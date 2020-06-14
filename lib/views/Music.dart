@@ -5,7 +5,7 @@ class Music extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        "Music",
+        "My Music",
         style: Theme.of(context).textTheme.headline1,
       ),
     );

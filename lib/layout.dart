@@ -2,35 +2,59 @@ import 'package:flutter/material.dart';
 import "./constants.dart";
 import "./input.dart";
 
-class Layout extends StatelessWidget {
-  final Widget child;
+import "./views/Albums.dart";
+import "./views/Artists.dart";
+import "./views/Home.dart";
+import "./views/Music.dart";
 
-  Layout({this.child});
-  static const routes = ["/music", "/artists", "/albums", "/settings"];
+class Layout extends StatefulWidget {
+  @override
+  _LayoutState createState() => _LayoutState();
+}
+
+class _LayoutState extends State<Layout> {
+  int _currentPage = 4;
+
+  final pages = <Widget>[
+    Home(),
+    Music(),
+    Artists(),
+    Albums(),
+  ];
+
+  void goHome() {
+    setState(() {
+      _currentPage = 0;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    int page = routes.indexOf(ModalRoute.of(context).settings.name);
-
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
         textTheme: Theme.of(context).textTheme,
-        leading: Container(
-          margin: EdgeInsets.only(left: 10.0),
-          padding: EdgeInsets.all(4.0),
-          child: Image(
-            image: AssetImage("graphics/icon.png"),
-            fit: BoxFit.scaleDown,
+        leading: GestureDetector(
+          onTap: goHome,
+          child: Container(
+            margin: EdgeInsets.only(left: 10.0),
+            padding: EdgeInsets.all(4.0),
+            child: Image(
+              image: AssetImage("graphics/icon.png"),
+              fit: BoxFit.scaleDown,
+            ),
           ),
         ),
-        title: Container(
-          child: Text(
-            "Music",
-            style: TextStyle(color: Colors.white, fontSize: 1.5 * rem),
+        title: GestureDetector(
+          onTap: goHome,
+          child: Container(
+            child: Text(
+              "Music",
+              style: TextStyle(color: Colors.white, fontSize: 1.5 * rem),
+            ),
+            transform: Matrix4.translationValues(-20, 0, 0),
           ),
-          transform: Matrix4.translationValues(-20, 0, 0),
         ),
         actions: [
           Container(
@@ -55,16 +79,22 @@ class Layout extends StatelessWidget {
         primary: true,
       ),
       bottomNavigationBar: BottomNavigationBar(
-        currentIndex: page == -1 ? null : page,
+        currentIndex: _currentPage,
         onTap: (int index) {
-          Navigator.pushNamed(context, routes[index]);
+          setState(() {
+            _currentPage = index;
+          });
         },
-        selectedItemColor: Theme.of(context).accentTextTheme.bodyText1.color,
         backgroundColor: Theme.of(context).backgroundColor,
+        selectedItemColor: Theme.of(context).accentTextTheme.bodyText1.color,
         items: [
           BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text("Home"),
+          ),
+          BottomNavigationBarItem(
             icon: Icon(Icons.music_note),
-            title: Text("Songs"),
+            title: Text("My Music"),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
@@ -74,13 +104,12 @@ class Layout extends StatelessWidget {
             icon: Icon(Icons.library_music),
             title: Text("Albums"),
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            title: Text("Settings"),
-          ),
         ],
       ),
-      body: child,
+      body: IndexedStack(
+        children: pages,
+        index: _currentPage,
+      ),
     );
   }
 }

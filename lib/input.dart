@@ -4,7 +4,7 @@ class Input extends StatelessWidget {
   final String placeholder;
   final void Function(String) onChange;
 
-  Input({Key key, this.placeholder, this.onChange}) : super(key: key);
+  Input({Key key, this.placeholder, @required this.onChange}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
