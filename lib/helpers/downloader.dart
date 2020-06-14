@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 Future<void> downloadSong(String id) async {
@@ -20,7 +19,7 @@ Future<void> downloadSong(String id) async {
       return manifest.audioOnly.first;
     }).url;
   } else {
-    throw ErrorDescription("Couldn't find audio.");
+    throw "Couldn't find audio.";
   }
 
   if (uri == null) {}

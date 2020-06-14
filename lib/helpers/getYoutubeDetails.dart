@@ -2,29 +2,18 @@ import 'dart:convert';
 import "package:http/http.dart" as http;
 
 import "./generateUri.dart";
-import "../apiKeys.dart";
 import "../dataClasses.dart";
+import "../apiKeys.dart";
 
 var searchUri = "https://www.googleapis.com/youtube/v3/search";
 var detailsUri = "https://www.googleapis.com/youtube/v3/videos";
-
-class YoutubeDetails {
-  String id;
-  int length;
-
-  YoutubeDetails({this.id, this.length});
-
-  toString() {
-    return "{\n\tid: $id,\n\tlength: $length\n}";
-  }
-}
 
 /// getYoutubeId()
 ///
 /// @param {string} query The title of the video to search on youtube's API
 ///
 /// Returns the first result's youtube id from a search query
-Future<YoutubeDetails> getYoutubeDetails(Song song) async {
+Future<YoutubeDetails> getYoutubeDetails(NapsterSongData song) async {
   try {
     // Makes sure to get the right video
     var query = "${song.title} ${song.artist} official music video";

@@ -60,3 +60,45 @@ class Artist {
     return "{\n\tname: $name,\n\timages: $images\n}";
   }
 }
+
+class NapsterAlbumData {
+  String id;
+  String name;
+
+  NapsterAlbumData({this.id, this.name});
+
+  toString() {
+    return "{\n\tid: $id,\n\tname: $name\n}";
+  }
+}
+
+class NapsterSongData {
+  String artist;
+  String title;
+  int length;
+  String thumbnail;
+  String albumId;
+
+  NapsterSongData({
+    this.artist,
+    this.length,
+    this.albumId,
+    this.thumbnail,
+    this.title,
+  });
+
+  toString() {
+    return "{\n\tartist: $artist,\n\ttitle: $title,\n\talbumId: $albumId,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}";
+  }
+}
+
+class YoutubeDetails {
+  String id;
+  int length;
+
+  YoutubeDetails({this.id, this.length});
+
+  toString() {
+    return "{\n\tid: $id,\n\tlength: $length\n}";
+  }
+}

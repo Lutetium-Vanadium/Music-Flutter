@@ -3,37 +3,7 @@ import "package:http/http.dart" as http;
 
 import "./generateUri.dart";
 import "../apiKeys.dart";
-
-class NapsterAlbumData {
-  String id;
-  String name;
-
-  NapsterAlbumData({this.id, this.name});
-
-  toString() {
-    return "{\n\tid: $id,\n\tname: $name\n}";
-  }
-}
-
-class NapsterSongData {
-  String artist;
-  String title;
-  int length;
-  String thumbnail;
-  String albumId;
-
-  NapsterSongData({
-    this.artist,
-    this.length,
-    this.albumId,
-    this.thumbnail,
-    this.title,
-  });
-
-  toString() {
-    return "{\n\tartist: $artist,\n\ttitle: $title,\n\talbumId: $albumId,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}";
-  }
-}
+import "../dataClasses.dart";
 
 /// getAlbumInfo()
 ///
@@ -60,7 +30,7 @@ Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
 ///
 /// @param {string} query The search term
 ///
-/// Gets the info for only one particular song, and downloads the thumbnail for it
+/// Gets the info for only one particular song
 Future<NapsterSongData> getSongInfo(String query) async {
   try {
     var response =
@@ -116,7 +86,7 @@ Future<List<NapsterSongData>> search(String query) async {
 /// @param data The album object returned by napster api
 ///
 /// Returns the id and name for the album object
-NapsterAlbumData formatAlbumData(Map<String, String> data) => NapsterAlbumData(
+NapsterAlbumData formatAlbumData(Map<String, dynamic> data) => NapsterAlbumData(
       id: data["id"],
       name: data["name"],
     );
