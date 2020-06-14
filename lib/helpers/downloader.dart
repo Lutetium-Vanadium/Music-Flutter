@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import "package:path_provider/path_provider.dart";
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-Future<void> downloadSong(String id) async {
+Future<void> downloadSong(String id, String filename) async {
   var yt = YoutubeExplode();
-  var manifest = await yt.videos.streamsClient.getManifest("fJ9rUzIMcZQ");
+  var manifest = await yt.videos.streamsClient.getManifest(id);
 
   Uri uri;
 
@@ -22,11 +23,14 @@ Future<void> downloadSong(String id) async {
     throw "Couldn't find audio.";
   }
 
-  if (uri == null) {}
+  if (uri == null) {
+    return;
+  }
 
   print("Got manifest");
+  var root = await getApplicationDocumentsDirectory();
 
-  var file = File(Directory.current.path + "/bo.mp3"); // Fix file name
+  var file = File("${root.path}/songs/$filename");
   var client = HttpClient();
   var request = await client.getUrl(uri);
   var response = await request.close();
@@ -49,7 +53,9 @@ Future<void> downloadSong(String id) async {
 }
 
 Future<void> downloadImage(String id) async {
-  var file = File(Directory.current.path + "/$id" + "jpg");
+  var root = await getApplicationDocumentsDirectory();
+
+  var file = File("${root.path}/album_images/$id.jpg");
 
   if (await file.exists()) return;
   var uri = Uri.parse(
