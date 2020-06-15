@@ -5,6 +5,8 @@ import "./generateUri.dart";
 import "../apiKeys.dart";
 import "../dataClasses.dart";
 
+const SEARCH_LIMIT = "15";
+
 /// getAlbumInfo()
 ///
 /// @param {string} albumId The id of the album
@@ -62,7 +64,7 @@ Future<List<NapsterSongData>> search(String query) async {
         await http.get(generateUri("https://api.napster.com/v2.2/search", {
       "apikey": NAPSTER_API_KEY,
       "type": "track",
-      "per_type_limit": "10",
+      "per_type_limit": SEARCH_LIMIT,
       "query": query,
     }));
 

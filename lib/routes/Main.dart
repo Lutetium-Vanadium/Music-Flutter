@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import "./constants.dart";
-import "./input.dart";
+
+import "../constants.dart";
+import "../input.dart";
 
 import "./views/Albums.dart";
 import "./views/Artists.dart";
 import "./views/Home.dart";
 import "./views/Music.dart";
 
-class Layout extends StatefulWidget {
+class Main extends StatefulWidget {
   @override
-  _LayoutState createState() => _LayoutState();
+  _MainState createState() => _MainState();
 }
 
-class _LayoutState extends State<Layout> {
-  int _currentPage = 4;
+class _MainState extends State<Main> {
+  int _currentPage = 0;
 
   final pages = <Widget>[
     Home(),
@@ -33,27 +34,27 @@ class _LayoutState extends State<Layout> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
+        centerTitle: false,
+        automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).backgroundColor,
         textTheme: Theme.of(context).textTheme,
-        leading: GestureDetector(
-          onTap: goHome,
-          child: Container(
-            margin: EdgeInsets.only(left: 10.0),
-            padding: EdgeInsets.all(4.0),
-            child: Image(
-              image: AssetImage("graphics/icon.png"),
-              fit: BoxFit.scaleDown,
+        title: Hero(
+          tag: "navbar-title",
+          child: GestureDetector(
+            onTap: goHome,
+            child: Row(
+              children: <Widget>[
+                Image(
+                  image: AssetImage("graphics/icon.png"),
+                  fit: BoxFit.scaleDown,
+                  height: 2.5 * rem,
+                ),
+                Text(
+                  "Music",
+                  style: TextStyle(color: Colors.white, fontSize: 1.5 * rem),
+                ),
+              ],
             ),
-          ),
-        ),
-        title: GestureDetector(
-          onTap: goHome,
-          child: Container(
-            child: Text(
-              "Music",
-              style: TextStyle(color: Colors.white, fontSize: 1.5 * rem),
-            ),
-            transform: Matrix4.translationValues(-20, 0, 0),
           ),
         ),
         actions: [
@@ -61,14 +62,22 @@ class _LayoutState extends State<Layout> {
             width: MediaQuery.of(context).size.width / 2 - 30,
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Row(
-              children: <Widget>[
-                Input(
-                  placeholder: "Download",
-                  onChange: print,
-                ),
-                Icon(Icons.search),
-              ],
+            child: Hero(
+              tag: "navbar-search",
+              child: Row(
+                children: <Widget>[
+                  Input(
+                    placeholder: "Download",
+                    onChange: (query) {
+                      if (query.length > 0) {
+                        Navigator.of(context)
+                            .pushNamed("/search", arguments: query);
+                      }
+                    },
+                  ),
+                  Icon(Icons.search),
+                ],
+              ),
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),

@@ -1,4 +1,11 @@
-class Song {
+class Pair<T1, T2> {
+  T1 first;
+  T2 second;
+
+  Pair(this.first, this.second);
+}
+
+class Song extends NapsterSongData {
   String title;
   String artist;
   String albumId;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './routing.dart';
 import "./themedata.dart";
-import "./layout.dart";
 
 void main() {
   runApp(MyApp());
@@ -13,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Music",
       theme: themeData,
-      home: Layout(),
+      initialRoute: "/",
+      onGenerateRoute: Router.generateRoute,
     );
   }
 }

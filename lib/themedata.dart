@@ -3,7 +3,7 @@ import "./constants.dart";
 
 TextTheme createTextTheme(Color col) {
   return TextTheme(
-    bodyText1: TextStyle(color: col),
+    bodyText1: TextStyle(color: col, fontSize: 1.2 * rem),
     bodyText2: TextStyle(color: col),
     button: TextStyle(color: col),
     caption: TextStyle(color: col),
