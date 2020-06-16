@@ -45,7 +45,7 @@ class _MainState extends State<Main> {
             child: Row(
               children: <Widget>[
                 Image(
-                  image: AssetImage("graphics/icon.png"),
+                  image: AssetImage("$imgs/icon.png"),
                   fit: BoxFit.scaleDown,
                   height: 2.5 * rem,
                 ),

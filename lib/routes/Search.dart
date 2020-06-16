@@ -1,11 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 
-import "../helpers/napster.dart" as napster;
+import '../CustomIcons.dart';
 import "../dataClasses.dart";
 import '../constants.dart';
 import '../input.dart';
-import 'shared/SongView.dart';
+import "../helpers/napster.dart" as napster;
+import './shared/SongView.dart';
 
 class Search extends StatefulWidget {
   final String intitalQuery;
@@ -18,9 +19,27 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   List<NapsterSongData> _results = [];
+  TextEditingController _textController;
 
   void goHome() {
     Navigator.of(context).pushNamed("/");
+  }
+
+  void search(String query) async {
+    if (query.length == 0) {
+      Navigator.of(context).pushNamed("/");
+    } else if (query.length % 2 == 1) {
+      var res = await napster.search(query);
+      setState(() {
+        _results = res;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.intitalQuery);
   }
 
   @override
@@ -37,7 +56,7 @@ class _SearchState extends State<Search> {
         backgroundColor: Theme.of(context).backgroundColor,
         textTheme: Theme.of(context).textTheme,
         leading: GestureDetector(
-          onTap: goHome,
+          onTap: Navigator.of(context).pop,
           child: Icon(CupertinoIcons.back),
         ),
         title: Hero(
@@ -47,7 +66,7 @@ class _SearchState extends State<Search> {
             child: Row(
               children: <Widget>[
                 Image(
-                  image: AssetImage("graphics/icon.png"),
+                  image: AssetImage("$imgs/icon.png"),
                   fit: BoxFit.scaleDown,
                   height: 2.5 * rem,
                 ),
@@ -70,20 +89,16 @@ class _SearchState extends State<Search> {
                 children: <Widget>[
                   Input(
                     placeholder: "Download",
-                    initialValue: widget.intitalQuery,
+                    controller: _textController,
                     autofocus: true,
-                    onChange: (query) async {
-                      if (query.length == 0) {
-                        Navigator.of(context).pushNamed("/");
-                      } else if (query.length % 2 == 1) {
-                        var res = await napster.search(query);
-                        setState(() {
-                          _results = res;
-                        });
-                      }
+                    onChange: search,
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      search(_textController.text);
                     },
                   ),
-                  Icon(Icons.search),
                 ],
               ),
             ),
@@ -100,6 +115,7 @@ class _SearchState extends State<Search> {
         onClick: (song, index) {
           print("$index: $song");
         },
+        // iconData: Icons.file_download
       ),
     );
   }

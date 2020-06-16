@@ -37,6 +37,10 @@ TextTheme createTextTheme(Color col) {
       fontSize: 1.4 * rem,
       fontWeight: FontWeight.w500,
     ),
+    subtitle1: TextStyle(
+      fontSize: 13,
+      color: Colors.grey[300],
+    ),
   );
 }
 
@@ -60,4 +64,29 @@ var themeData = ThemeData(
   hintColor: Colors.grey[400],
   canvasColor: Color.fromRGBO(27, 27, 27, 1),
   accentTextTheme: createTextTheme(Color.fromRGBO(71, 135, 231, 1)),
+  colorScheme: ColorScheme(
+    background: Color.fromRGBO(20, 20, 20, 1),
+    brightness: Brightness.dark,
+    error: Color(0xFFBE0003),
+    onBackground: Colors.white,
+    onError: Colors.white,
+    onPrimary: Colors.white,
+    onSecondary: Colors.white,
+    onSurface: Colors.white,
+    primary: Color.fromRGBO(50, 50, 50, 1),
+    primaryVariant: Color.fromRGBO(45, 45, 45, 1),
+    secondary: Color.fromRGBO(29, 29, 29, 1),
+    secondaryVariant: Color.fromRGBO(25, 25, 25, 1),
+    surface: Color.fromRGBO(40, 40, 40, 1),
+  ),
+  accentColorBrightness: Brightness.dark,
+  accentIconTheme: IconThemeData(
+    color: Color.fromRGBO(23, 99, 212, 1),
+  ),
+  brightness: Brightness.dark,
+  pageTransitionsTheme: PageTransitionsTheme(
+    builders: {
+      TargetPlatform.android: CupertinoPageTransitionsBuilder(),
+    },
+  ),
 );

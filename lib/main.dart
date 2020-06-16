@@ -13,8 +13,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: "Music",
       theme: themeData,
+      darkTheme: themeData,
       initialRoute: "/",
       onGenerateRoute: Router.generateRoute,
+      themeMode: ThemeMode.dark,
     );
   }
 }

@@ -15,7 +15,7 @@ const SEARCH_LIMIT = "15";
 Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
   try {
     var response = await http
-        .get(generateUri("https://api.napster.com/v2.2/albums/${albumId}", {
+        .get(generateUri("https://api.napster.com/v2.2/albums/$albumId", {
       "apikey": NAPSTER_API_KEY,
     }));
 
