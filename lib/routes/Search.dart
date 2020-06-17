@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 
-import '../CustomIcons.dart';
 import "../dataClasses.dart";
 import '../constants.dart';
 import '../input.dart';
@@ -18,7 +17,7 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  List<NapsterSongData> _results = [];
+  List<NapsterSongData> _results;
   TextEditingController _textController;
 
   void goHome() {
@@ -44,10 +43,6 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    if (_results.length > 0) {
-      print("TITLE1: ${_results.first.title}");
-    }
-
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
@@ -93,12 +88,7 @@ class _SearchState extends State<Search> {
                     autofocus: true,
                     onChange: search,
                   ),
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      search(_textController.text);
-                    },
-                  ),
+                  Icon(Icons.search),
                 ],
               ),
             ),
@@ -115,7 +105,6 @@ class _SearchState extends State<Search> {
         onClick: (song, index) {
           print("$index: $song");
         },
-        // iconData: Icons.file_download
       ),
     );
   }

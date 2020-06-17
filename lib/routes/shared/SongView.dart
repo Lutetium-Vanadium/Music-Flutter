@@ -13,7 +13,7 @@ class SongView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (songs == null || songs.length == 0) {
+    if (songs == null) {
       return Center(
         child: Container(
           width: 50,
@@ -32,6 +32,13 @@ class SongView extends StatelessWidget {
         //   "Home",
         //   style: Theme.of(context).textTheme.headline1,
         // ),
+      );
+    }
+
+    if (songs.length == 0) {
+      return Center(
+        child:
+            Text("No Results.", style: Theme.of(context).textTheme.headline4),
       );
     }
 
