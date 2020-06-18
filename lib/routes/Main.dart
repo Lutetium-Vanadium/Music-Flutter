@@ -62,22 +62,19 @@ class _MainState extends State<Main> {
             width: MediaQuery.of(context).size.width / 2 - 30,
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Hero(
-              tag: "navbar-search",
-              child: Row(
-                children: <Widget>[
-                  Input(
-                    placeholder: "Download",
-                    onChange: (query) {
-                      if (query.length > 0) {
-                        Navigator.of(context)
-                            .pushNamed("/search", arguments: query);
-                      }
-                    },
-                  ),
-                  Icon(Icons.search),
-                ],
-              ),
+            child: Row(
+              children: <Widget>[
+                Input(
+                  placeholder: "Download",
+                  onChange: (query) {
+                    if (query.length > 0) {
+                      Navigator.of(context)
+                          .pushNamed("/search", arguments: query);
+                    }
+                  },
+                ),
+                Icon(Icons.search),
+              ],
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),

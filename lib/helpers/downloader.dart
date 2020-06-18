@@ -31,6 +31,12 @@ Future<void> downloadSong(String id, String filename) async {
   var root = await getApplicationDocumentsDirectory();
 
   var file = File("${root.path}/songs/$filename");
+
+  if (await file.exists())
+    return;
+  else
+    file = await file.create(recursive: true);
+
   var client = HttpClient();
   var request = await client.getUrl(uri);
   var response = await request.close();
@@ -57,7 +63,10 @@ Future<void> downloadImage(String id) async {
 
   var file = File("${root.path}/album_images/$id.jpg");
 
-  if (await file.exists()) return;
+  if (await file.exists())
+    return;
+  else
+    file = await file.create(recursive: true);
   var uri = Uri.parse(
       "https://api.napster.com/imageserver/v2/albums/$id/images/500x500.jpg");
 

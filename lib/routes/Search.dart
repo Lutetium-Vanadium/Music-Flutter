@@ -1,5 +1,10 @@
+import 'package:Music/helpers/updateAlbum.dart';
+import 'package:Music/helpers/db.dart';
+import 'package:Music/helpers/downloader.dart';
+import 'package:Music/helpers/getYoutubeDetails.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
+import 'package:path_provider/path_provider.dart';
 
 import "../dataClasses.dart";
 import '../constants.dart';
@@ -33,6 +38,42 @@ class _SearchState extends State<Search> {
         _results = res;
       });
     }
+  }
+
+  void download(NapsterSongData songData, int index) async {
+    print(songData);
+
+    var data = await getYoutubeDetails(songData);
+
+    if (data == null) return;
+
+    var filename = songData.title + ".mp3";
+    var albumId = songData.albumId;
+
+    print("Downloading ${songData.title}");
+    var downloadFuture = downloadSong(data.id, filename);
+    var updateAlbumFuture = updateAlbum(albumId, songData.artist);
+
+    var root = await getApplicationDocumentsDirectory();
+
+    var song = Song(
+      albumId: albumId,
+      artist: songData.artist,
+      filePath: "${root.path}/songs/$filename",
+      length: data.length,
+      liked: false,
+      numListens: 0,
+      thumbnail: "${root.path}/album_images/$albumId.jpg",
+      title: songData.title,
+    );
+
+    var db = await getDB();
+
+    await db.insert(Tables.Songs, Song.toMap(song));
+
+    await Future.wait([downloadFuture, updateAlbumFuture]);
+
+    await db.close();
   }
 
   @override
@@ -78,19 +119,16 @@ class _SearchState extends State<Search> {
             width: MediaQuery.of(context).size.width / 2 - 30,
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
-            child: Hero(
-              tag: "navbar-search",
-              child: Row(
-                children: <Widget>[
-                  Input(
-                    placeholder: "Download",
-                    controller: _textController,
-                    autofocus: true,
-                    onChange: search,
-                  ),
-                  Icon(Icons.search),
-                ],
-              ),
+            child: Row(
+              children: <Widget>[
+                Input(
+                  placeholder: "Download",
+                  controller: _textController,
+                  autofocus: true,
+                  onChange: search,
+                ),
+                Icon(Icons.search),
+              ],
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -102,9 +140,7 @@ class _SearchState extends State<Search> {
       ),
       body: SongView(
         songs: _results,
-        onClick: (song, index) {
-          print("$index: $song");
-        },
+        onClick: download,
       ),
     );
   }

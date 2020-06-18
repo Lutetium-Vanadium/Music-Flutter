@@ -1,3 +1,6 @@
+import 'package:Music/helpers/db.dart';
+import 'package:path_provider/path_provider.dart';
+
 import "./napster.dart" show getAlbumInfo;
 import "./downloader.dart" show downloadImage;
 import "../dataClasses.dart";
@@ -9,19 +12,26 @@ import "../dataClasses.dart";
 /// @param numSongs the number of songs in the album, defaults to 1
 ///
 /// Adds an album and downloads the image for the album if they dont exist
-Future<void> addAlbum(String albumId, String artist, {int numSongs = 1}) async {
-  var imagePath = "file://album_images/$albumId.jpg"; // todo proper file
+Future<void> updateAlbum(String albumId, String artist,
+    {int numSongs = 1}) async {
+  var root = await getApplicationDocumentsDirectory();
+  var imagePath = "${root.path}/album_images/$albumId.jpg";
 
   downloadImage(albumId);
 
-  // if (await db.exists(albumId)) {
-  //   db.incrementNumSongs(albumId);
-  //   return;
-  // }
+  var db = await getDB();
+
+  if ((await db.query(Tables.Albums, where: "id = ?", whereArgs: [albumId]))
+          .length >
+      0) {
+    db.execute("UPDATE albumdata SET numSongs = numSongs + 1 WHERE id LIKE ?",
+        [albumId]);
+    return db.close();
+  }
 
   var albumInfo = await getAlbumInfo(albumId);
 
-  if (albumId != albumInfo.id) {
+  if (albumInfo == null) {
     print("Failed album $albumId");
   }
 
@@ -35,5 +45,7 @@ Future<void> addAlbum(String albumId, String artist, {int numSongs = 1}) async {
     artist: artist,
   );
 
-  // db.addAlbum(album);
+  await db.insert(Tables.Albums, Album.toMap(album));
+
+  await db.close();
 }
