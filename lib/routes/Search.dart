@@ -10,7 +10,7 @@ import "../dataClasses.dart";
 import '../constants.dart';
 import '../input.dart';
 import "../helpers/napster.dart" as napster;
-import './shared/SongView.dart';
+import './models/SongView.dart';
 
 class Search extends StatefulWidget {
   final String intitalQuery;
