@@ -81,7 +81,6 @@ class _HomeState extends State<Home> {
 
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (_, state) {
-        // if (state is Notification)
         if (state is DownloadedNotification) {
           getTop();
         }

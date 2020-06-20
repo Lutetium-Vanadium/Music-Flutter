@@ -45,12 +45,18 @@ Stream<Pair<int, int>> downloadSong(String id, String filename) async* {
 
   var progress = 0;
   var length = response.contentLength;
+  var _percent = 0;
+
   var writer = file.openWrite();
 
   await for (var data in response) {
     writer.add(data);
     progress += data.length;
-    yield Pair(progress, length);
+    var percent = (100 * progress / length).round();
+    if (percent != _percent) {
+      _percent = percent;
+      yield Pair(progress, length);
+    }
   }
 
   print("Finished $filename");
@@ -83,6 +89,6 @@ Future<void> downloadImage(String id) async {
     writer.add(data);
   }, onDone: () {
     writer.close();
-    print("\nDone");
+    print("Done $id");
   });
 }

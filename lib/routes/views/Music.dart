@@ -1,7 +1,9 @@
+import 'package:Music/bloc/notification_bloc.dart';
 import "package:flutter/material.dart";
 
 import 'package:Music/helpers/db.dart';
 import 'package:Music/models/models.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/SongView.dart';
 
 class Music extends StatefulWidget {
@@ -16,10 +18,10 @@ class _MusicState extends State<Music> {
   void initState() {
     super.initState();
 
-    getTop();
+    getSongs();
   }
 
-  Future<void> getTop() async {
+  Future<void> getSongs() async {
     var db = await getDB();
 
     var allSongs = Song.fromMapArray(
@@ -37,24 +39,32 @@ class _MusicState extends State<Music> {
   Widget build(BuildContext context) {
     var width10 = MediaQuery.of(context).size.shortestSide / 10;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Padding(
-          padding: EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-          child: Text("My Music", style: Theme.of(context).textTheme.headline3),
-        ),
-        Expanded(
-          child: SongView(
-            songs: songs,
-            isLocal: true,
-            onClick: (song, _) {
-              print(song);
-            },
+    return BlocListener(
+      listener: (_, state) {
+        if (state is DownloadedNotification) {
+          getSongs();
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
+            child:
+                Text("My Music", style: Theme.of(context).textTheme.headline3),
           ),
-        ),
-      ],
+          Expanded(
+            child: SongView(
+              songs: songs,
+              isLocal: true,
+              onClick: (song, _) {
+                print(song);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
