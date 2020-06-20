@@ -1,16 +1,13 @@
-import 'package:Music/helpers/updateAlbum.dart';
-import 'package:Music/helpers/db.dart';
-import 'package:Music/helpers/downloader.dart';
-import 'package:Music/helpers/getYoutubeDetails.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
-import 'package:path_provider/path_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "../dataClasses.dart";
+import '../bloc/notification_bloc.dart';
+import "../models/models.dart";
 import '../constants.dart';
-import '../input.dart';
 import "../helpers/napster.dart" as napster;
-import './models/SongView.dart';
+import './widgets/Input.dart';
+import './widgets/SongView.dart';
 
 class Search extends StatefulWidget {
   final String intitalQuery;
@@ -34,46 +31,11 @@ class _SearchState extends State<Search> {
       Navigator.of(context).pushNamed("/");
     } else if (query.length % 2 == 1) {
       var res = await napster.search(query);
+      if (!mounted) return;
       setState(() {
         _results = res;
       });
     }
-  }
-
-  void download(NapsterSongData songData, int index) async {
-    print(songData);
-
-    var data = await getYoutubeDetails(songData);
-
-    if (data == null) return;
-
-    var filename = songData.title + ".mp3";
-    var albumId = songData.albumId;
-
-    print("Downloading ${songData.title}");
-    var downloadFuture = downloadSong(data.id, filename);
-    var updateAlbumFuture = updateAlbum(albumId, songData.artist);
-
-    var root = await getApplicationDocumentsDirectory();
-
-    var song = Song(
-      albumId: albumId,
-      artist: songData.artist,
-      filePath: "${root.path}/songs/$filename",
-      length: data.length,
-      liked: false,
-      numListens: 0,
-      thumbnail: "${root.path}/album_images/$albumId.jpg",
-      title: songData.title,
-    );
-
-    var db = await getDB();
-
-    await db.insert(Tables.Songs, Song.toMap(song));
-
-    await Future.wait([downloadFuture, updateAlbumFuture]);
-
-    await db.close();
   }
 
   @override
@@ -138,9 +100,17 @@ class _SearchState extends State<Search> {
         ],
         primary: true,
       ),
-      body: SongView(
-        songs: _results,
-        onClick: download,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: SongView(
+          songs: _results,
+          onClick: (NapsterSongData songData, int index) {
+            BlocProvider.of<NotificationBloc>(context)
+                .add(DownloadSong(songData));
+          },
+        ),
       ),
     );
   }

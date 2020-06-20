@@ -1,8 +1,8 @@
 import 'dart:convert';
 import "package:http/http.dart" as http;
 
+import 'package:Music/models/models.dart';
 import "./generateUri.dart";
-import "../dataClasses.dart";
 import "../apiKeys.dart";
 
 var searchUri = "https://www.googleapis.com/youtube/v3/search";

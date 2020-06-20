@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import 'package:Music/constants.dart';
-import 'package:Music/dataClasses.dart';
 
 class CoverImage extends StatelessWidget {
   final String image;

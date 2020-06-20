@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 
 Future<Database> getDB() async {
@@ -43,13 +42,4 @@ abstract class Tables {
   static const Songs = "songdata";
   static const Albums = "albumdata";
   static const CustomAlbums = "customalbums";
-}
-
-String stringifyArr(List<dynamic> arr) {
-  var strArr = jsonEncode(arr);
-  return strArr.substring(1, strArr.length - 1);
-}
-
-List<dynamic> parseArr(String arr) {
-  return jsonDecode("[$arr]");
 }

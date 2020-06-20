@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_bloc: ^4.0.1
   cupertino_icons: ^0.1.3
   youtube_explode_dart: 1.0.0
   path_provider:
@@ -24,9 +25,5 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
-  fonts:
-    - family: CustomIcons
-      fonts:
-        - asset: assets/fonts/CustomIcons.ttf
 
   uses-material-design: true

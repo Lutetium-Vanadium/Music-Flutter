@@ -3,7 +3,9 @@ import 'dart:io';
 import "package:path_provider/path_provider.dart";
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-Future<void> downloadSong(String id, String filename) async {
+import 'package:Music/models/models.dart';
+
+Stream<Pair<int, int>> downloadSong(String id, String filename) async* {
   var yt = YoutubeExplode();
   var manifest = await yt.videos.streamsClient.getManifest(id);
 
@@ -44,15 +46,17 @@ Future<void> downloadSong(String id, String filename) async {
   var progress = 0;
   var length = response.contentLength;
   var writer = file.openWrite();
-  response.listen((data) {
+
+  await for (var data in response) {
     writer.add(data);
     progress += data.length;
-    var percent = (100 * progress / length).round();
-    // todo emit progress
-  }, onDone: () {
-    print("\nDone");
-    writer.close();
-  });
+    yield Pair(progress, length);
+  }
+
+  print("Finished $filename");
+
+  await writer.flush();
+  await writer.close();
 
   // Close the YoutubeExplode's http client.
   yt.close();

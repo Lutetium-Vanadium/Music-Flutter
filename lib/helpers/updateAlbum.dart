@@ -1,9 +1,10 @@
-import 'package:Music/helpers/db.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'package:Music/helpers/db.dart';
+import 'package:Music/models/models.dart';
 
 import "./napster.dart" show getAlbumInfo;
 import "./downloader.dart" show downloadImage;
-import "../dataClasses.dart";
 
 /// addAlbum()
 ///

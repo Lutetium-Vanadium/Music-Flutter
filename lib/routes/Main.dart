@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import "../constants.dart";
-import "../input.dart";
+import "./widgets/Input.dart";
 
 import "./views/Albums.dart";
 import "./views/Artists.dart";
@@ -63,6 +63,8 @@ class _MainState extends State<Main> {
             margin: EdgeInsets.symmetric(vertical: 8, horizontal: 10),
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 14),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Input(
                   placeholder: "Download",
@@ -112,9 +114,14 @@ class _MainState extends State<Main> {
           ),
         ],
       ),
-      body: IndexedStack(
-        children: pages,
-        index: _currentPage,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: IndexedStack(
+          children: pages,
+          index: _currentPage,
+        ),
       ),
     );
   }

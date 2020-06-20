@@ -1,9 +1,9 @@
 import 'dart:convert';
 import "package:http/http.dart" as http;
 
+import 'package:Music/models/models.dart';
 import "./generateUri.dart";
 import "../apiKeys.dart";
-import "../dataClasses.dart";
 
 const SEARCH_LIMIT = "15";
 

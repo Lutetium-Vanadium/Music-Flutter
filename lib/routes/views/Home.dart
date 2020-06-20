@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'package:Music/bloc/notification_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'package:Music/constants.dart';
-import 'package:Music/routes/models/CoverImage.dart';
 import "package:Music/helpers/db.dart";
-import "package:Music/dataClasses.dart";
+import "package:Music/models/models.dart";
+import '../widgets/CoverImage.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -23,25 +26,26 @@ class _HomeState extends State<Home> {
     getTop();
   }
 
-  Future<void> getTop() async {
-    var db = await getDB();
-
+  Future<void> dev() async {
     // SECTION dev helpers
 
-    // Clear Database Contents
+    // // Clear Database Contents
+    // var db = await getDB();
+    // // print(Song.fromMapArray(await db.query(Tables.Songs)));
+    // // print(Album.fromMapArray(await db.query(Tables.Albums)));
+    // // print(CustomAlbum.fromMapArray(await db.query(Tables.CustomAlbums)));
     // db.delete(Tables.Albums);
     // db.delete(Tables.Songs);
     // db.delete(Tables.CustomAlbums);
-
-    // Delete Songs
+    // // Delete Songs
     // File("${(await getApplicationDocumentsDirectory()).path}/songs")
     //     .delete(recursive: true);
 
-    // Delete album covers
+    // // Delete album covers
     // File("${(await getApplicationDocumentsDirectory()).path}/album_images")
     //     .delete(recursive: true);
 
-    // List all files ignoring flutter stuff
+    // // List all files ignoring flutter stuff
     // var dirs =
     //     (await getApplicationDocumentsDirectory()).listSync(recursive: true);
     // var base = "/data/user/0/com.example.Music/app_flutter";
@@ -51,6 +55,10 @@ class _HomeState extends State<Home> {
     // print("[\n\t${dirs.join(",\n\t")}\n]");
 
     // !SECTION
+  }
+
+  Future<void> getTop() async {
+    var db = await getDB();
 
     var topSongs = Song.fromMapArray(
       await db.query(Tables.Songs, orderBy: "numListens DESC", limit: 5),
@@ -65,72 +73,79 @@ class _HomeState extends State<Home> {
       _topSongs = topSongs;
       _topAlbums = topAlbums;
     });
-    await db.close();
   }
 
   @override
   Widget build(BuildContext context) {
     var width10 = MediaQuery.of(context).size.shortestSide / 10;
 
-    return ListView(
-      physics: BouncingScrollPhysics(),
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding:
-                  EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-              child: Text("Top Albums",
-                  style: Theme.of(context).textTheme.headline3),
-            ),
-            Container(
-              height: 4.3 * width10 + 3 * rem,
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: width10 / 4),
-                scrollDirection: Axis.horizontal,
-                itemCount: _topAlbums.length,
-                itemBuilder: (ctx, index) {
-                  var album = _topAlbums[index];
-                  return CoverImage(
-                    image: album.imagePath,
-                    title: album.name,
-                    subtitle: "Album · ${album.artist}",
-                  );
-                },
+    return BlocListener<NotificationBloc, NotificationState>(
+      listener: (_, state) {
+        // if (state is Notification)
+        if (state is DownloadedNotification) {
+          getTop();
+        }
+      },
+      child: ListView(
+        physics: BouncingScrollPhysics(),
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding:
+                    EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
+                child: Text("Top Albums",
+                    style: Theme.of(context).textTheme.headline3),
               ),
-            ),
-          ],
-        ),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.only(left: width10 / 4 * 2, bottom: 7),
-              child: Text("Top Songs",
-                  style: Theme.of(context).textTheme.headline3),
-            ),
-            Container(
-              height: 4.3 * width10 + 3 * rem,
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding: EdgeInsets.symmetric(horizontal: width10 / 4),
-                scrollDirection: Axis.horizontal,
-                itemCount: _topSongs.length,
-                itemBuilder: (ctx, index) {
-                  var song = _topSongs[index];
-                  return CoverImage(
-                    image: song.thumbnail,
-                    title: song.title,
-                    subtitle: "Song · ${song.artist}",
-                  );
-                },
+              Container(
+                height: 4.3 * width10 + 3 * rem,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: width10 / 4),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _topAlbums.length,
+                  itemBuilder: (ctx, index) {
+                    var album = _topAlbums[index];
+                    return CoverImage(
+                      image: album.imagePath,
+                      title: album.name,
+                      subtitle: "Album · ${album.artist}",
+                    );
+                  },
+                ),
               ),
-            ),
-          ],
-        )
-      ],
+            ],
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(left: width10 / 4 * 2, bottom: 7),
+                child: Text("Top Songs",
+                    style: Theme.of(context).textTheme.headline3),
+              ),
+              Container(
+                height: 4.3 * width10 + 3 * rem,
+                child: ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  padding: EdgeInsets.symmetric(horizontal: width10 / 4),
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _topSongs.length,
+                  itemBuilder: (ctx, index) {
+                    var song = _topSongs[index];
+                    return CoverImage(
+                      image: song.thumbnail,
+                      title: song.title,
+                      subtitle: "Song · ${song.artist}",
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 }
