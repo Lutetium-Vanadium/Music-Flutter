@@ -1,8 +1,8 @@
 import "package:flutter/cupertino.dart";
 
 import "models/models.dart";
-import "./routes/Main.dart";
-import "./routes/Search.dart";
+import "./routes/MainPage.dart";
+import "./routes/SearchPage.dart";
 import "./routes/ArtistPage.dart";
 import "./routes/AlbumsPage.dart";
 
@@ -11,14 +11,14 @@ class Router {
     switch (settings.name) {
       case "/":
         return CupertinoPageRoute(
-          builder: (_) => Main(),
+          builder: (_) => MainPage(),
         );
         break;
       case "/search":
         assert(settings.arguments is String);
         return CupertinoPageRoute(
           maintainState: false,
-          builder: (_) => Search(settings.arguments),
+          builder: (_) => SearchPage(settings.arguments),
         );
         break;
       case "/artist":

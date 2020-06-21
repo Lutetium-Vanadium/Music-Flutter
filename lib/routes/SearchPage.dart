@@ -9,16 +9,16 @@ import "../helpers/napster.dart" as napster;
 import './widgets/Input.dart';
 import './widgets/SongView.dart';
 
-class Search extends StatefulWidget {
+class SearchPage extends StatefulWidget {
   final String intitalQuery;
 
-  Search(this.intitalQuery);
+  SearchPage(this.intitalQuery);
 
   @override
-  _SearchState createState() => _SearchState();
+  _SearchPageState createState() => _SearchPageState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchPageState extends State<SearchPage> {
   List<NapsterSongData> _results;
   TextEditingController _textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();

@@ -8,12 +8,12 @@ import "./views/Artists.dart";
 import "./views/Home.dart";
 import "./views/Music.dart";
 
-class Main extends StatefulWidget {
+class MainPage extends StatefulWidget {
   @override
-  _MainState createState() => _MainState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _MainState extends State<Main> {
+class _MainPageState extends State<MainPage> {
   int _currentPage = 0;
 
   final pages = <Widget>[
