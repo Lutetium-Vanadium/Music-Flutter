@@ -32,9 +32,9 @@ class _HomeState extends State<Home> {
 
     // // Clear Database Contents
     // var db = await getDB();
-    // // print(Song.fromMapArray(await db.query(Tables.Songs)));
-    // // print(Album.fromMapArray(await db.query(Tables.Albums)));
-    // // print(CustomAlbum.fromMapArray(await db.query(Tables.CustomAlbums)));
+    // print(Song.fromMapArray(await db.query(Tables.Songs)));
+    // print(Album.fromMapArray(await db.query(Tables.Albums)));
+    // print(CustomAlbum.fromMapArray(await db.query(Tables.CustomAlbums)));
     // db.delete(Tables.Albums);
     // db.delete(Tables.Songs);
     // db.delete(Tables.CustomAlbums);
@@ -59,6 +59,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getTop() async {
+    // await dev();
     var db = await getDB();
 
     var topSongs = Song.fromMapArray(
@@ -112,6 +113,11 @@ class _HomeState extends State<Home> {
                       title: album.name,
                       subtitle:
                           generateSubtitle(type: "Album", artist: album.artist),
+                      tag: album.id,
+                      onClick: () {
+                        Navigator.of(context)
+                            .pushNamed("/album", arguments: album);
+                      },
                     );
                   },
                 ),

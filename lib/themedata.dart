@@ -9,8 +9,12 @@ TextTheme createTextTheme(Color col) {
     caption: TextStyle(color: col),
     headline1: TextStyle(
       color: col,
-      fontSize: 4 * rem,
+      fontSize: 36,
       fontWeight: FontWeight.w700,
+      letterSpacing: 1.2,
+      shadows: [
+        Shadow(color: Colors.black38, blurRadius: 10, offset: Offset(3, 3))
+      ],
     ),
     headline2: TextStyle(
       color: col,
@@ -62,7 +66,7 @@ var themeData = ThemeData(
   bottomAppBarTheme: BottomAppBarTheme(
     elevation: 0,
   ),
-  buttonColor: Color.fromRGBO(23, 99, 212, 1),
+  buttonColor: Color.fromRGBO(18, 91, 193, 1),
   bottomAppBarColor: Color.fromRGBO(27, 27, 27, 1),
   cursorColor: Colors.grey[100],
   hintColor: Colors.grey[400],

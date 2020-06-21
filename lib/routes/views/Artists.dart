@@ -42,8 +42,6 @@ class _ArtistsState extends State<Artists> {
       artists.add(Artist.fromMapAndPreArtist(images, preSong));
     }
 
-    print(artists);
-
     if (!mounted) return;
 
     setState(() {
@@ -91,6 +89,11 @@ class _ArtistsState extends State<Artists> {
                   subtitle: generateSubtitle(
                       type: "Artist", numSongs: artist.numSongs),
                   isBig: true,
+                  tag: artist.name,
+                  onClick: () {
+                    Navigator.of(context)
+                        .pushNamed("/artist", arguments: artist);
+                  },
                 );
               },
             ),
