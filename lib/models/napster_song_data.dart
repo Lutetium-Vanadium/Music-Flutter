@@ -1,9 +1,9 @@
 class NapsterSongData {
-  String artist;
-  String title;
-  int length;
-  String thumbnail;
-  String albumId;
+  final String artist;
+  final String title;
+  final int length;
+  final String thumbnail;
+  final String albumId;
 
   NapsterSongData({
     this.artist,

@@ -10,9 +10,9 @@ List<dynamic> parseArr(String arr) {
 }
 
 class CustomAlbum {
-  String id;
-  String name;
-  List<String> songs;
+  final String id;
+  final String name;
+  final List<String> songs;
 
   CustomAlbum({this.id, this.name, this.songs});
 

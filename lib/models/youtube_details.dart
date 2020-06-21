@@ -1,6 +1,6 @@
 class YoutubeDetails {
-  String id;
-  int length;
+  final String id;
+  final int length;
 
   YoutubeDetails({this.id, this.length});
 

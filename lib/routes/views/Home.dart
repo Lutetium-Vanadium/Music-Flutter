@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:Music/bloc/notification_bloc.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
 import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -109,7 +110,8 @@ class _HomeState extends State<Home> {
                     return CoverImage(
                       image: album.imagePath,
                       title: album.name,
-                      subtitle: "Album · ${album.artist}",
+                      subtitle:
+                          generateSubtitle(type: "Album", artist: album.artist),
                     );
                   },
                 ),
@@ -136,7 +138,8 @@ class _HomeState extends State<Home> {
                     return CoverImage(
                       image: song.thumbnail,
                       title: song.title,
-                      subtitle: "Song · ${song.artist}",
+                      subtitle:
+                          generateSubtitle(type: "Song", artist: song.artist),
                     );
                   },
                 ),

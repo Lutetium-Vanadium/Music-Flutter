@@ -21,6 +21,7 @@ class Search extends StatefulWidget {
 class _SearchState extends State<Search> {
   List<NapsterSongData> _results;
   TextEditingController _textController;
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   void goHome() {
     Navigator.of(context).pushNamed("/");
@@ -47,6 +48,7 @@ class _SearchState extends State<Search> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: false,
@@ -109,6 +111,9 @@ class _SearchState extends State<Search> {
           onClick: (NapsterSongData songData, int index) {
             BlocProvider.of<NotificationBloc>(context)
                 .add(DownloadSong(songData));
+            scaffoldKey.currentState.showSnackBar(SnackBar(
+              content: Text("Preparing to download ${songData.title}"),
+            ));
           },
         ),
       ),

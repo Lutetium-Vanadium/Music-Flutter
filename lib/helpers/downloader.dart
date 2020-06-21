@@ -59,13 +59,13 @@ Stream<Pair<int, int>> downloadSong(String id, String filename) async* {
     }
   }
 
-  print("Finished $filename");
-
   await writer.flush();
   await writer.close();
 
   // Close the YoutubeExplode's http client.
   yt.close();
+
+  print("Finished $filename");
 }
 
 Future<void> downloadImage(String id) async {

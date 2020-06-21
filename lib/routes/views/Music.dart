@@ -39,7 +39,7 @@ class _MusicState extends State<Music> {
   Widget build(BuildContext context) {
     var width10 = MediaQuery.of(context).size.shortestSide / 10;
 
-    return BlocListener(
+    return BlocListener<NotificationBloc, NotificationState>(
       listener: (_, state) {
         if (state is DownloadedNotification) {
           getSongs();

@@ -74,7 +74,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Downloading',
+      title,
       body,
       platformChannelSpecifics,
       payload: 'item x',
@@ -140,7 +140,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       await updateAlbumFuture;
       var progressStream = downloadSong(data.id, filename);
 
-      final body = "Downloading ${song.title} by ${song.artist}";
+      final body = "\nDownloading ${song.title} by ${song.artist}";
 
       await for (var progress in progressStream) {
         _showProgressNotification(

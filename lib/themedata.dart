@@ -38,6 +38,10 @@ TextTheme createTextTheme(Color col) {
       fontWeight: FontWeight.w500,
     ),
     subtitle1: TextStyle(
+      fontSize: 18,
+      color: Colors.grey[300],
+    ),
+    subtitle2: TextStyle(
       fontSize: 13,
       color: Colors.grey[300],
     ),

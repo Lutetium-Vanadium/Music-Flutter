@@ -1,9 +1,9 @@
 class Album {
-  String id;
-  String imagePath;
-  String name;
-  int numSongs;
-  String artist;
+  final String id;
+  final String imagePath;
+  final String name;
+  final int numSongs;
+  final String artist;
 
   Album({this.artist, this.name, this.id, this.imagePath, this.numSongs});
 

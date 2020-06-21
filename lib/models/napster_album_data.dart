@@ -1,6 +1,6 @@
 class NapsterAlbumData {
-  String id;
-  String name;
+  final String id;
+  final String name;
 
   NapsterAlbumData({this.id, this.name});
 

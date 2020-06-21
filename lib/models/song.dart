@@ -1,14 +1,14 @@
 import "./napster_song_data.dart";
 
 class Song extends NapsterSongData {
-  String title;
-  String artist;
-  String albumId;
-  String filePath;
-  int numListens;
-  bool liked;
-  String thumbnail;
-  int length;
+  final String title;
+  final String artist;
+  final String albumId;
+  final String filePath;
+  final int numListens;
+  final bool liked;
+  final String thumbnail;
+  final int length;
 
   Song({
     this.filePath,
