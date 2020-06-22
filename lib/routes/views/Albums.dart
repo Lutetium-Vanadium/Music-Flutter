@@ -72,6 +72,11 @@ class _AlbumsState extends State<Albums> {
                   subtitle:
                       generateSubtitle(type: "Album", numSongs: album.numSongs),
                   isBig: true,
+                  // TODO add this, currently the home page tree is also maintained so there are multiple Hero widgets with same id
+                  // tag: album.id,
+                  // onClick: () {
+                  //   Navigator.of(context).pushNamed("/album", arguments: album);
+                  // },
                 );
               },
             ),
