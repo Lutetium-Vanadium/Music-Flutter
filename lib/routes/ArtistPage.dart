@@ -29,7 +29,7 @@ class _ArtistPageState extends State<ArtistPage>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 600));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
     beginAnimation();
     getSongs();
   }
@@ -75,7 +75,10 @@ class _ArtistPageState extends State<ArtistPage>
           ),
           SizedBox(height: 30),
           Expanded(
-            child: SongView(
+            child: AnimatedSongView(
+              controller: _controller,
+              delay: 0.5,
+              length: 0.5,
               songs: _songs,
               isLocal: true,
               onClick: (song, i) {
@@ -98,11 +101,11 @@ class ArtistCover extends StatelessWidget {
   ArtistCover({Key key, @required this.artist, @required this.controller})
       : _animation1 = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(0.0, 2 / 3, curve: Curves.easeOutCubic),
+          curve: Interval(0.0, 0.5, curve: Curves.easeOutCubic),
         )),
         _animation2 = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
           parent: controller,
-          curve: Interval(2 / 3, 1, curve: Curves.easeOutCubic),
+          curve: Interval(0.25, 0.75, curve: Curves.easeOutCubic),
         )),
         super(key: key);
 
