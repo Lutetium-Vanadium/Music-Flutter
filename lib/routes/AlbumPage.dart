@@ -4,20 +4,18 @@ import "package:flutter/material.dart";
 import "package:Music/models/models.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/routes/widgets/SongPage.dart";
+import "./widgets/SongPage.dart";
 
-import "./widgets/Mozaic.dart";
+class AlbumPage extends StatefulWidget {
+  final AlbumData album;
 
-class ArtistPage extends StatefulWidget {
-  final ArtistData artist;
-
-  const ArtistPage(this.artist, {Key key}) : super(key: key);
+  const AlbumPage(this.album, {Key key}) : super(key: key);
 
   @override
-  _ArtistPageState createState() => _ArtistPageState();
+  _AlbumPageState createState() => _AlbumPageState();
 }
 
-class _ArtistPageState extends State<ArtistPage>
+class _AlbumPageState extends State<AlbumPage>
     with SingleTickerProviderStateMixin {
   List<SongData> _songs = [];
   AnimationController _controller;
@@ -48,8 +46,8 @@ class _ArtistPageState extends State<ArtistPage>
 
     var songs = SongData.fromMapArray(await db.query(
       Tables.Songs,
-      where: "artist LIKE ?",
-      whereArgs: [widget.artist.name],
+      where: "albumId LIKE ?",
+      whereArgs: [widget.album.id],
       orderBy: "LOWER(title), title",
     ));
 
@@ -63,23 +61,20 @@ class _ArtistPageState extends State<ArtistPage>
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
-
     return SongPage(
       controller: _controller,
-      title: widget.artist.name,
+      title: widget.album.name,
       subtitle: generateSubtitle(
-        type: "Artist",
-        numSongs: widget.artist.numSongs,
+        type: "Album",
+        artist: widget.album.artist,
       ),
       hero: Hero(
-        tag: widget.artist.name,
-        child: widget.artist.images.length == 4
-            ? Mozaic(widget.artist.images, screenWidth)
-            : Image.file(
-                File(widget.artist.images[0]),
-                height: screenWidth,
-                width: screenWidth,
-              ),
+        tag: widget.album.id,
+        child: Image.file(
+          File(widget.album.imagePath),
+          width: screenWidth,
+          height: screenWidth,
+        ),
       ),
       songs: _songs,
     );

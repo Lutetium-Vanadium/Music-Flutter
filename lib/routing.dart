@@ -4,7 +4,7 @@ import "models/models.dart";
 import "./routes/MainPage.dart";
 import "./routes/SearchPage.dart";
 import "./routes/ArtistPage.dart";
-import "./routes/AlbumsPage.dart";
+import "./routes/AlbumPage.dart";
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {

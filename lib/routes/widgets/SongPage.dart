@@ -1,65 +1,27 @@
-import 'dart:io';
-import 'dart:ui';
+import "dart:ui";
 import "package:flutter/material.dart";
 import "package:flutter/animation.dart";
 
-import 'package:Music/constants.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/helpers/db.dart';
-import 'package:Music/helpers/generateSubtitle.dart';
-import 'package:Music/routes/widgets/SongView.dart';
+import "package:Music/constants.dart";
+import "package:Music/models/models.dart";
 
-class AlbumPage extends StatefulWidget {
-  final AlbumData album;
+import "./SongView.dart";
 
-  const AlbumPage(this.album, {Key key}) : super(key: key);
+class SongPage extends StatelessWidget {
+  final AnimationController controller;
+  final List<SongData> songs;
+  final String title;
+  final String subtitle;
+  final Hero hero;
 
-  @override
-  _AlbumPageState createState() => _AlbumPageState();
-}
-
-class _AlbumPageState extends State<AlbumPage>
-    with SingleTickerProviderStateMixin {
-  List<SongData> _songs = [];
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 800));
-    beginAnimation();
-    getSongs();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  Future<void> beginAnimation() async {
-    // TODO change this to constant variable for Custom page transition
-    await Future.delayed(const Duration(milliseconds: 450));
-    await _controller.forward();
-  }
-
-  Future<void> getSongs() async {
-    var db = await getDB();
-
-    var songs = SongData.fromMapArray(await db.query(
-      Tables.Songs,
-      where: "albumId LIKE ?",
-      whereArgs: [widget.album.id],
-      orderBy: "LOWER(title), title",
-    ));
-
-    if (!mounted) return;
-
-    setState(() {
-      _songs = songs;
-    });
-  }
+  const SongPage({
+    Key key,
+    @required this.controller,
+    @required this.title,
+    @required this.subtitle,
+    @required this.hero,
+    @required this.songs,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,17 +29,19 @@ class _AlbumPageState extends State<AlbumPage>
       color: Theme.of(context).backgroundColor,
       child: Column(
         children: <Widget>[
-          AlbumCover(
-            album: widget.album,
-            controller: _controller,
+          HeaderImage(
+            hero: hero,
+            subtitle: subtitle,
+            title: title,
+            controller: controller,
           ),
           SizedBox(height: 30),
           Expanded(
             child: AnimatedSongView(
-              controller: _controller,
+              controller: controller,
               delay: 0.5,
               length: 0.5,
-              songs: _songs,
+              songs: songs,
               isLocal: true,
               onClick: (song, i) {
                 print(song);
@@ -90,14 +54,21 @@ class _AlbumPageState extends State<AlbumPage>
   }
 }
 
-class AlbumCover extends StatelessWidget {
-  final AlbumData album;
+class HeaderImage extends StatelessWidget {
+  final String title;
+  final String subtitle;
+  final Hero hero;
   final AnimationController controller;
   final Animation<double> _animation1;
   final Animation<double> _animation2;
 
-  AlbumCover({Key key, @required this.album, @required this.controller})
-      : _animation1 = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+  HeaderImage({
+    Key key,
+    @required this.controller,
+    @required this.title,
+    @required this.subtitle,
+    @required this.hero,
+  })  : _animation1 = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
           parent: controller,
           curve: Interval(0.0, 0.5, curve: Curves.easeOutCubic),
         )),
@@ -112,17 +83,11 @@ class AlbumCover extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
     return AnimatedBuilder(
       animation: controller,
-      builder: (_, __) => Stack(
+      child: hero,
+      builder: (_, child) => Stack(
         overflow: Overflow.visible,
         children: [
-          Hero(
-            tag: album.id,
-            child: Image.file(
-              File(album.imagePath),
-              width: screenWidth,
-              height: screenWidth,
-            ),
-          ),
+          child,
           Opacity(
             opacity: _animation1.value,
             child: Container(
@@ -165,7 +130,7 @@ class AlbumCover extends StatelessWidget {
                     Container(
                       constraints: BoxConstraints(maxWidth: 0.8 * screenWidth),
                       child: Text(
-                        album.name,
+                        title,
                         maxLines: 2,
                         textAlign: TextAlign.center,
                         overflow: TextOverflow.ellipsis,
@@ -173,10 +138,7 @@ class AlbumCover extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      generateSubtitle(
-                        type: "Album",
-                        artist: album.artist,
-                      ),
+                      subtitle,
                       style: Theme.of(context).textTheme.subtitle1,
                     ),
                   ],
