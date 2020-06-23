@@ -1,9 +1,9 @@
-import 'dart:io';
+import "dart:io";
 import "package:flutter/material.dart";
 
-import 'package:Music/CustomSplashFactory.dart';
-import 'package:Music/helpers/formatLength.dart';
-import 'package:Music/constants.dart';
+import "package:Music/CustomSplashFactory.dart";
+import "package:Music/helpers/formatLength.dart";
+import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
 
 class SongView extends StatelessWidget {

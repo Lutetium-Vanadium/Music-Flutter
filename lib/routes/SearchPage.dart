@@ -1,13 +1,13 @@
-import 'package:flutter/cupertino.dart';
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:flutter_bloc/flutter_bloc.dart";
 
-import '../bloc/notification_bloc.dart';
+import "../bloc/notification_bloc.dart";
 import "../models/models.dart";
-import '../constants.dart';
+import "../constants.dart";
 import "../helpers/napster.dart" as napster;
-import './widgets/Input.dart';
-import './widgets/SongView.dart';
+import "./widgets/Input.dart";
+import "./widgets/SongView.dart";
 
 class SearchPage extends StatefulWidget {
   final String intitalQuery;

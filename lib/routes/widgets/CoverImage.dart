@@ -1,9 +1,9 @@
-import 'dart:io';
-import 'package:flutter/material.dart';
+import "dart:io";
+import "package:flutter/material.dart";
 
-import 'package:Music/constants.dart';
+import "package:Music/constants.dart";
 
-import 'Mozaic.dart';
+import "Mozaic.dart";
 
 class CoverImage extends StatelessWidget {
   final String image;

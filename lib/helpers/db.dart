@@ -1,4 +1,4 @@
-import 'package:sqflite/sqflite.dart';
+import "package:sqflite/sqflite.dart";
 
 Future<Database> getDB() async {
   var db = await openDatabase(

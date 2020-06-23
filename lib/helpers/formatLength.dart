@@ -1,4 +1,4 @@
-import 'package:Music/models/models.dart';
+import "package:Music/models/models.dart";
 
 String formatLength(int length) {
   var mins = (length / 60).floor().toString();

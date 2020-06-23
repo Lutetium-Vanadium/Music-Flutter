@@ -1,15 +1,15 @@
-import 'dart:io';
-import 'dart:ui';
+import "dart:io";
+import "dart:ui";
 import "package:flutter/material.dart";
 import "package:flutter/animation.dart";
 
-import 'package:Music/constants.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/helpers/db.dart';
-import 'package:Music/helpers/generateSubtitle.dart';
-import 'package:Music/routes/widgets/SongView.dart';
+import "package:Music/constants.dart";
+import "package:Music/models/models.dart";
+import "package:Music/helpers/db.dart";
+import "package:Music/helpers/generateSubtitle.dart";
+import "package:Music/routes/widgets/SongView.dart";
 
-import 'widgets/Mozaic.dart';
+import "widgets/Mozaic.dart";
 
 class ArtistPage extends StatefulWidget {
   final ArtistData artist;

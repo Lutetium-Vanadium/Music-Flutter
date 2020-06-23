@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import "package:flutter/material.dart";
 
 String generateSubtitle({@required String type, int numSongs, String artist}) {
   assert(numSongs == null || artist == null);

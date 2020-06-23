@@ -1,11 +1,11 @@
-import 'package:Music/bloc/notification_bloc.dart';
-import 'package:Music/constants.dart';
-import 'package:Music/helpers/db.dart';
-import 'package:Music/helpers/generateSubtitle.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/routes/widgets/CoverImage.dart';
+import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/constants.dart";
+import "package:Music/helpers/db.dart";
+import "package:Music/helpers/generateSubtitle.dart";
+import "package:Music/models/models.dart";
+import "package:Music/routes/widgets/CoverImage.dart";
 import "package:flutter/material.dart";
-import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:flutter_bloc/flutter_bloc.dart";
 
 class Artists extends StatefulWidget {
   @override

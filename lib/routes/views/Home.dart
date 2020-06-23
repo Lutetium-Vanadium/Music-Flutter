@@ -1,15 +1,13 @@
-import 'dart:io';
-import 'package:Music/bloc/notification_bloc.dart';
-import 'package:Music/helpers/generateSubtitle.dart';
-import 'package:flutter/cupertino.dart';
+import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/helpers/generateSubtitle.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:path_provider/path_provider.dart';
+import "package:flutter_bloc/flutter_bloc.dart";
 
-import 'package:Music/constants.dart';
+import "package:Music/constants.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
-import '../widgets/CoverImage.dart';
+import "../widgets/CoverImage.dart";
 
 class Home extends StatefulWidget {
   @override
