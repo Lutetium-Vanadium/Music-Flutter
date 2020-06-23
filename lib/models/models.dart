@@ -1,9 +1,9 @@
-export "album.dart";
-export "artist.dart";
-export "custom_album.dart";
-export "models.dart";
+export "album_data.dart";
+export "artist_data.dart";
+export "custom_album_data.dart";
 export "napster_album_data.dart";
 export "napster_song_data.dart";
 export "pair.dart";
-export "song.dart";
+export "song_data.dart";
+export "song_metadata.dart";
 export "youtube_details.dart";

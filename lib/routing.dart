@@ -23,13 +23,13 @@ class Router {
         );
         break;
       case "/artist":
-        assert(settings.arguments is Artist);
+        assert(settings.arguments is ArtistData);
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => ArtistPage(settings.arguments),
         );
       case "/album":
-        assert(settings.arguments is Album);
+        assert(settings.arguments is AlbumData);
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => AlbumPage(settings.arguments),

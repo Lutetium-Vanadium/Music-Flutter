@@ -14,7 +14,7 @@ class Albums extends StatefulWidget {
 }
 
 class _AlbumsState extends State<Albums> {
-  List<Album> _albums = [];
+  List<AlbumData> _albums = [];
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _AlbumsState extends State<Albums> {
   getAlbums() async {
     var db = await getDB();
 
-    var albums = Album.fromMapArray(
+    var albums = AlbumData.fromMapArray(
       await db.query(Tables.Albums, orderBy: "LOWER(name), name"),
     );
 

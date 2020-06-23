@@ -10,7 +10,7 @@ import 'package:Music/helpers/generateSubtitle.dart';
 import 'package:Music/routes/widgets/SongView.dart';
 
 class AlbumPage extends StatefulWidget {
-  final Album album;
+  final AlbumData album;
 
   const AlbumPage(this.album, {Key key}) : super(key: key);
 
@@ -20,7 +20,7 @@ class AlbumPage extends StatefulWidget {
 
 class _AlbumPageState extends State<AlbumPage>
     with SingleTickerProviderStateMixin {
-  List<Song> _songs = [];
+  List<SongData> _songs = [];
   AnimationController _controller;
 
   @override
@@ -47,7 +47,7 @@ class _AlbumPageState extends State<AlbumPage>
   Future<void> getSongs() async {
     var db = await getDB();
 
-    var songs = Song.fromMapArray(await db.query(
+    var songs = SongData.fromMapArray(await db.query(
       Tables.Songs,
       where: "albumId LIKE ?",
       whereArgs: [widget.album.id],
@@ -91,7 +91,7 @@ class _AlbumPageState extends State<AlbumPage>
 }
 
 class AlbumCover extends StatelessWidget {
-  final Album album;
+  final AlbumData album;
   final AnimationController controller;
   final Animation<double> _animation1;
   final Animation<double> _animation2;

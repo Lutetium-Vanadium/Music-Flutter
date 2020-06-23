@@ -13,7 +13,7 @@ class Artists extends StatefulWidget {
 }
 
 class _ArtistsState extends State<Artists> {
-  List<Artist> _artists = [];
+  List<ArtistData> _artists = [];
 
   @override
   void initState() {
@@ -27,7 +27,7 @@ class _ArtistsState extends State<Artists> {
     var preSongs = PreArtist.fromMapArray(await db.rawQuery(
         "SELECT artist as name, COUNT(*) as numSongs FROM songdata GROUP BY artist;"));
 
-    List<Artist> artists = [];
+    List<ArtistData> artists = [];
 
     for (var preSong in preSongs) {
       var images = await db.query(
@@ -39,7 +39,7 @@ class _ArtistsState extends State<Artists> {
         limit: 4,
       );
 
-      artists.add(Artist.fromMapAndPreArtist(images, preSong));
+      artists.add(ArtistData.fromMapAndPreArtist(images, preSong));
     }
 
     if (!mounted) return;

@@ -1,4 +1,6 @@
-class NapsterSongData {
+import "./song_metadata.dart";
+
+class NapsterSongData extends SongMetadata {
   final String artist;
   final String title;
   final int length;

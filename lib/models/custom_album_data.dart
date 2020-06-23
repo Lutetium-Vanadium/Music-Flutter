@@ -9,18 +9,18 @@ List<dynamic> parseArr(String arr) {
   return jsonDecode("[$arr]");
 }
 
-class CustomAlbum {
+class CustomAlbumData {
   final String id;
   final String name;
   final List<String> songs;
 
-  CustomAlbum({this.id, this.name, this.songs});
+  CustomAlbumData({this.id, this.name, this.songs});
 
   toString() {
     return "{\n\tid: $id,\n\tname: $name,\n\tsongs: $songs\n}";
   }
 
-  static Map<String, dynamic> toMap(CustomAlbum album) {
+  static Map<String, dynamic> toMap(CustomAlbumData album) {
     return {
       "id": album.id,
       "name": album.name,
@@ -28,25 +28,25 @@ class CustomAlbum {
     };
   }
 
-  static List<Map<String, dynamic>> toMapArray(List<CustomAlbum> albums) {
+  static List<Map<String, dynamic>> toMapArray(List<CustomAlbumData> albums) {
     return List.generate(
       albums.length,
-      (i) => CustomAlbum.toMap(albums[i]),
+      (i) => CustomAlbumData.toMap(albums[i]),
     );
   }
 
-  static CustomAlbum fromMap(Map<String, dynamic> map) {
-    return CustomAlbum(
+  static CustomAlbumData fromMap(Map<String, dynamic> map) {
+    return CustomAlbumData(
       id: map["id"],
       name: map["name"],
       songs: parseArr(map["songs"]),
     );
   }
 
-  static List<CustomAlbum> fromMapArray(List<Map<String, dynamic>> maps) {
+  static List<CustomAlbumData> fromMapArray(List<Map<String, dynamic>> maps) {
     return List.generate(
       maps.length,
-      (i) => CustomAlbum.fromMap(maps[i]),
+      (i) => CustomAlbumData.fromMap(maps[i]),
     );
   }
 }

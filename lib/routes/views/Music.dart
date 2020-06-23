@@ -12,7 +12,7 @@ class Music extends StatefulWidget {
 }
 
 class _MusicState extends State<Music> {
-  List<Song> songs = [];
+  List<SongData> songs = [];
 
   @override
   void initState() {
@@ -24,7 +24,7 @@ class _MusicState extends State<Music> {
   Future<void> getSongs() async {
     var db = await getDB();
 
-    var allSongs = Song.fromMapArray(
+    var allSongs = SongData.fromMapArray(
       await db.query(Tables.Songs, orderBy: "LOWER(title), title"),
     );
 

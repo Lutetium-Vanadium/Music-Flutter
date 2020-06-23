@@ -114,7 +114,7 @@ class _SearchPageState extends State<SearchPage> {
         },
         child: SongView(
           songs: _results,
-          onClick: (NapsterSongData songData, int index) {
+          onClick: (songData, index) {
             BlocProvider.of<NotificationBloc>(context)
                 .add(DownloadSong(songData));
             scaffoldKey.currentState.showSnackBar(SnackBar(

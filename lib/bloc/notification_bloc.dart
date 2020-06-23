@@ -122,7 +122,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       var root = await getApplicationDocumentsDirectory();
 
-      var song = Song(
+      var song = SongData(
         albumId: albumId,
         artist: songData.artist,
         filePath: "${root.path}/songs/$filename",
@@ -135,7 +135,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       var db = await getDB();
 
-      await db.insert(Tables.Songs, Song.toMap(song));
+      await db.insert(Tables.Songs, SongData.toMap(song));
 
       await updateAlbumFuture;
       var progressStream = downloadSong(data.id, filename);

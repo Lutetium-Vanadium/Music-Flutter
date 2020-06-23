@@ -12,7 +12,7 @@ import 'package:Music/routes/widgets/SongView.dart';
 import 'widgets/Mozaic.dart';
 
 class ArtistPage extends StatefulWidget {
-  final Artist artist;
+  final ArtistData artist;
 
   const ArtistPage(this.artist, {Key key}) : super(key: key);
 
@@ -22,7 +22,7 @@ class ArtistPage extends StatefulWidget {
 
 class _ArtistPageState extends State<ArtistPage>
     with SingleTickerProviderStateMixin {
-  List<Song> _songs = [];
+  List<SongData> _songs = [];
   AnimationController _controller;
 
   @override
@@ -49,7 +49,7 @@ class _ArtistPageState extends State<ArtistPage>
   Future<void> getSongs() async {
     var db = await getDB();
 
-    var songs = Song.fromMapArray(await db.query(
+    var songs = SongData.fromMapArray(await db.query(
       Tables.Songs,
       where: "artist LIKE ?",
       whereArgs: [widget.artist.name],
@@ -93,7 +93,7 @@ class _ArtistPageState extends State<ArtistPage>
 }
 
 class ArtistCover extends StatelessWidget {
-  final Artist artist;
+  final ArtistData artist;
   final AnimationController controller;
   final Animation<double> _animation1;
   final Animation<double> _animation2;

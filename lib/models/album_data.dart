@@ -1,17 +1,17 @@
-class Album {
+class AlbumData {
   final String id;
   final String imagePath;
   final String name;
   final int numSongs;
   final String artist;
 
-  Album({this.artist, this.name, this.id, this.imagePath, this.numSongs});
+  AlbumData({this.artist, this.name, this.id, this.imagePath, this.numSongs});
 
   toString() {
     return "{\n\tid: $id,\n\tname: $name,\n\tartist: $artist,\n\timagePath: $imagePath,\n\tnumSongs: $numSongs\n}";
   }
 
-  static Map<String, dynamic> toMap(Album album) {
+  static Map<String, dynamic> toMap(AlbumData album) {
     return {
       "id": album.id,
       "imagePath": album.imagePath,
@@ -21,15 +21,15 @@ class Album {
     };
   }
 
-  static List<Map<String, dynamic>> toMapArray(List<Album> albums) {
+  static List<Map<String, dynamic>> toMapArray(List<AlbumData> albums) {
     return List.generate(
       albums.length,
-      (i) => Album.toMap(albums[i]),
+      (i) => AlbumData.toMap(albums[i]),
     );
   }
 
-  static Album fromMap(Map<String, dynamic> map) {
-    return Album(
+  static AlbumData fromMap(Map<String, dynamic> map) {
+    return AlbumData(
       id: map["id"],
       artist: map["artist"],
       name: map["name"],
@@ -38,7 +38,7 @@ class Album {
     );
   }
 
-  static List<Album> fromMapArray(List<Map<String, dynamic>> maps) {
-    return List.generate(maps.length, (i) => Album.fromMap(maps[i]));
+  static List<AlbumData> fromMapArray(List<Map<String, dynamic>> maps) {
+    return List.generate(maps.length, (i) => AlbumData.fromMap(maps[i]));
   }
 }

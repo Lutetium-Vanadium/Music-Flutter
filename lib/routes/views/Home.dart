@@ -17,8 +17,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<Song> _topSongs = [];
-  List<Album> _topAlbums = [];
+  List<SongData> _topSongs = [];
+  List<AlbumData> _topAlbums = [];
 
   @override
   void initState() {
@@ -62,10 +62,10 @@ class _HomeState extends State<Home> {
     // await dev();
     var db = await getDB();
 
-    var topSongs = Song.fromMapArray(
+    var topSongs = SongData.fromMapArray(
       await db.query(Tables.Songs, orderBy: "numListens DESC", limit: 5),
     );
-    var topAlbums = Album.fromMapArray(
+    var topAlbums = AlbumData.fromMapArray(
       await db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),
     );
 

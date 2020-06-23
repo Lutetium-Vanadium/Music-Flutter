@@ -1,6 +1,6 @@
-import "./napster_song_data.dart";
+import "./song_metadata.dart";
 
-class Song extends NapsterSongData {
+class SongData extends SongMetadata {
   final String title;
   final String artist;
   final String albumId;
@@ -10,7 +10,7 @@ class Song extends NapsterSongData {
   final String thumbnail;
   final int length;
 
-  Song({
+  SongData({
     this.filePath,
     this.title,
     this.thumbnail,
@@ -25,7 +25,7 @@ class Song extends NapsterSongData {
     return "{\n\ttitle: $title,\n\tartist: $artist,\n\talbumId: $albumId,\n\tfilePath: $filePath,\n\tnumListens: $numListens,\n\tliked: $liked,\n\tthumbnail: $thumbnail,\n\tlength: $length\n}";
   }
 
-  static Map<String, dynamic> toMap(Song song) {
+  static Map<String, dynamic> toMap(SongData song) {
     return {
       "filePath": song.filePath,
       "title": song.title,
@@ -38,15 +38,15 @@ class Song extends NapsterSongData {
     };
   }
 
-  static List<Map<String, dynamic>> toMapArray(List<Song> songs) {
+  static List<Map<String, dynamic>> toMapArray(List<SongData> songs) {
     return List.generate(
       songs.length,
-      (i) => Song.toMap(songs[i]),
+      (i) => SongData.toMap(songs[i]),
     );
   }
 
-  static Song fromMap(Map<String, dynamic> map) {
-    return Song(
+  static SongData fromMap(Map<String, dynamic> map) {
+    return SongData(
       albumId: map["albumId"],
       artist: map["artist"],
       filePath: map["filePath"],
@@ -58,10 +58,10 @@ class Song extends NapsterSongData {
     );
   }
 
-  static List<Song> fromMapArray(List<Map<String, dynamic>> maps) {
+  static List<SongData> fromMapArray(List<Map<String, dynamic>> maps) {
     return List.generate(
       maps.length,
-      (i) => Song.fromMap(maps[i]),
+      (i) => SongData.fromMap(maps[i]),
     );
   }
 }

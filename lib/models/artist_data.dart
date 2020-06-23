@@ -1,21 +1,21 @@
-class Artist {
+class ArtistData {
   final String name;
   final List<String> images;
   final int numSongs;
 
-  Artist({this.name, this.images, this.numSongs});
+  ArtistData({this.name, this.images, this.numSongs});
 
   toString() {
     return "{\n\tname: $name,\n\tnumSongs: $numSongs,\n\timages: $images\n}";
   }
 
-  static Artist fromMapAndPreArtist(
+  static ArtistData fromMapAndPreArtist(
     List<Map<String, dynamic>> images,
     PreArtist preArtist,
   ) {
     assert(images.isNotEmpty);
 
-    return Artist(
+    return ArtistData(
       name: preArtist.name,
       numSongs: preArtist.numSongs,
       images: List.generate(

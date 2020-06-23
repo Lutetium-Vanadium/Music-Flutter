@@ -1,14 +1,14 @@
 import 'dart:io';
-import 'package:Music/CustomSplashFactory.dart';
 import "package:flutter/material.dart";
 
+import 'package:Music/CustomSplashFactory.dart';
 import 'package:Music/helpers/formatLength.dart';
 import 'package:Music/constants.dart';
 import "package:Music/models/models.dart";
 
 class SongView extends StatelessWidget {
-  final List<NapsterSongData> songs;
-  final void Function(NapsterSongData, int) onClick;
+  final List<SongMetadata> songs;
+  final void Function(SongMetadata, int) onClick;
   final IconData iconData;
   final bool isLocal;
 
@@ -172,8 +172,8 @@ class SongView extends StatelessWidget {
 }
 
 class AnimatedSongView extends StatelessWidget {
-  final List<NapsterSongData> songs;
-  final void Function(NapsterSongData, int) onClick;
+  final List<SongMetadata> songs;
+  final void Function(SongMetadata, int) onClick;
   final IconData iconData;
   final bool isLocal;
 

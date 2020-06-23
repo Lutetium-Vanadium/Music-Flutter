@@ -38,7 +38,7 @@ Future<void> updateAlbum(String albumId, String artist,
 
   print("Adding album ${albumInfo.name}.");
 
-  var album = Album(
+  var album = AlbumData(
     id: albumInfo.id,
     name: albumInfo.name,
     imagePath: imagePath,
@@ -46,7 +46,7 @@ Future<void> updateAlbum(String albumId, String artist,
     artist: artist,
   );
 
-  await db.insert(Tables.Albums, Album.toMap(album));
+  await db.insert(Tables.Albums, AlbumData.toMap(album));
 
   await db.close();
 }
