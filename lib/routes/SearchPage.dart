@@ -24,12 +24,12 @@ class _SearchPageState extends State<SearchPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   void goHome() {
-    Navigator.of(context).pushNamed("/");
+    Navigator.of(context).pop();
   }
 
   void search(String query) async {
     if (query.length == 0) {
-      Navigator.of(context).pushNamed("/");
+      Navigator.of(context).pop();
     } else if (query.length % 2 == 1) {
       var res = await napster.search(query);
       if (!mounted) return;
@@ -43,6 +43,12 @@ class _SearchPageState extends State<SearchPage> {
   void initState() {
     super.initState();
     _textController = TextEditingController(text: widget.intitalQuery);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _textController.dispose();
   }
 
   @override

@@ -15,6 +15,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _currentPage = 0;
+  final _controller = PageController(initialPage: 0, keepPage: true);
 
   final pages = <Widget>[
     Home(),
@@ -26,7 +27,15 @@ class _MainPageState extends State<MainPage> {
   void goHome() {
     setState(() {
       _currentPage = 0;
+      _controller.animateToPage(0,
+          duration: Duration(milliseconds: 400), curve: Curves.easeOutCubic);
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -91,6 +100,9 @@ class _MainPageState extends State<MainPage> {
         onTap: (int index) {
           setState(() {
             _currentPage = index;
+            _controller.animateToPage(index,
+                duration: Duration(milliseconds: 400),
+                curve: Curves.easeOutCubic);
           });
         },
         backgroundColor: Theme.of(context).backgroundColor,
@@ -118,9 +130,18 @@ class _MainPageState extends State<MainPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: IndexedStack(
-          children: pages,
-          index: _currentPage,
+        child: PageView.builder(
+          itemBuilder: (context, index) {
+            return pages[index];
+          },
+          onPageChanged: (index) {
+            setState(() {
+              _currentPage = index;
+            });
+          },
+          physics: BouncingScrollPhysics(),
+          itemCount: pages.length,
+          controller: _controller,
         ),
       ),
     );

@@ -11,6 +11,7 @@ class Router {
     switch (settings.name) {
       case "/":
         return CupertinoPageRoute(
+          maintainState: false,
           builder: (_) => MainPage(),
         );
         break;
