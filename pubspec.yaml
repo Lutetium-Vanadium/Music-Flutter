@@ -20,6 +20,7 @@ dependencies:
   flutter_local_notifications: 1.4.4+1
   equatable: ^1.2.0
   palette_generator: 0.2.3
+  focused_menu: 1.0.1
 
 dev_dependencies:
   flutter_test:

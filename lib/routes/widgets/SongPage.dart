@@ -1,3 +1,4 @@
+import "dart:math";
 import "dart:ui";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -26,6 +27,7 @@ class SongPage extends StatelessWidget {
     @required this.songs,
   }) : super(key: key);
 
+  // TODO use custom scroll to get cool minimizing for Header Image
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,6 +42,7 @@ class SongPage extends StatelessWidget {
             subtitle: subtitle,
             title: title,
             controller: controller,
+            songs: songs,
           ),
           SizedBox(height: 30),
           Expanded(
@@ -68,6 +71,7 @@ class HeaderImage extends StatelessWidget {
   final AnimationController controller;
   final Animation<double> _animation1;
   final Animation<double> _animation2;
+  final List<SongData> songs;
 
   HeaderImage({
     Key key,
@@ -75,6 +79,7 @@ class HeaderImage extends StatelessWidget {
     @required this.title,
     @required this.subtitle,
     @required this.hero,
+    @required this.songs,
   })  : _animation1 = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
           parent: controller,
           curve: Interval(0.0, 0.5, curve: Curves.easeOutCubic),
@@ -168,14 +173,23 @@ class HeaderImage extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(1.25 * rem)),
                     color: Theme.of(context).buttonColor,
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<QueueBloc>(context)
+                          .add(EnqueueSongs(songs: songs));
+                    },
                     child: Text("Play All"),
                   ),
                   FlatButton(
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(1.25 * rem)),
                     color: Theme.of(context).buttonColor,
-                    onPressed: () {},
+                    onPressed: () {
+                      var random = Random();
+                      BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                          songs: songs,
+                          index: random.nextInt(songs.length),
+                          shuffle: true));
+                    },
                     child: Text("Play Random"),
                   ),
                 ],

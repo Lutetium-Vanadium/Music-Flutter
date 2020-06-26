@@ -2,6 +2,8 @@ import "dart:io";
 import "package:flutter/material.dart";
 
 import "package:Music/constants.dart";
+import "package:focused_menu/focused_menu.dart";
+import "package:focused_menu/modals.dart";
 
 import "Mozaic.dart";
 
@@ -13,6 +15,7 @@ class CoverImage extends StatelessWidget {
   final bool isBig;
   final Object tag;
   final VoidCallback onClick;
+  final List<FocusedMenuItem> focusedMenuItems;
 
   CoverImage({
     @required this.title,
@@ -22,6 +25,7 @@ class CoverImage extends StatelessWidget {
     this.isBig = false,
     this.onClick,
     this.tag,
+    this.focusedMenuItems,
   }) {
     assert(image != null || images != null);
     if (images != null) {
@@ -35,6 +39,7 @@ class CoverImage extends StatelessWidget {
 
     var width10 = size.shortestSide / 10;
     var imgWidth = width10 * (isBig ? 4.1 : 3.8);
+    var menuWidth = width10 * (isBig ? 4.7 : 4.2);
 
     var img = images != null
         ? Mozaic(images, imgWidth)
@@ -44,23 +49,20 @@ class CoverImage extends StatelessWidget {
             width: imgWidth,
           );
 
-    return Container(
+    var widget = Container(
       width: imgWidth,
       height: imgWidth + 3 * rem,
       margin: EdgeInsets.all(isBig ? width10 * 0.3 : width10 / 4),
       child: Column(
         children: <Widget>[
-          GestureDetector(
-            onTap: onClick,
-            child: ClipRRect(
-              child: tag == null
-                  ? img
-                  : Hero(
-                      tag: tag,
-                      child: img,
-                    ),
-              borderRadius: BorderRadius.circular(10),
-            ),
+          ClipRRect(
+            child: tag == null
+                ? img
+                : Hero(
+                    tag: tag,
+                    child: img,
+                  ),
+            borderRadius: BorderRadius.circular(10),
           ),
           SizedBox(height: rem / 2),
           Text(
@@ -78,5 +80,27 @@ class CoverImage extends StatelessWidget {
         ],
       ),
     );
+
+    if (focusedMenuItems == null) {
+      return GestureDetector(
+        onTap: onClick,
+        child: widget,
+      );
+    } else {
+      return FocusedMenuHolder(
+        menuItems: focusedMenuItems,
+        child: widget,
+        onPressed: onClick,
+        animateMenuItems: false,
+        blurSize: 5,
+        menuBoxDecoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(6),
+          color: Theme.of(context).canvasColor.withOpacity(0.69),
+        ),
+        blurBackgroundColor: Colors.transparent,
+        duration: Duration(milliseconds: 300),
+        menuWidth: menuWidth,
+      );
+    }
   }
 }

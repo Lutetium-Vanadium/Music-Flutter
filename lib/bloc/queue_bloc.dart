@@ -1,5 +1,5 @@
 import "dart:async";
-import 'dart:math';
+import "dart:math";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 import "package:meta/meta.dart";
@@ -52,9 +52,9 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     QueueEvent event,
   ) async* {
     if (event is EnqueueSongs) {
-      _songs = event.songs;
       _allSongs = event.songs;
       _index = event.index;
+      _songs = _shuffle([...event.songs], cur: event.index);
     } else if (event is DequeueSongs) {
       _songs = [];
       _allSongs = [];
@@ -71,7 +71,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         _songs = _allSongs;
         _index = _songs.indexOf(cur);
       } else {
-        _songs = _shuffle([..._allSongs]);
+        _songs = _shuffle([..._allSongs], cur: _index);
         _index = 0;
       }
       _isShuffled = !_isShuffled;

@@ -1,12 +1,14 @@
-import "package:Music/helpers/generateSubtitle.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:focused_menu/modals.dart";
 
+import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
-import "package:Music/routes/widgets/CoverImage.dart";
 import "package:Music/constants.dart";
+import "package:Music/routes/widgets/CoverImage.dart";
 
 class Albums extends StatefulWidget {
   @override
@@ -76,6 +78,24 @@ class _AlbumsState extends State<Albums> {
                   onClick: () {
                     Navigator.of(context).pushNamed("/album", arguments: album);
                   },
+                  focusedMenuItems: [
+                    FocusedMenuItem(
+                      onPressed: () async {
+                        var db = await getDB();
+                        var songs = SongData.fromMapArray(await db.query(
+                          Tables.Songs,
+                          where: "albumId LIKE ?",
+                          whereArgs: [album.id],
+                          orderBy: "LOWER(title), title",
+                        ));
+                        BlocProvider.of<QueueBloc>(context)
+                            .add(EnqueueSongs(songs: songs));
+                      },
+                      title: Text("Play"),
+                      trailingIcon: Icon(Icons.playlist_play),
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ],
                 );
               },
             ),

@@ -1,9 +1,10 @@
-import 'package:Music/routes/CurrentSongPageWidgets/disable.dart';
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "package:Music/CustomIcons.dart";
 import "package:Music/bloc/queue_bloc.dart";
+
+import "./disable.dart";
 
 class ControlBar extends StatefulWidget {
   final Disable disable;

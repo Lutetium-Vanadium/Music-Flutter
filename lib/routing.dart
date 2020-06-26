@@ -1,4 +1,3 @@
-import 'package:Music/routes/CurrentSongPage.dart';
 import "package:flutter/cupertino.dart";
 
 import "models/models.dart";
@@ -6,6 +5,7 @@ import "./routes/MainPage.dart";
 import "./routes/SearchPage.dart";
 import "./routes/ArtistPage.dart";
 import "./routes/AlbumPage.dart";
+import "./routes/CurrentSongPage.dart";
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {

@@ -9,14 +9,18 @@ abstract class QueueEvent extends Equatable {
 class EnqueueSongs extends QueueEvent {
   final List<SongData> songs;
   final int index;
+  final bool shuffle;
 
-  EnqueueSongs({@required this.songs, this.index = 0})
-      : assert(songs != null),
+  EnqueueSongs({
+    @required this.songs,
+    this.index = 0,
+    this.shuffle = false,
+  })  : assert(songs != null),
         assert(index != null),
         assert(index >= 0 && index < songs.length);
 
   @override
-  List<Object> get props => [songs, index];
+  List<Object> get props => [songs, index, shuffle];
 }
 
 class DequeueSongs extends QueueEvent {}

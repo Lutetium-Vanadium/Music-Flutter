@@ -2,6 +2,7 @@ import "dart:io";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:focused_menu/modals.dart";
 
 import "package:Music/bloc/notification_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
@@ -10,6 +11,7 @@ import "package:Music/models/models.dart";
 import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/helpers/db.dart";
+
 import "../widgets/CoverImage.dart";
 
 class Home extends StatefulWidget {
@@ -122,6 +124,24 @@ class _HomeState extends State<Home> {
                         Navigator.of(context)
                             .pushNamed("/album", arguments: album);
                       },
+                      focusedMenuItems: [
+                        FocusedMenuItem(
+                          onPressed: () async {
+                            var db = await getDB();
+                            var songs = SongData.fromMapArray(await db.query(
+                              Tables.Songs,
+                              where: "albumId LIKE ?",
+                              whereArgs: [album.id],
+                              orderBy: "LOWER(title), title",
+                            ));
+                            BlocProvider.of<QueueBloc>(context)
+                                .add(EnqueueSongs(songs: songs));
+                          },
+                          title: Text("Play"),
+                          trailingIcon: Icon(Icons.playlist_play),
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ],
                     );
                   },
                 ),
@@ -148,13 +168,39 @@ class _HomeState extends State<Home> {
                     return CoverImage(
                       image: song.thumbnail,
                       title: song.title,
+                      subtitle:
+                          generateSubtitle(type: "Song", artist: song.artist),
                       onClick: () {
                         BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
                           songs: displace(_topSongs, index),
                         ));
                       },
-                      subtitle:
-                          generateSubtitle(type: "Song", artist: song.artist),
+                      focusedMenuItems: [
+                        FocusedMenuItem(
+                          onPressed: () {
+                            BlocProvider.of<QueueBloc>(context)
+                                .add(EnqueueSongs(
+                              songs: displace(_topSongs, index),
+                            ));
+                          },
+                          title: Text("Play"),
+                          trailingIcon: Icon(Icons.play_arrow),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        FocusedMenuItem(
+                          onPressed: () {},
+                          title: Text("Like"),
+                          trailingIcon: Icon(Icons.favorite_border),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        FocusedMenuItem(
+                          onPressed: () {},
+                          title: Text("Delete",
+                              style: TextStyle(color: Colors.red)),
+                          trailingIcon: Icon(Icons.delete, color: Colors.red),
+                          backgroundColor: Colors.transparent,
+                        ),
+                      ],
                     );
                   },
                 ),
