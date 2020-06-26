@@ -43,11 +43,11 @@ TextTheme createTextTheme(Color col) {
     ),
     subtitle1: TextStyle(
       fontSize: 18,
-      color: Colors.grey[300],
+      color: Colors.grey[400],
     ),
     subtitle2: TextStyle(
       fontSize: 13,
-      color: Colors.grey[300],
+      color: Colors.grey[400],
     ),
   );
 }

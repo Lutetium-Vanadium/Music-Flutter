@@ -1,9 +1,11 @@
-import "package:Music/bloc/notification_bloc.dart";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/bloc/queue_bloc.dart";
+import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
 import "../widgets/SongView.dart";
 
 class Music extends StatefulWidget {
@@ -57,9 +59,10 @@ class _MusicState extends State<Music> {
           Expanded(
             child: SongView(
               songs: songs,
-              isLocal: true,
-              onClick: (song, _) {
-                print(song);
+              onClick: (song, index) {
+                BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                  songs: displace(songs, index),
+                ));
               },
             ),
           ),

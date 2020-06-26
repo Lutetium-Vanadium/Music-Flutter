@@ -1,3 +1,4 @@
+import 'package:Music/routes/CurrentSongPage.dart';
 import "package:flutter/cupertino.dart";
 
 import "models/models.dart";
@@ -11,7 +12,6 @@ class Router {
     switch (settings.name) {
       case "/":
         return CupertinoPageRoute(
-          maintainState: false,
           builder: (_) => MainPage(),
         );
         break;
@@ -33,6 +33,11 @@ class Router {
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => AlbumPage(settings.arguments),
+        );
+      case "/player":
+        return CupertinoPageRoute(
+          maintainState: false,
+          builder: (_) => CurrentSongPage(),
         );
       default:
         return CupertinoPageRoute(

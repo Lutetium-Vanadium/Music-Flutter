@@ -1,8 +1,9 @@
-import "package:Music/bloc/notification_bloc.dart";
 import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "./bloc/notification_bloc.dart";
+import "./bloc/queue_bloc.dart";
 import "./routing.dart";
 import "./themedata.dart";
 
@@ -21,8 +22,15 @@ void main() {
 class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NotificationBloc(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<NotificationBloc>(
+          create: (_) => NotificationBloc(),
+        ),
+        BlocProvider<QueueBloc>(
+          create: (_) => QueueBloc(),
+        ),
+      ],
       child: NotificationListener<DraggableScrollableNotification>(
         onNotification: (notification) {
           // Close keyboard if list is scrolled

@@ -8,6 +8,7 @@ import "../constants.dart";
 import "../helpers/napster.dart" as napster;
 import "./widgets/Input.dart";
 import "./widgets/SongView.dart";
+import "./widgets/CurrentSongBanner.dart";
 
 class SearchPage extends StatefulWidget {
   final String intitalQuery;
@@ -108,12 +109,16 @@ class _SearchPageState extends State<SearchPage> {
         ],
         primary: true,
       ),
+      persistentFooterButtons: <Widget>[
+        CurrentSongBanner(),
+      ],
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
         child: SongView(
           songs: _results,
+          isNetwork: true,
           onClick: (songData, index) {
             BlocProvider.of<NotificationBloc>(context)
                 .add(DownloadSong(songData));

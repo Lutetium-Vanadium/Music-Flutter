@@ -1,12 +1,15 @@
-import "package:Music/bloc/notification_bloc.dart";
-import "package:Music/helpers/generateSubtitle.dart";
+import "dart:io";
 import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/constants.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
+import "package:Music/helpers/displace.dart";
+import "package:Music/helpers/generateSubtitle.dart";
+import "package:Music/helpers/db.dart";
 import "../widgets/CoverImage.dart";
 
 class Home extends StatefulWidget {
@@ -30,9 +33,13 @@ class _HomeState extends State<Home> {
 
     // // Clear Database Contents
     // var db = await getDB();
-    // print(Song.fromMapArray(await db.query(Tables.Songs)));
-    // print(Album.fromMapArray(await db.query(Tables.Albums)));
-    // print(CustomAlbum.fromMapArray(await db.query(Tables.CustomAlbums)));
+    // print("===== Songs =====");
+    // SongData.fromMapArray(await db.query(Tables.Songs)).forEach(print);
+    // print("===== Albums ====");
+    // AlbumData.fromMapArray(await db.query(Tables.Albums)).forEach(print);
+    // print("== CustomAlbums =");
+    // CustomAlbumData.fromMapArray(await db.query(Tables.CustomAlbums)).forEach(print);
+    // print("==================");
     // db.delete(Tables.Albums);
     // db.delete(Tables.Songs);
     // db.delete(Tables.CustomAlbums);
@@ -52,7 +59,6 @@ class _HomeState extends State<Home> {
     // dirs.retainWhere((element) =>
     //     toSee[0].hasMatch(element.path) || toSee[1].hasMatch(element.path));
     // print("[\n\t${dirs.join(",\n\t")}\n]");
-
     // !SECTION
   }
 
@@ -142,6 +148,11 @@ class _HomeState extends State<Home> {
                     return CoverImage(
                       image: song.thumbnail,
                       title: song.title,
+                      onClick: () {
+                        BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                          songs: displace(_topSongs, index),
+                        ));
+                      },
                       subtitle:
                           generateSubtitle(type: "Song", artist: song.artist),
                     );

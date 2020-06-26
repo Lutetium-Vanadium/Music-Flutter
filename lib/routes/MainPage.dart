@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 
 import "../constants.dart";
 import "./widgets/Input.dart";
-
+import "./widgets/CurrentSongBanner.dart";
 import "./views/Albums.dart";
 import "./views/Artists.dart";
 import "./views/Home.dart";
@@ -126,6 +126,9 @@ class _MainPageState extends State<MainPage> {
           ),
         ],
       ),
+      persistentFooterButtons: <Widget>[
+        CurrentSongBanner(),
+      ],
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();

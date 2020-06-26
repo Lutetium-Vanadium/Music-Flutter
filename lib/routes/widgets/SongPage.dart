@@ -1,11 +1,14 @@
 import "dart:ui";
 import "package:flutter/material.dart";
-import "package:flutter/animation.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/bloc/queue_bloc.dart";
+import "package:Music/helpers/displace.dart";
 import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
 
 import "./SongView.dart";
+import "./CurrentSongBanner.dart";
 
 class SongPage extends StatelessWidget {
   final AnimationController controller;
@@ -25,9 +28,12 @@ class SongPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Theme.of(context).backgroundColor,
-      child: Column(
+    return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+      persistentFooterButtons: <Widget>[
+        CurrentSongBanner(),
+      ],
+      body: Column(
         children: <Widget>[
           HeaderImage(
             hero: hero,
@@ -42,9 +48,10 @@ class SongPage extends StatelessWidget {
               delay: 0.5,
               length: 0.5,
               songs: songs,
-              isLocal: true,
-              onClick: (song, i) {
-                print(song);
+              onClick: (song, index) {
+                BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                  songs: displace(songs, index),
+                ));
               },
             ),
           ),
