@@ -54,7 +54,9 @@ class _ControlBarState extends State<ControlBar>
               color: false
                   ? Theme.of(context).accentColor
                   : Colors.white, // TODO shuffle
-              onPressed: () {},
+              onPressed: () {
+                BlocProvider.of<QueueBloc>(context).add(ShuffleSongs());
+              },
             ),
             IconButton(
               icon: Icon(Icons.fast_rewind),

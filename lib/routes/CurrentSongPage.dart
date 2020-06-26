@@ -133,7 +133,7 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                     onClick: (song, index) {
                       // index is relative
                       BlocProvider.of<QueueBloc>(context).add(JumpToSong(
-                        (state.index + index) % state.songs.length,
+                        (state.index + index + 1) % state.songs.length,
                       ));
                     },
                   ),

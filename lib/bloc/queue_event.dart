@@ -1,7 +1,10 @@
 part of "queue_bloc.dart";
 
 @immutable
-abstract class QueueEvent extends Equatable {}
+abstract class QueueEvent extends Equatable {
+  @override
+  List<Object> get props => [];
+}
 
 class EnqueueSongs extends QueueEvent {
   final List<SongData> songs;
@@ -16,10 +19,7 @@ class EnqueueSongs extends QueueEvent {
   List<Object> get props => [songs, index];
 }
 
-class DequeueSongs extends QueueEvent {
-  @override
-  List<Object> get props => [];
-}
+class DequeueSongs extends QueueEvent {}
 
 class JumpToSong extends QueueEvent {
   final int index;
@@ -30,12 +30,8 @@ class JumpToSong extends QueueEvent {
   List<Object> get props => [index];
 }
 
-class NextSong extends QueueEvent {
-  @override
-  List<Object> get props => [];
-}
+class NextSong extends QueueEvent {}
 
-class PrevSong extends QueueEvent {
-  @override
-  List<Object> get props => [];
-}
+class PrevSong extends QueueEvent {}
+
+class ShuffleSongs extends QueueEvent {}
