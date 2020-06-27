@@ -1,11 +1,14 @@
 import "dart:io";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
-import "package:Music/models/models.dart";
+import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/routes/widgets/SongPage.dart";
+import "package:Music/models/models.dart";
 
+import "./widgets/SongPage.dart";
 import "./widgets/Mozaic.dart";
 
 class ArtistPage extends StatefulWidget {
@@ -63,25 +66,43 @@ class _ArtistPageState extends State<ArtistPage>
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
 
-    return SongPage(
-      controller: _controller,
-      title: widget.artist.name,
-      subtitle: generateSubtitle(
-        type: "Artist",
-        numSongs: widget.artist.numSongs,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NotificationBloc, NotificationState>(
+          listener: (_, state) {
+            if (state is DownloadedNotification) {
+              getSongs();
+            }
+          },
+        ),
+        BlocListener<QueueBloc, QueueState>(
+          listener: (context, state) {
+            if (state.updateData) {
+              getSongs();
+            }
+          },
+        ),
+      ],
+      child: SongPage(
+        controller: _controller,
+        title: widget.artist.name,
+        subtitle: generateSubtitle(
+          type: "Artist",
+          numSongs: widget.artist.numSongs,
+        ),
+        hero: Hero(
+          tag: widget.artist.name,
+          child: widget.artist.images.length == 4
+              ? Mozaic(widget.artist.images, screenWidth)
+              : Image.file(
+                  File(widget.artist.images[0]),
+                  height: screenWidth,
+                  width: screenWidth,
+                  fit: BoxFit.cover,
+                ),
+        ),
+        songs: _songs,
       ),
-      hero: Hero(
-        tag: widget.artist.name,
-        child: widget.artist.images.length == 4
-            ? Mozaic(widget.artist.images, screenWidth)
-            : Image.file(
-                File(widget.artist.images[0]),
-                height: screenWidth,
-                width: screenWidth,
-                fit: BoxFit.cover,
-              ),
-      ),
-      songs: _songs,
     );
   }
 }

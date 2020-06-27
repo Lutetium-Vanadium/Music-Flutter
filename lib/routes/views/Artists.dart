@@ -56,12 +56,23 @@ class _ArtistsState extends State<Artists> {
   Widget build(BuildContext context) {
     var width10 = MediaQuery.of(context).size.shortestSide / 10;
 
-    return BlocListener<NotificationBloc, NotificationState>(
-      listener: (_, state) {
-        if (state is DownloadedNotification) {
-          getArtists();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NotificationBloc, NotificationState>(
+          listener: (_, state) {
+            if (state is DownloadedNotification) {
+              getArtists();
+            }
+          },
+        ),
+        BlocListener<QueueBloc, QueueState>(
+          listener: (_, state) {
+            if (state.updateData) {
+              getArtists();
+            }
+          },
+        ),
+      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

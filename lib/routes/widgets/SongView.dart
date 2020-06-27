@@ -1,7 +1,9 @@
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/focused_menu.dart";
 import "package:focused_menu/modals.dart";
 
+import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/models/models.dart";
 import "package:Music/CustomSplashFactory.dart";
 import "package:Music/constants.dart";
@@ -47,9 +49,14 @@ class SongView extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                   ),
                   FocusedMenuItem(
-                    onPressed: () {},
-                    title: Text("Like"),
-                    trailingIcon: Icon(Icons.favorite_border),
+                    onPressed: () {
+                      BlocProvider.of<QueueBloc>(context)
+                          .add(ToggleLikedSong(song));
+                    },
+                    title: song.liked ? Text("Unlike") : Text("Like"),
+                    trailingIcon: song.liked
+                        ? Icon(Icons.favorite)
+                        : Icon(Icons.favorite_border),
                     backgroundColor: Colors.transparent,
                   ),
                   FocusedMenuItem(

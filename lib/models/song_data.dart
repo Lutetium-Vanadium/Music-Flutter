@@ -25,6 +25,25 @@ class SongData extends SongMetadata {
     return "{\n\ttitle: $title,\n\tartist: $artist,\n\talbumId: $albumId,\n\tfilePath: $filePath,\n\tnumListens: $numListens,\n\tliked: $liked,\n\tthumbnail: $thumbnail,\n\tlength: $length\n}";
   }
 
+  SongData.override(
+    SongData song, {
+    title,
+    artist,
+    albumId,
+    filePath,
+    numListens,
+    liked,
+    thumbnail,
+    length,
+  })  : this.title = title ?? song.title,
+        this.artist = artist ?? song.artist,
+        this.albumId = albumId ?? song.albumId,
+        this.filePath = filePath ?? song.filePath,
+        this.numListens = numListens ?? song.numListens,
+        this.liked = liked ?? song.liked,
+        this.thumbnail = thumbnail ?? song.thumbnail,
+        this.length = length ?? song.length;
+
   static Map<String, dynamic> toMap(SongData song) {
     return {
       "filePath": song.filePath,

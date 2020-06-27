@@ -4,6 +4,7 @@ import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 import "package:meta/meta.dart";
 
+import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 
 part "queue_event.dart";
@@ -48,9 +49,9 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
   QueueState get initialState => EmptyQueue();
 
   @override
-  Stream<QueueState> mapEventToState(
-    QueueEvent event,
-  ) async* {
+  Stream<QueueState> mapEventToState(QueueEvent event) async* {
+    var updateData = false;
+
     if (event is EnqueueSongs) {
       _allSongs = event.songs;
       _index = event.index;
@@ -75,12 +76,35 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         _index = 0;
       }
       _isShuffled = !_isShuffled;
+    } else if (event is ToggleLikedSong) {
+      var liked = !event.song.liked;
+
+      var allSongsIndex = _allSongs.indexOf(event.song);
+      if (allSongsIndex >= 0) {
+        _allSongs[allSongsIndex] = SongData.override(event.song, liked: liked);
+      }
+
+      var songsIndex = _songs.indexOf(event.song);
+      if (songsIndex >= 0) {
+        _songs[songsIndex] = SongData.override(event.song, liked: liked);
+      }
+
+      var db = await getDB();
+
+      db.update(
+        Tables.Songs,
+        {"liked": liked},
+        where: "title LIKE ?",
+        whereArgs: [event.song.title],
+      );
+
+      updateData = true;
     }
 
     if (_songs.length == 0) {
-      yield EmptyQueue();
+      yield EmptyQueue(updateData: updateData);
     } else {
-      yield PlayingQueue(songs: _songs, index: _index);
+      yield PlayingQueue(songs: _songs, index: _index, updateData: updateData);
     }
   }
 }

@@ -39,3 +39,12 @@ class NextSong extends QueueEvent {}
 class PrevSong extends QueueEvent {}
 
 class ShuffleSongs extends QueueEvent {}
+
+class ToggleLikedSong extends QueueEvent {
+  final SongData song;
+
+  ToggleLikedSong(this.song) : assert(song != null);
+
+  @override
+  List<Object> get props => [song];
+}

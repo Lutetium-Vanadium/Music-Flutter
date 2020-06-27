@@ -42,12 +42,23 @@ class _AlbumsState extends State<Albums> {
   Widget build(BuildContext context) {
     var width10 = MediaQuery.of(context).size.shortestSide / 10;
 
-    return BlocListener<NotificationBloc, NotificationState>(
-      listener: (_, state) {
-        if (state is DownloadedNotification) {
-          getAlbums();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NotificationBloc, NotificationState>(
+          listener: (_, state) {
+            if (state is DownloadedNotification) {
+              getAlbums();
+            }
+          },
+        ),
+        BlocListener<QueueBloc, QueueState>(
+          listener: (_, state) {
+            if (state.updateData) {
+              getAlbums();
+            }
+          },
+        ),
+      ],
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

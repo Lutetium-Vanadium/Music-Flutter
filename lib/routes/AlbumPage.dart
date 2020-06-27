@@ -1,9 +1,12 @@
 import "dart:io";
 import "package:flutter/material.dart";
+import "package:flutter_bloc/flutter_bloc.dart";
 
-import "package:Music/models/models.dart";
+import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
+import "package:Music/models/models.dart";
 import "./widgets/SongPage.dart";
 
 class AlbumPage extends StatefulWidget {
@@ -60,23 +63,41 @@ class _AlbumPageState extends State<AlbumPage>
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
-    return SongPage(
-      controller: _controller,
-      title: widget.album.name,
-      subtitle: generateSubtitle(
-        type: "Album",
-        artist: widget.album.artist,
-      ),
-      hero: Hero(
-        tag: widget.album.id,
-        child: Image.file(
-          File(widget.album.imagePath),
-          width: screenWidth,
-          height: screenWidth,
-          fit: BoxFit.cover,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NotificationBloc, NotificationState>(
+          listener: (_, state) {
+            if (state is DownloadedNotification) {
+              getSongs();
+            }
+          },
         ),
+        BlocListener<QueueBloc, QueueState>(
+          listener: (context, state) {
+            if (state.updateData) {
+              getSongs();
+            }
+          },
+        ),
+      ],
+      child: SongPage(
+        controller: _controller,
+        title: widget.album.name,
+        subtitle: generateSubtitle(
+          type: "Album",
+          artist: widget.album.artist,
+        ),
+        hero: Hero(
+          tag: widget.album.id,
+          child: Image.file(
+            File(widget.album.imagePath),
+            width: screenWidth,
+            height: screenWidth,
+            fit: BoxFit.cover,
+          ),
+        ),
+        songs: _songs,
       ),
-      songs: _songs,
     );
   }
 }

@@ -87,12 +87,23 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     var width10 = MediaQuery.of(context).size.shortestSide / 10;
 
-    return BlocListener<NotificationBloc, NotificationState>(
-      listener: (_, state) {
-        if (state is DownloadedNotification) {
-          getTop();
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<NotificationBloc, NotificationState>(
+          listener: (_, state) {
+            if (state is DownloadedNotification) {
+              getTop();
+            }
+          },
+        ),
+        BlocListener<QueueBloc, QueueState>(
+          listener: (context, state) {
+            if (state.updateData) {
+              getTop();
+            }
+          },
+        ),
+      ],
       child: ListView(
         physics: BouncingScrollPhysics(),
         children: <Widget>[
@@ -188,9 +199,14 @@ class _HomeState extends State<Home> {
                           backgroundColor: Colors.transparent,
                         ),
                         FocusedMenuItem(
-                          onPressed: () {},
-                          title: Text("Like"),
-                          trailingIcon: Icon(Icons.favorite_border),
+                          onPressed: () {
+                            BlocProvider.of<QueueBloc>(context)
+                                .add(ToggleLikedSong(song));
+                          },
+                          title: song.liked ? Text("Unlike") : Text("Like"),
+                          trailingIcon: song.liked
+                              ? Icon(Icons.favorite)
+                              : Icon(Icons.favorite_border),
                           backgroundColor: Colors.transparent,
                         ),
                         FocusedMenuItem(
