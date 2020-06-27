@@ -8,7 +8,7 @@ import "package:palette_generator/palette_generator.dart";
 import "package:Music/helpers/formatLength.dart";
 import "package:Music/bloc/queue_bloc.dart";
 
-import "./widgets/SongView.dart";
+import "./widgets/SongList.dart";
 import "./CurrentSongPageWidgets/disable.dart";
 import "./CurrentSongPageWidgets/HeaderImage.dart";
 import "./CurrentSongPageWidgets/ControlBar.dart";
@@ -128,7 +128,7 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                   ),
                 ),
                 Expanded(
-                  child: SongView(
+                  child: SongList(
                     songs: displaceWithoutIndex(state.songs, state.index),
                     onClick: (song, index) {
                       // index is relative

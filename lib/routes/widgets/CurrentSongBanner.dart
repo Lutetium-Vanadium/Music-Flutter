@@ -79,8 +79,8 @@ class _CurrentSongBannerState extends State<CurrentSongBanner>
                     width: 10,
                   ),
                   Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
                         song.title,
@@ -127,8 +127,6 @@ class _CurrentSongBannerState extends State<CurrentSongBanner>
     return BlocBuilder<QueueBloc, QueueState>(
       builder: (context, state) {
         double height = (state is EmptyQueue) ? 0 : 50;
-
-        print("height: $height");
 
         return AnimatedContainer(
           duration: Duration(milliseconds: 300),

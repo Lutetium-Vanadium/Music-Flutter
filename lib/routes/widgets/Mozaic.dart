@@ -10,37 +10,40 @@ class Mozaic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Image.file(
-              File(images[0]),
-              width: totalWidth / 2,
-              height: totalWidth / 2,
-            ),
-            Image.file(
-              File(images[1]),
-              width: totalWidth / 2,
-              height: totalWidth / 2,
-            ),
-          ],
-        ),
-        Row(
-          children: <Widget>[
-            Image.file(
-              File(images[2]),
-              width: totalWidth / 2,
-              height: totalWidth / 2,
-            ),
-            Image.file(
-              File(images[3]),
-              width: totalWidth / 2,
-              height: totalWidth / 2,
-            ),
-          ],
-        ),
-      ],
+    return FittedBox(
+      fit: BoxFit.cover,
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Image.file(
+                File(images[0]),
+                width: totalWidth / 2,
+                height: totalWidth / 2,
+              ),
+              Image.file(
+                File(images[1]),
+                width: totalWidth / 2,
+                height: totalWidth / 2,
+              ),
+            ],
+          ),
+          Row(
+            children: <Widget>[
+              Image.file(
+                File(images[2]),
+                width: totalWidth / 2,
+                height: totalWidth / 2,
+              ),
+              Image.file(
+                File(images[3]),
+                width: totalWidth / 2,
+                height: totalWidth / 2,
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

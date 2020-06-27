@@ -36,7 +36,6 @@ class _AlbumPageState extends State<AlbumPage>
   }
 
   Future<void> beginAnimation() async {
-    // TODO change this to constant variable for Custom page transition
     await Future.delayed(const Duration(milliseconds: 450));
     await _controller.forward();
   }
@@ -74,6 +73,7 @@ class _AlbumPageState extends State<AlbumPage>
           File(widget.album.imagePath),
           width: screenWidth,
           height: screenWidth,
+          fit: BoxFit.cover,
         ),
       ),
       songs: _songs,

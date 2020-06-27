@@ -8,7 +8,7 @@ import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
-import "../widgets/SongView.dart";
+import "../widgets/SongList.dart";
 
 class Music extends StatefulWidget {
   @override
@@ -50,7 +50,7 @@ class _MusicState extends State<Music> {
         }
       },
       child: Expanded(
-        child: SongView(
+        child: SongList(
           before: Padding(
             padding: EdgeInsets.only(
               left: width10 / 2,

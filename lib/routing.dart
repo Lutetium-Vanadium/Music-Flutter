@@ -1,4 +1,5 @@
 import "package:flutter/cupertino.dart";
+import 'package:flutter/material.dart';
 
 import "models/models.dart";
 import "./routes/MainPage.dart";
@@ -35,9 +36,26 @@ class Router {
           builder: (_) => AlbumPage(settings.arguments),
         );
       case "/player":
-        return CupertinoPageRoute(
+        return PageRouteBuilder(
           maintainState: false,
-          builder: (_) => CurrentSongPage(),
+          transitionDuration: Duration(milliseconds: 400),
+          transitionsBuilder: (context, animation, secondAnimation, child) {
+            var offsetTween =
+                Tween<Offset>(begin: Offset(0, 1), end: Offset.zero)
+                    .chain(CurveTween(curve: Curves.easeOutCubic));
+            var opacityTween = Tween<double>(begin: 0, end: 1)
+                .chain(CurveTween(curve: Interval(0, 0.1)));
+
+            return SlideTransition(
+              position: offsetTween.animate(animation),
+              child: FadeTransition(
+                opacity: opacityTween.animate(animation),
+                child: child,
+              ),
+            );
+          },
+          pageBuilder: (context, animation, secondAnimation) =>
+              CurrentSongPage(),
         );
       default:
         return CupertinoPageRoute(

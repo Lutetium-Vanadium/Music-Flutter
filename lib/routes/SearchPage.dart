@@ -7,7 +7,7 @@ import "../models/models.dart";
 import "../constants.dart";
 import "../helpers/napster.dart" as napster;
 import "./widgets/Input.dart";
-import "./widgets/SongView.dart";
+import "./widgets/SongList.dart";
 import "./widgets/CurrentSongBanner.dart";
 
 class SearchPage extends StatefulWidget {
@@ -116,7 +116,7 @@ class _SearchPageState extends State<SearchPage> {
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: SongView(
+        child: SongList(
           songs: _results,
           isNetwork: true,
           onClick: (songData, index) {
