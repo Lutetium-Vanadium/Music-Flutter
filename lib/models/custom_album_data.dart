@@ -1,15 +1,19 @@
 import "dart:convert";
 
+import "package:equatable/equatable.dart";
+
 String stringifyArr(List<dynamic> arr) {
   var strArr = jsonEncode(arr);
   return strArr.substring(1, strArr.length - 1);
 }
 
-List<dynamic> parseArr(String arr) {
-  return jsonDecode("[$arr]");
+List<String> parseArr(String arr) {
+  List<dynamic> lst = jsonDecode("[$arr]");
+
+  return lst.map((el) => el.toString()).toList();
 }
 
-class CustomAlbumData {
+class CustomAlbumData extends Equatable {
   final String id;
   final String name;
   final List<String> songs;
@@ -19,6 +23,9 @@ class CustomAlbumData {
   toString() {
     return "{\n\tid: $id,\n\tname: $name,\n\tsongs: $songs\n}";
   }
+
+  @override
+  List<Object> get props => [id, name, songs];
 
   static Map<String, dynamic> toMap(CustomAlbumData album) {
     return {

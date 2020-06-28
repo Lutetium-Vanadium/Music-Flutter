@@ -1,4 +1,6 @@
-class AlbumData {
+import "package:equatable/equatable.dart";
+
+class AlbumData extends Equatable {
   final String id;
   final String imagePath;
   final String name;
@@ -10,6 +12,9 @@ class AlbumData {
   toString() {
     return "{\n\tid: $id,\n\tname: $name,\n\tartist: $artist,\n\timagePath: $imagePath,\n\tnumSongs: $numSongs\n}";
   }
+
+  @override
+  List<Object> get props => [id, imagePath, name, numSongs, artist];
 
   static Map<String, dynamic> toMap(AlbumData album) {
     return {

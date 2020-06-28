@@ -1,4 +1,6 @@
-class SongMetadata {
+import "package:equatable/equatable.dart";
+
+abstract class SongMetadata extends Equatable {
   final String artist;
   final String title;
   final int length;

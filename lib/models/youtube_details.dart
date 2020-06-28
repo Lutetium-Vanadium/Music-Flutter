@@ -1,4 +1,6 @@
-class YoutubeDetails {
+import "package:equatable/equatable.dart";
+
+class YoutubeDetails extends Equatable {
   final String id;
   final int length;
 
@@ -7,4 +9,8 @@ class YoutubeDetails {
   toString() {
     return "{\n\tid: $id,\n\tlength: $length\n}";
   }
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id, length];
 }

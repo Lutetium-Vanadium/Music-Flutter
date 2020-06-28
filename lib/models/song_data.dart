@@ -25,6 +25,9 @@ class SongData extends SongMetadata {
     return "{\n\ttitle: $title,\n\tartist: $artist,\n\talbumId: $albumId,\n\tfilePath: $filePath,\n\tnumListens: $numListens,\n\tliked: $liked,\n\tthumbnail: $thumbnail,\n\tlength: $length\n}";
   }
 
+  List<Object> get props =>
+      [title, artist, albumId, filePath, numListens, liked, thumbnail, length];
+
   SongData.override(
     SongData song, {
     title,

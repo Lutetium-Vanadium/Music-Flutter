@@ -1,4 +1,6 @@
-class ArtistData {
+import "package:equatable/equatable.dart";
+
+class ArtistData extends Equatable {
   final String name;
   final List<String> images;
   final int numSongs;
@@ -8,6 +10,9 @@ class ArtistData {
   toString() {
     return "{\n\tname: $name,\n\tnumSongs: $numSongs,\n\timages: $images\n}";
   }
+
+  @override
+  List<Object> get props => [name, images, numSongs];
 
   static ArtistData fromMapAndPreArtist(
     List<Map<String, dynamic>> images,
@@ -26,7 +31,7 @@ class ArtistData {
   }
 }
 
-class PreArtist {
+class PreArtist extends Equatable {
   final String name;
   final int numSongs;
 
@@ -35,6 +40,9 @@ class PreArtist {
   toString() {
     return "{\n\tname: $name,\n\tnumSongs: $numSongs\n}";
   }
+
+  @override
+  List<Object> get props => [name, numSongs];
 
   static PreArtist fromMap(Map<String, dynamic> map) {
     return PreArtist(

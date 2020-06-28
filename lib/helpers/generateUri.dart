@@ -1,4 +1,4 @@
-Uri generateUri(String base, Map<String, String> params) {
+Uri generateUri(String base, [Map<String, String> params = const {}]) {
   if (params.isNotEmpty) base += "?";
 
   List<String> paramList = [];

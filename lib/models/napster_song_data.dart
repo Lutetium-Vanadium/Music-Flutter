@@ -18,4 +18,7 @@ class NapsterSongData extends SongMetadata {
   toString() {
     return "{\n\tartist: $artist,\n\ttitle: $title,\n\talbumId: $albumId,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}";
   }
+
+  @override
+  List<Object> get props => [artist, length, albumId, thumbnail, title];
 }
