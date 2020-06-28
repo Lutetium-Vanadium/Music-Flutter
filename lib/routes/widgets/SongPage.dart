@@ -74,18 +74,16 @@ class _SongPageState extends State<SongPage> {
               },
             ),
           ),
-          Expanded(
-            child: AnimatedSongList(
-              controller: widget.controller,
-              delay: 0.5,
-              length: 0.5,
-              songs: widget.songs,
-              onClick: (song, index) {
-                BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                  songs: displace(widget.songs, index),
-                ));
-              },
-            ),
+          AnimatedSongList(
+            controller: widget.controller,
+            delay: 0.5,
+            length: 0.5,
+            songs: widget.songs,
+            onClick: (song, index) {
+              BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                songs: displace(widget.songs, index),
+              ));
+            },
           ),
         ],
       ),

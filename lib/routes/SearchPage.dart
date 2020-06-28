@@ -29,9 +29,7 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void search(String query) async {
-    if (query.length == 0) {
-      Navigator.of(context).pop();
-    } else if (query.length % 2 == 1) {
+    if (query.length % 2 == 1) {
       var res = await napster.search(query);
       if (!mounted) return;
       setState(() {
@@ -119,6 +117,7 @@ class _SearchPageState extends State<SearchPage> {
         child: SongList(
           songs: _results,
           isNetwork: true,
+          showFocusedMenuItems: false,
           onClick: (songData, index) {
             BlocProvider.of<NotificationBloc>(context)
                 .add(DownloadSong(songData));

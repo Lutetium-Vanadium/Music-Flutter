@@ -10,7 +10,7 @@ import "package:Music/constants.dart";
 import "package:Music/helpers/formatLength.dart";
 
 class SongView extends StatelessWidget {
-  final SongData song;
+  final SongMetadata song;
   final VoidCallback onClick;
   final IconData iconData;
   final Image image;
@@ -27,6 +27,11 @@ class SongView extends StatelessWidget {
 
   @override
   Widget build(context) {
+    bool liked;
+    if (song is SongData) {
+      liked = (song as SongData).liked;
+    }
+
     return Container(
       margin: EdgeInsets.symmetric(
         vertical: 0.6 * rem,
@@ -38,7 +43,7 @@ class SongView extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        child: !showFocusedMenuItems
+        child: (!showFocusedMenuItems || liked == null)
             ? _buildSongDetails(context)
             : FocusedMenuHolder(
                 menuItems: [
@@ -53,8 +58,8 @@ class SongView extends StatelessWidget {
                       BlocProvider.of<QueueBloc>(context)
                           .add(ToggleLikedSong(song));
                     },
-                    title: song.liked ? Text("Unlike") : Text("Like"),
-                    trailingIcon: song.liked
+                    title: liked ? Text("Unlike") : Text("Like"),
+                    trailingIcon: liked
                         ? Icon(Icons.favorite)
                         : Icon(Icons.favorite_border),
                     backgroundColor: Colors.transparent,

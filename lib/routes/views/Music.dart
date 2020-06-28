@@ -60,43 +60,41 @@ class _MusicState extends State<Music> {
           },
         ),
       ],
-      child: Expanded(
-        child: SongList(
-          before: Padding(
-            padding: EdgeInsets.only(
-              left: width10 / 2,
-              right: width10 / 2,
-              top: 30,
-              bottom: 7,
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("My Music", style: Theme.of(context).textTheme.headline3),
-                FlatButton(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(1.25 * rem)),
-                  color: Theme.of(context).buttonColor,
-                  onPressed: () {
-                    var random = Random();
-                    BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                        songs: songs,
-                        index: random.nextInt(songs.length),
-                        shuffle: true));
-                  },
-                  child: Text("Play Random"),
-                ),
-              ],
-            ),
+      child: SongList(
+        before: Padding(
+          padding: EdgeInsets.only(
+            left: width10 / 2,
+            right: width10 / 2,
+            top: 30,
+            bottom: 7,
           ),
-          songs: songs,
-          onClick: (song, index) {
-            BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-              songs: displace(songs, index),
-            ));
-          },
+          child: Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("My Music", style: Theme.of(context).textTheme.headline3),
+              FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(1.25 * rem)),
+                color: Theme.of(context).buttonColor,
+                onPressed: () {
+                  var random = Random();
+                  BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                      songs: songs,
+                      index: random.nextInt(songs.length),
+                      shuffle: true));
+                },
+                child: Text("Play Random"),
+              ),
+            ],
+          ),
         ),
+        songs: songs,
+        onClick: (song, index) {
+          BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+            songs: displace(songs, index),
+          ));
+        },
       ),
     );
   }
