@@ -69,7 +69,8 @@ class _HomeState extends State<Home> {
     var db = await getDB();
 
     var topSongs = SongData.fromMapArray(
-      await db.query(Tables.Songs, orderBy: "numListens DESC", limit: 5),
+      await db.query(Tables.Songs,
+          orderBy: "not liked, numListens DESC", limit: 5),
     );
     var topAlbums = AlbumData.fromMapArray(
       await db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),

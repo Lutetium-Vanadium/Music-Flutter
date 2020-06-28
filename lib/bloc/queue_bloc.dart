@@ -55,7 +55,11 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     if (event is EnqueueSongs) {
       _allSongs = event.songs;
       _index = event.index;
-      _songs = _shuffle([...event.songs], cur: event.index);
+      if (event.shuffle) {
+        _songs = _shuffle([...event.songs], cur: event.index);
+      } else {
+        _songs = event.songs;
+      }
     } else if (event is DequeueSongs) {
       _songs = [];
       _allSongs = [];
@@ -63,9 +67,9 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     } else if (event is JumpToSong) {
       _index = event.index;
     } else if (event is NextSong) {
-      _index++;
+      _index = (_index + 1) % _songs.length;
     } else if (event is PrevSong) {
-      _index--;
+      _index = (_index + _songs.length - 1) % _songs.length;
     } else if (event is ShuffleSongs) {
       if (_isShuffled) {
         var cur = _songs[_index];
@@ -91,7 +95,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
       var db = await getDB();
 
-      db.update(
+      await db.update(
         Tables.Songs,
         {"liked": liked},
         where: "title LIKE ?",
@@ -104,7 +108,12 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     if (_songs.length == 0) {
       yield EmptyQueue(updateData: updateData);
     } else {
-      yield PlayingQueue(songs: _songs, index: _index, updateData: updateData);
+      yield PlayingQueue(
+        songs: _songs,
+        index: _index,
+        updateData: updateData,
+        shuffled: _isShuffled,
+      );
     }
   }
 }

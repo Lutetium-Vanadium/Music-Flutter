@@ -32,11 +32,13 @@ class _HeaderImageState extends State<HeaderImage> {
           onVerticalDragUpdate: (dragUpdateDetails) {
             _dragUpdateDetails = dragUpdateDetails;
           },
+          onVerticalDragCancel: () => print("Cancel"),
           onVerticalDragEnd: (dragEndDetails) {
             var delta = _dragUpdateDetails.localPosition.dy -
                 _dragStartDetails.localPosition.dy;
+            print(dragEndDetails.velocity);
             if (delta > threshold ||
-                dragEndDetails.velocity.pixelsPerSecond.dx > threshold) {
+                dragEndDetails.velocity.pixelsPerSecond.dy > threshold) {
               Navigator.of(context).pop();
             }
           },
@@ -45,8 +47,8 @@ class _HeaderImageState extends State<HeaderImage> {
             width: 10 * width10,
             height: 10 * width10,
             padding: EdgeInsets.only(
-              left: 2 * width10,
-              right: 2 * width10,
+              left: width10,
+              right: width10,
               top: 2 * width10,
             ),
             decoration: BoxDecoration(
@@ -76,7 +78,7 @@ class _HeaderImageState extends State<HeaderImage> {
                   height: width10 / 2,
                 ),
                 Container(
-                  constraints: BoxConstraints(maxWidth: width10 * 8),
+                  constraints: BoxConstraints(maxWidth: width10 * 9),
                   child: Text(
                     widget.song.title,
                     maxLines: 1,

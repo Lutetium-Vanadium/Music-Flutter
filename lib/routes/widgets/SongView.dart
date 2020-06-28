@@ -121,13 +121,9 @@ class SongView extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 0.5 * rem, left: 0.8 * rem),
-                      child: Text(
-                        song.artist,
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
+                    Text(
+                      song.artist,
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
                   ],
                 ),

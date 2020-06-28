@@ -49,10 +49,10 @@ class _CurrentSongBannerState extends State<CurrentSongBanner>
           var delta = _dragUpdateDetails.localPosition.dy -
               _dragStartDetails.localPosition.dy;
           if (-delta > threshold ||
-              -dragEndDetails.velocity.pixelsPerSecond.dx > threshold) {
+              -dragEndDetails.velocity.pixelsPerSecond.dy > threshold) {
             Navigator.of(context).pushNamed("/player");
           } else if (delta > threshold / 3 ||
-              dragEndDetails.velocity.pixelsPerSecond.dx > threshold / 3) {
+              dragEndDetails.velocity.pixelsPerSecond.dy > threshold / 3) {
             BlocProvider.of<QueueBloc>(context).add(DequeueSongs());
           }
         },

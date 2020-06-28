@@ -118,7 +118,7 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                     ],
                   ),
                 ),
-                ControlBar(disable: disable),
+                ControlBar(song: song, shuffled: state.shuffled),
                 SizedBox(height: width10 / 2),
                 SizedBox(
                   width: 8 * width10,
