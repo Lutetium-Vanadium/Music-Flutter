@@ -8,7 +8,6 @@ abstract class QueueState extends Equatable {
   QueueState({this.updateData = false});
 
   @override
-  // TODO: implement props
   List<Object> get props => [updateData];
 }
 
@@ -24,12 +23,12 @@ class PlayingQueue extends QueueState {
   final bool updateData;
   final bool shuffled;
 
-  PlayingQueue(
-      {@required this.songs,
-      this.index,
-      this.updateData = false,
-      this.shuffled = false})
-      : assert(songs != null),
+  PlayingQueue({
+    @required this.songs,
+    this.index,
+    this.updateData = false,
+    this.shuffled = false,
+  })  : assert(songs != null),
         assert(index != null),
         assert(index >= 0 && index < songs.length);
 
