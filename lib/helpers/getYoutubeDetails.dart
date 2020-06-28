@@ -18,10 +18,12 @@ Future<YoutubeDetails> getYoutubeDetails(NapsterSongData song) async {
     // Makes sure to get the right video
     var query = "${song.title} ${song.artist} official music video";
 
+    await keys.isReady;
+
     query = query.replaceAll(" ", "+");
 
     var result = await http.get(generateUri(searchUri, {
-      "key": GOOGLE_API_KEY,
+      "key": keys.youtube,
       "q": query,
       "part": "snippet",
     }));
@@ -30,7 +32,7 @@ Future<YoutubeDetails> getYoutubeDetails(NapsterSongData song) async {
     var id = jsonDecode(result.body)["items"][0]["id"]["videoId"];
 
     var response = await http.get(generateUri(detailsUri, {
-      "key": GOOGLE_API_KEY,
+      "key": keys.youtube,
       "part": "contentDetails",
       "id": id,
     }));

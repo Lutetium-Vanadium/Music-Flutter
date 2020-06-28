@@ -14,9 +14,11 @@ const SEARCH_LIMIT = "15";
 /// Gets the info for an album
 Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
   try {
+    await keys.isReady;
+
     var response = await http
         .get(generateUri("https://api.napster.com/v2.2/albums/$albumId", {
-      "apikey": NAPSTER_API_KEY,
+      "apikey": keys.napster,
     }));
 
     if (response.statusCode != 200) throw response.headers["status"];
@@ -35,9 +37,10 @@ Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
 /// Gets the info for only one particular song
 Future<NapsterSongData> getSongInfo(String query) async {
   try {
+    await keys.isReady;
     var response =
         await http.get(generateUri("https://api.napster.com/v2.2/search", {
-      "apikey": NAPSTER_API_KEY,
+      "apikey": keys.napster,
       "type": "track",
       "per_type_limit": "1",
       "query": query,
@@ -60,9 +63,10 @@ Future<NapsterSongData> getSongInfo(String query) async {
 /// Returns the top 10 songs which fit the query
 Future<List<NapsterSongData>> search(String query) async {
   try {
+    await keys.isReady;
     var response =
         await http.get(generateUri("https://api.napster.com/v2.2/search", {
-      "apikey": NAPSTER_API_KEY,
+      "apikey": keys.napster,
       "type": "track",
       "per_type_limit": SEARCH_LIMIT,
       "query": query,

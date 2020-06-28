@@ -29,6 +29,7 @@ dev_dependencies:
 flutter:
   assets:
     - assets/images/
+    - assets/keys/
   fonts:
     - family: CustomIcons
       fonts:
