@@ -88,9 +88,7 @@ class _ControlBarState extends State<ControlBar>
             ),
             IconButton(
               icon: Icon(CustomIcons.loop),
-              color: false
-                  ? Theme.of(context).accentColor
-                  : Colors.white, // TODO loop
+              color: Colors.white, // TODO loop
               onPressed: () {},
             ),
             IconButton(

@@ -9,7 +9,6 @@ import "package:Music/helpers/formatLength.dart";
 import "package:Music/bloc/queue_bloc.dart";
 
 import "./widgets/SongList.dart";
-import "./CurrentSongPageWidgets/disable.dart";
 import "./CurrentSongPageWidgets/HeaderImage.dart";
 import "./CurrentSongPageWidgets/ControlBar.dart";
 
@@ -73,16 +72,6 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                 }
               },
             );
-          }
-
-          var disable = Disable.None;
-
-          if (state.index == 0 && state.songs.length == 1) {
-            disable = Disable.Both;
-          } else if (state.index == 0) {
-            disable = Disable.Previous;
-          } else if (state.index == state.songs.length - 1) {
-            disable = Disable.Next;
           }
 
           var time = formatTime(song.length ~/ 3, song.length);
