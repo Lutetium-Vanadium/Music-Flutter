@@ -21,3 +21,8 @@ class DownloadedNotification extends NotificationState {
   @override
   List<Object> get props => [];
 }
+
+class UpdateData extends NotificationState {
+  @override
+  List<Object> get props => [];
+}

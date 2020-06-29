@@ -47,7 +47,7 @@ class _MusicState extends State<Music> {
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
           listener: (_, state) {
-            if (state is DownloadedNotification) {
+            if (state is DownloadedNotification || state is UpdateData) {
               getSongs();
             }
           },

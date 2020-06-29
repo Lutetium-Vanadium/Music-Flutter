@@ -165,6 +165,28 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       );
 
       yield DownloadedNotification();
+    } else if (event is AddCustomAlbum) {
+      var db = await getDB();
+
+      int number = (await db.rawQuery(
+          "SELECT COUNT(*) AS cnt FROM ${Tables.CustomAlbums};"))[0]["cnt"];
+
+      var album = CustomAlbumData(
+        id: "cst.$number",
+        name: event.name,
+        songs: event.songs,
+      );
+
+      await db.insert(Tables.CustomAlbums, CustomAlbumData.toMap(album));
+
+      yield UpdateData();
+    } else if (event is DeleteCustomAlbum) {
+      var db = await getDB();
+
+      await db.delete(Tables.CustomAlbums,
+          where: "id LIKE ?", whereArgs: [event.id]);
+
+      yield UpdateData();
     }
   }
 }

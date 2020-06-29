@@ -123,7 +123,7 @@ void main() {
           image: image,
           song: mockSong1,
           showFocusedMenuItems: true,
-          iconData: Icons.timer,
+          icon: Icon(Icons.timer),
         ),
       ));
 
@@ -134,7 +134,7 @@ void main() {
         home: SongView(
           image: image,
           song: mockSong2,
-          iconData: Icons.timer,
+          icon: Icon(Icons.timer),
         ),
       ));
 

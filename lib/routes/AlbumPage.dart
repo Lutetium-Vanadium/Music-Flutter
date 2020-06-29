@@ -67,7 +67,7 @@ class _AlbumPageState extends State<AlbumPage>
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
           listener: (_, state) {
-            if (state is DownloadedNotification) {
+            if (state is DownloadedNotification || state is UpdateData) {
               getSongs();
             }
           },

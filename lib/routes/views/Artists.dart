@@ -60,7 +60,7 @@ class _ArtistsState extends State<Artists> {
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
           listener: (_, state) {
-            if (state is DownloadedNotification) {
+            if (state is DownloadedNotification || state is UpdateData) {
               getArtists();
             }
           },
@@ -73,63 +73,66 @@ class _ArtistsState extends State<Artists> {
           },
         ),
       ],
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-            child:
-                Text("Artists", style: Theme.of(context).textTheme.headline3),
+      child: CustomScrollView(
+        physics: BouncingScrollPhysics(),
+        slivers: <Widget>[
+          SliverToBoxAdapter(
+            child: Padding(
+              padding:
+                  EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
+              child:
+                  Text("Artists", style: Theme.of(context).textTheme.headline3),
+            ),
           ),
-          Expanded(
-            child: GridView.builder(
-              physics: BouncingScrollPhysics(),
-              padding: EdgeInsets.all(0.3 * width10),
-              itemCount: _artists.length,
+          SliverPadding(
+            padding: EdgeInsets.all(0.3 * width10),
+            sliver: SliverGrid(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 childAspectRatio: (4.1 * width10) / (4.1 * width10 + 3 * rem),
               ),
-              itemBuilder: (ctx, index) {
-                var artist = _artists[index];
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  var artist = _artists[index];
 
-                var mozaic = artist.images.length == 4;
+                  var mozaic = artist.images.length == 4;
 
-                return CoverImage(
-                  image: mozaic ? null : artist.images[0],
-                  images: mozaic ? artist.images : null,
-                  title: artist.name,
-                  subtitle: generateSubtitle(
-                      type: "Artist", numSongs: artist.numSongs),
-                  isBig: true,
-                  tag: artist.name,
-                  onClick: () {
-                    Navigator.of(context)
-                        .pushNamed("/artist", arguments: artist);
-                  },
-                  focusedMenuItems: [
-                    FocusedMenuItem(
-                      onPressed: () async {
-                        var db = await getDB();
-                        var songs = SongData.fromMapArray(await db.query(
-                          Tables.Songs,
-                          where: "artist LIKE ?",
-                          whereArgs: [artist.name],
-                          orderBy: "LOWER(title), title",
-                        ));
-                        BlocProvider.of<QueueBloc>(context)
-                            .add(EnqueueSongs(songs: songs));
-                      },
-                      title: Text("Play"),
-                      trailingIcon: Icon(Icons.playlist_play),
-                      backgroundColor: Colors.transparent,
-                    ),
-                  ],
-                );
-              },
+                  return CoverImage(
+                    image: mozaic ? null : artist.images[0],
+                    images: mozaic ? artist.images : null,
+                    title: artist.name,
+                    subtitle: generateSubtitle(
+                        type: "Artist", numSongs: artist.numSongs),
+                    isBig: true,
+                    tag: artist.name,
+                    onClick: () {
+                      Navigator.of(context)
+                          .pushNamed("/artist", arguments: artist);
+                    },
+                    focusedMenuItems: [
+                      FocusedMenuItem(
+                        onPressed: () async {
+                          var db = await getDB();
+                          var songs = SongData.fromMapArray(await db.query(
+                            Tables.Songs,
+                            where: "artist LIKE ?",
+                            whereArgs: [artist.name],
+                            orderBy: "LOWER(title), title",
+                          ));
+                          BlocProvider.of<QueueBloc>(context)
+                              .add(EnqueueSongs(songs: songs));
+                        },
+                        title: Text("Play"),
+                        trailingIcon: Icon(Icons.playlist_play),
+                        backgroundColor: Colors.transparent,
+                      ),
+                    ],
+                  );
+                },
+                childCount: _artists.length,
+              ),
             ),
-          ),
+          )
         ],
       ),
     );

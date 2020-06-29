@@ -9,7 +9,7 @@ import "./SongView.dart";
 class SongList extends StatelessWidget {
   final List<SongMetadata> songs;
   final void Function(SongMetadata, int) onClick;
-  final IconData iconData;
+  final Icon Function(int) getIcon;
   final bool isNetwork;
   final bool showFocusedMenuItems;
   final Widget before;
@@ -17,7 +17,7 @@ class SongList extends StatelessWidget {
   SongList({
     @required this.songs,
     this.onClick,
-    this.iconData,
+    this.getIcon,
     this.before,
     this.isNetwork = false,
     this.showFocusedMenuItems = true,
@@ -73,7 +73,7 @@ class SongList extends StatelessWidget {
 
           var song = songs[index];
           return SongView(
-            iconData: iconData,
+            icon: getIcon == null ? null : getIcon(index),
             song: song,
             onClick: () {
               if (onClick != null) {

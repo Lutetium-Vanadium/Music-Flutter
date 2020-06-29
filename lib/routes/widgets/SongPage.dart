@@ -166,6 +166,21 @@ class _CustomAppBarState extends State<CustomAppBar> {
           style: Theme.of(context).textTheme.headline6,
         ),
       ),
+      actions: <Widget>[
+        Opacity(
+          opacity: _textOpacity,
+          child: IconButton(
+            tooltip: "Play All",
+            icon: Icon(Icons.play_arrow),
+            onPressed: _textOpacity < 0.6
+                ? null
+                : () {
+                    BlocProvider.of<QueueBloc>(context)
+                        .add(EnqueueSongs(songs: widget.songs));
+                  },
+          ),
+        ),
+      ],
       pinned: true,
       flexibleSpace: LayoutBuilder(builder: (context, constraints) {
         double percent = (constraints.maxHeight - kToolbarHeight) /

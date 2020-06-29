@@ -12,7 +12,7 @@ import "./SongView.dart";
 class AnimatedSongList extends StatelessWidget {
   final List<SongMetadata> songs;
   final void Function(SongMetadata, int) onClick;
-  final IconData iconData;
+  final Icon Function(int) getIcon;
   final bool isNetwork;
   final Widget before;
 
@@ -28,7 +28,7 @@ class AnimatedSongList extends StatelessWidget {
     this.length = 1,
     @required this.songs,
     this.onClick,
-    this.iconData,
+    this.getIcon,
     this.before,
     this.isNetwork = false,
   })  : _opacity = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
@@ -59,6 +59,7 @@ class AnimatedSongList extends StatelessWidget {
                 width: 4 * rem,
                 height: 4 * rem,
               ),
+              icon: getIcon == null ? null : getIcon(index),
             );
           },
           childCount: songs.length,

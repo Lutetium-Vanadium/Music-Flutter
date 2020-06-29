@@ -1,26 +1,24 @@
-import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/constants.dart";
 import "package:Music/bloc/notification_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/models/models.dart";
-
 import "./widgets/SongPage.dart";
-import "./widgets/Mozaic.dart";
 
-class ArtistPage extends StatefulWidget {
-  final ArtistData artist;
+class CustomAlbumPage extends StatefulWidget {
+  final CustomAlbumData album;
 
-  const ArtistPage(this.artist, {Key key}) : super(key: key);
+  const CustomAlbumPage(this.album, {Key key}) : super(key: key);
 
   @override
-  _ArtistPageState createState() => _ArtistPageState();
+  _CustomAlbumPageState createState() => _CustomAlbumPageState();
 }
 
-class _ArtistPageState extends State<ArtistPage>
+class _CustomAlbumPageState extends State<CustomAlbumPage>
     with SingleTickerProviderStateMixin {
   List<SongData> _songs = [];
   AnimationController _controller;
@@ -48,11 +46,10 @@ class _ArtistPageState extends State<ArtistPage>
   Future<void> getSongs() async {
     var db = await getDB();
 
-    var songs = SongData.fromMapArray(await db.query(
-      Tables.Songs,
-      where: "artist LIKE ?",
-      whereArgs: [widget.artist.name],
-      orderBy: "LOWER(title), title",
+    String songNames = CustomAlbumData.toMap(widget.album)["songs"];
+
+    var songs = SongData.fromMapArray(await db.rawQuery(
+      "SELECT * from ${Tables.Songs} WHERE title IN ($songNames) ORDER BY LOWER(title), title;",
     ));
 
     if (!mounted) return;
@@ -65,7 +62,6 @@ class _ArtistPageState extends State<ArtistPage>
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
-
     return MultiBlocListener(
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
@@ -85,21 +81,16 @@ class _ArtistPageState extends State<ArtistPage>
       ],
       child: SongPage(
         controller: _controller,
-        title: widget.artist.name,
-        subtitle: generateSubtitle(
-          type: "Artist",
-          numSongs: widget.artist.numSongs,
-        ),
+        title: widget.album.name,
+        subtitle: generateSubtitle(type: "Album", numSongs: _songs.length),
         hero: Hero(
-          tag: widget.artist.name,
-          child: widget.artist.images.length == 4
-              ? Mozaic(widget.artist.images, screenWidth)
-              : Image.file(
-                  File(widget.artist.images[0]),
-                  height: screenWidth,
-                  width: screenWidth,
-                  fit: BoxFit.cover,
-                ),
+          tag: widget.album.id,
+          child: Image.asset(
+            "$imgs/music_symbol.png",
+            width: screenWidth,
+            height: screenWidth,
+            fit: BoxFit.cover,
+          ),
         ),
         songs: _songs,
       ),

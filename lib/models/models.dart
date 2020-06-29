@@ -4,6 +4,7 @@ export "custom_album_data.dart";
 export "napster_album_data.dart";
 export "napster_song_data.dart";
 export "pair.dart";
+export "selected_song_data.dart";
 export "song_data.dart";
 export "song_metadata.dart";
 export "youtube_details.dart";

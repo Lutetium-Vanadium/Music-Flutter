@@ -16,6 +16,7 @@ class CoverImage extends StatelessWidget {
   final Object tag;
   final VoidCallback onClick;
   final List<FocusedMenuItem> focusedMenuItems;
+  final bool isAssetImage;
 
   CoverImage({
     @required this.title,
@@ -23,9 +24,10 @@ class CoverImage extends StatelessWidget {
     this.images,
     this.subtitle = "",
     this.isBig = false,
-    this.onClick,
     this.tag,
+    this.onClick,
     this.focusedMenuItems,
+    this.isAssetImage = false,
   }) {
     assert(image != null || images != null);
     if (images != null) {
@@ -43,11 +45,17 @@ class CoverImage extends StatelessWidget {
 
     var img = images != null
         ? Mozaic(images, imgWidth)
-        : Image.file(
-            File(image),
-            height: imgWidth,
-            width: imgWidth,
-          );
+        : isAssetImage
+            ? Image.asset(
+                "$imgs/$image",
+                height: imgWidth,
+                width: imgWidth,
+              )
+            : Image.file(
+                File(image),
+                height: imgWidth,
+                width: imgWidth,
+              );
 
     var widget = Container(
       width: imgWidth,

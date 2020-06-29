@@ -10,3 +10,22 @@ class DownloadSong extends NotificationEvent {
   @override
   List<Object> get props => [song];
 }
+
+class AddCustomAlbum extends NotificationEvent {
+  final String name;
+  final List<String> songs;
+
+  AddCustomAlbum({this.name, this.songs});
+
+  @override
+  List<Object> get props => [name, songs];
+}
+
+class DeleteCustomAlbum extends NotificationEvent {
+  final String id;
+
+  DeleteCustomAlbum(this.id);
+
+  @override
+  List<Object> get props => [id];
+}

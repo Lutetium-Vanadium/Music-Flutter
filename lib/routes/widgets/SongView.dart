@@ -12,7 +12,7 @@ import "package:Music/helpers/formatLength.dart";
 class SongView extends StatelessWidget {
   final SongMetadata song;
   final VoidCallback onClick;
-  final IconData iconData;
+  final Icon icon;
   final Image image;
   final bool showFocusedMenuItems;
 
@@ -20,7 +20,7 @@ class SongView extends StatelessWidget {
     @required this.song,
     @required this.image,
     this.onClick,
-    this.iconData,
+    this.icon,
     this.showFocusedMenuItems = false,
     Key key,
   }) : super(key: key);
@@ -131,13 +131,8 @@ class SongView extends StatelessWidget {
             ),
             Text(formatLength(song.length)),
             Padding(
-              padding: iconData == null
-                  ? EdgeInsets.all(0)
-                  : EdgeInsets.only(left: 13, right: 3),
-              child: Icon(
-                iconData,
-                size: 1.5 * rem,
-              ),
+              padding: EdgeInsets.only(left: 13, right: 3),
+              child: icon,
             ),
           ],
         ),
