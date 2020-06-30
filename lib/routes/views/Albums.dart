@@ -57,7 +57,8 @@ class _AlbumsState extends State<Albums> {
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
           listener: (_, state) {
-            if (state is DownloadedNotification || state is UpdateData) {
+            print(state);
+            if (state is UpdateData) {
               getAlbums();
             }
           },

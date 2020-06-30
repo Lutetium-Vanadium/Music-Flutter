@@ -3,6 +3,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/focused_menu.dart";
 import "package:focused_menu/modals.dart";
 
+import "package:Music/bloc/notification_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/models/models.dart";
 import "package:Music/CustomSplashFactory.dart";
@@ -65,7 +66,10 @@ class SongView extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                   ),
                   FocusedMenuItem(
-                    onPressed: () {},
+                    onPressed: () {
+                      BlocProvider.of<NotificationBloc>(context)
+                          .add(DeleteSong(song));
+                    },
                     title: Text("Delete", style: TextStyle(color: Colors.red)),
                     trailingIcon: Icon(Icons.delete, color: Colors.red),
                     backgroundColor: Colors.transparent,

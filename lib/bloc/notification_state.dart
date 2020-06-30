@@ -1,28 +1,16 @@
 part of "notification_bloc.dart";
 
-@immutable
-abstract class NotificationState extends Equatable {}
+// Equatable not used because each UpdateData must be taken as seperate things and not the same
 
-class NotificationInitial extends NotificationState {
-  @override
-  List<Object> get props => [];
-}
+@immutable
+abstract class NotificationState {}
+
+class NotificationInitial extends NotificationState {}
 
 class ProgressNotification extends NotificationState {
   final int bytesDownloaded;
   final int totalBytes;
   ProgressNotification({this.bytesDownloaded, this.totalBytes}) : super();
-
-  @override
-  List<Object> get props => [bytesDownloaded, totalBytes];
 }
 
-class DownloadedNotification extends NotificationState {
-  @override
-  List<Object> get props => [];
-}
-
-class UpdateData extends NotificationState {
-  @override
-  List<Object> get props => [];
-}
+class UpdateData extends NotificationState {}

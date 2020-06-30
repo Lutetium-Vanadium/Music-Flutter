@@ -20,8 +20,8 @@ class _MainPageState extends State<MainPage> {
   final pages = <Widget>[
     Home(),
     Music(),
-    Artists(),
     Albums(),
+    Artists(),
   ];
 
   void goHome() {
@@ -117,12 +117,12 @@ class _MainPageState extends State<MainPage> {
             title: Text("My Music"),
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            title: Text("Artists"),
-          ),
-          BottomNavigationBarItem(
             icon: Icon(Icons.library_music),
             title: Text("Albums"),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            title: Text("Artists"),
           ),
         ],
       ),

@@ -66,7 +66,7 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
           listener: (_, state) {
-            if (state is DownloadedNotification || state is UpdateData) {
+            if (state is UpdateData) {
               getSongs();
             }
           },

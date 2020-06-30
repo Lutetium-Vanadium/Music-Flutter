@@ -92,7 +92,7 @@ class _HomeState extends State<Home> {
       listeners: [
         BlocListener<NotificationBloc, NotificationState>(
           listener: (_, state) {
-            if (state is DownloadedNotification || state is UpdateData) {
+            if (state is UpdateData) {
               getTop();
             }
           },
@@ -211,7 +211,10 @@ class _HomeState extends State<Home> {
                           backgroundColor: Colors.transparent,
                         ),
                         FocusedMenuItem(
-                          onPressed: () {},
+                          onPressed: () {
+                            BlocProvider.of<NotificationBloc>(context)
+                                .add(DeleteSong(song));
+                          },
                           title: Text("Delete",
                               style: TextStyle(color: Colors.red)),
                           trailingIcon: Icon(Icons.delete, color: Colors.red),

@@ -1,4 +1,5 @@
 import "dart:async";
+import "dart:io";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 import "package:flutter/material.dart";
@@ -163,13 +164,32 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         body: "Finished Downloading ${song.title} by ${song.artist}",
         path: song.thumbnail,
       );
+    } else if (event is DeleteSong) {
+      var songFile = File(event.song.filePath);
+      var db = await getDB();
 
-      yield DownloadedNotification();
+      Future.wait([
+        songFile.delete(),
+        db.delete(Tables.Songs,
+            where: "title LIKE ?", whereArgs: [event.song.title]),
+        db.rawUpdate(
+            "UPDATE ${Tables.Albums} SET numSongs = numSongs - 1 WHERE id LIKE ?",
+            [event.song.albumId]),
+      ]);
+
+      await db.delete(Tables.Albums, where: "numSongs < 1");
     } else if (event is AddCustomAlbum) {
       var db = await getDB();
 
-      int number = (await db.rawQuery(
-          "SELECT COUNT(*) AS cnt FROM ${Tables.CustomAlbums};"))[0]["cnt"];
+      var ids = await db.query(
+        Tables.CustomAlbums,
+        orderBy: "id DESC",
+      );
+
+      int number = 0;
+      if (ids.length > 0) {
+        number = int.parse(ids.first["id"].substring(4)) + 1;
+      }
 
       var album = CustomAlbumData(
         id: "cst.$number",
@@ -179,14 +199,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
 
       await db.insert(Tables.CustomAlbums, CustomAlbumData.toMap(album));
 
-      yield UpdateData();
+      print("ADDED ${event.name}");
     } else if (event is DeleteCustomAlbum) {
       var db = await getDB();
 
       await db.delete(Tables.CustomAlbums,
           where: "id LIKE ?", whereArgs: [event.id]);
 
-      yield UpdateData();
+      print("DELETED ${event.id}");
     }
+
+    // NOTE ForceUpdate doesnt need to be specially handled since it just requires to yield UpdateData()
+
+    yield UpdateData();
   }
 }

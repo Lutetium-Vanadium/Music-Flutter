@@ -3,9 +3,23 @@ part of "notification_bloc.dart";
 @immutable
 abstract class NotificationEvent extends Equatable {}
 
+class ForceUpdate extends NotificationEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class DownloadSong extends NotificationEvent {
   final NapsterSongData song;
-  DownloadSong(this.song) : super();
+  DownloadSong(this.song);
+
+  @override
+  List<Object> get props => [song];
+}
+
+class DeleteSong extends NotificationEvent {
+  final SongData song;
+
+  DeleteSong(this.song);
 
   @override
   List<Object> get props => [song];
