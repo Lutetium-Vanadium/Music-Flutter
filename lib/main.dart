@@ -2,7 +2,7 @@ import "package:flutter/material.dart";
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "./bloc/notification_bloc.dart";
+import 'bloc/data_bloc.dart';
 import "./bloc/queue_bloc.dart";
 import "./routing.dart";
 import "./themedata.dart";
@@ -24,8 +24,8 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<NotificationBloc>(
-          create: (_) => NotificationBloc(),
+        BlocProvider<DataBloc>(
+          create: (_) => DataBloc(),
         ),
         BlocProvider<QueueBloc>(
           create: (_) => QueueBloc(),

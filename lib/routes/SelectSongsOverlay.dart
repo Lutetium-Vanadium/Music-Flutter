@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "package:Music/bloc/notification_bloc.dart";
+import 'package:Music/bloc/data_bloc.dart';
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 import "package:Music/routes/widgets/SongList.dart";
@@ -144,8 +144,7 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
               onPressed: cantSubmit
                   ? null
                   : () {
-                      BlocProvider.of<NotificationBloc>(context)
-                          .add(AddCustomAlbum(
+                      BlocProvider.of<DataBloc>(context).add(AddCustomAlbum(
                         name: _controller.text,
                         songs: _songs
                             .where((s) => s.selected)

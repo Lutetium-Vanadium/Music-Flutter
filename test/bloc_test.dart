@@ -1,15 +1,15 @@
-import 'package:Music/models/song_data.dart';
 import "package:flutter_test/flutter_test.dart";
 
-import "package:Music/bloc/notification_bloc.dart";
+import "package:Music/models/song_data.dart";
+import 'package:Music/bloc/data_bloc.dart';
 import "package:Music/bloc/queue_bloc.dart";
 
 void main() {
   group("Notification Bloc", () {
-    NotificationBloc bloc;
+    DataBloc bloc;
 
     setUp(() {
-      bloc = NotificationBloc();
+      bloc = DataBloc();
     });
 
     tearDown(() {
@@ -17,10 +17,10 @@ void main() {
     });
 
     test("Initial state is correct", () {
-      expect(bloc.initialState, NotificationInitial());
+      expect(bloc.initialState, isA<InitialData>());
     });
     test("Closes without event", () {
-      expectLater(bloc, emitsInOrder([NotificationInitial(), emitsDone]));
+      expectLater(bloc, emitsInOrder([isA<InitialData>(), emitsDone]));
       bloc.close();
     });
   });

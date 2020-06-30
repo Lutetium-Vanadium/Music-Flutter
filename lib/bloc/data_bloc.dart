@@ -13,11 +13,11 @@ import "package:Music/helpers/getYoutubeDetails.dart";
 import "package:Music/helpers/updateAlbum.dart";
 import "package:Music/models/models.dart";
 
-part "notification_event.dart";
-part "notification_state.dart";
+part "data_event.dart";
+part "data_state.dart";
 
-class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
-  NotificationBloc() {
+class DataBloc extends Bloc<DataEvent, DataState> {
+  DataBloc() {
     initNotifications();
   }
 
@@ -102,11 +102,11 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
   }
 
   @override
-  NotificationState get initialState => NotificationInitial();
+  DataState get initialState => InitialData();
 
   @override
-  Stream<NotificationState> mapEventToState(
-    NotificationEvent event,
+  Stream<DataState> mapEventToState(
+    DataEvent event,
   ) async* {
     if (event is DownloadSong) {
       var songData = event.song;

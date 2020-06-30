@@ -1,14 +1,14 @@
-part of "notification_bloc.dart";
+part of 'data_bloc.dart';
 
 @immutable
-abstract class NotificationEvent extends Equatable {}
+abstract class DataEvent extends Equatable {}
 
-class ForceUpdate extends NotificationEvent {
+class ForceUpdate extends DataEvent {
   @override
   List<Object> get props => [];
 }
 
-class DownloadSong extends NotificationEvent {
+class DownloadSong extends DataEvent {
   final NapsterSongData song;
   DownloadSong(this.song);
 
@@ -16,7 +16,7 @@ class DownloadSong extends NotificationEvent {
   List<Object> get props => [song];
 }
 
-class DeleteSong extends NotificationEvent {
+class DeleteSong extends DataEvent {
   final SongData song;
 
   DeleteSong(this.song);
@@ -25,7 +25,7 @@ class DeleteSong extends NotificationEvent {
   List<Object> get props => [song];
 }
 
-class AddCustomAlbum extends NotificationEvent {
+class AddCustomAlbum extends DataEvent {
   final String name;
   final List<String> songs;
 
@@ -35,7 +35,7 @@ class AddCustomAlbum extends NotificationEvent {
   List<Object> get props => [name, songs];
 }
 
-class DeleteCustomAlbum extends NotificationEvent {
+class DeleteCustomAlbum extends DataEvent {
   final String id;
 
   DeleteCustomAlbum(this.id);

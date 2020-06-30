@@ -3,7 +3,7 @@ import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
 
 import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/bloc/notification_bloc.dart";
+import 'package:Music/bloc/data_bloc.dart';
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
@@ -55,7 +55,7 @@ class _AlbumsState extends State<Albums> {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<NotificationBloc, NotificationState>(
+        BlocListener<DataBloc, DataState>(
           listener: (_, state) {
             print(state);
             if (state is UpdateData) {
@@ -176,7 +176,7 @@ class _AlbumsState extends State<Albums> {
                       ),
                       FocusedMenuItem(
                         onPressed: () async {
-                          BlocProvider.of<NotificationBloc>(context)
+                          BlocProvider.of<DataBloc>(context)
                               .add(DeleteCustomAlbum(album.id));
                         },
                         title:

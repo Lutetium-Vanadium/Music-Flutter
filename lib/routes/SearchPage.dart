@@ -2,7 +2,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "../bloc/notification_bloc.dart";
+import '../bloc/data_bloc.dart';
 import "../models/models.dart";
 import "../constants.dart";
 import "../helpers/napster.dart" as napster;
@@ -119,8 +119,7 @@ class _SearchPageState extends State<SearchPage> {
           isNetwork: true,
           showFocusedMenuItems: false,
           onClick: (songData, index) {
-            BlocProvider.of<NotificationBloc>(context)
-                .add(DownloadSong(songData));
+            BlocProvider.of<DataBloc>(context).add(DownloadSong(songData));
             scaffoldKey.currentState.showSnackBar(SnackBar(
               content: Text("Preparing to download ${songData.title}"),
             ));

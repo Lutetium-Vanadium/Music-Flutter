@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
 
-import "package:Music/bloc/notification_bloc.dart";
+import 'package:Music/bloc/data_bloc.dart';
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
@@ -90,7 +90,7 @@ class _HomeState extends State<Home> {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<NotificationBloc, NotificationState>(
+        BlocListener<DataBloc, DataState>(
           listener: (_, state) {
             if (state is UpdateData) {
               getTop();
@@ -212,7 +212,7 @@ class _HomeState extends State<Home> {
                         ),
                         FocusedMenuItem(
                           onPressed: () {
-                            BlocProvider.of<NotificationBloc>(context)
+                            BlocProvider.of<DataBloc>(context)
                                 .add(DeleteSong(song));
                           },
                           title: Text("Delete",

@@ -3,7 +3,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
 import "package:Music/constants.dart";
-import "package:Music/bloc/notification_bloc.dart";
+import 'package:Music/bloc/data_bloc.dart';
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/db.dart";
@@ -45,7 +45,7 @@ class _MusicState extends State<Music> {
 
     return MultiBlocListener(
       listeners: [
-        BlocListener<NotificationBloc, NotificationState>(
+        BlocListener<DataBloc, DataState>(
           listener: (_, state) {
             if (state is UpdateData) {
               getSongs();
