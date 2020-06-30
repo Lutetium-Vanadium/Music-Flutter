@@ -1,4 +1,4 @@
-part of 'data_bloc.dart';
+part of "data_bloc.dart";
 
 // Equatable not used because each UpdateData must be taken as seperate things and not the same
 

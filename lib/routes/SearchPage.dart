@@ -2,10 +2,10 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import '../bloc/data_bloc.dart';
-import "../models/models.dart";
-import "../constants.dart";
-import "../helpers/napster.dart" as napster;
+import "package:Music/bloc/data_bloc.dart";
+import "package:Music/models/models.dart";
+import "package:Music/constants.dart";
+import "package:Music/helpers/napster.dart" as napster;
 import "./widgets/Input.dart";
 import "./widgets/SongList.dart";
 import "./widgets/CurrentSongBanner.dart";

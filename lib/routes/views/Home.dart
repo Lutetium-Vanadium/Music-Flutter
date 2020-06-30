@@ -4,7 +4,7 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
 
-import 'package:Music/bloc/data_bloc.dart';
+import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
@@ -33,18 +33,21 @@ class _HomeState extends State<Home> {
   Future<void> dev() async {
     // SECTION dev helpers
 
-    // // Clear Database Contents
-    // var db = await getDB();
+    var db = await getDB();
+    // // Print Database Contents
     // print("===== Songs =====");
     // SongData.fromMapArray(await db.query(Tables.Songs)).forEach(print);
     // print("===== Albums ====");
     // AlbumData.fromMapArray(await db.query(Tables.Albums)).forEach(print);
     // print("== CustomAlbums =");
-    // CustomAlbumData.fromMapArray(await db.query(Tables.CustomAlbums)).forEach(print);
+    // CustomAlbumData.fromMapArray(await db.query(Tables.CustomAlbums))
+    //     .forEach(print);
     // print("==================");
+    // Clear Database Contents
     // db.delete(Tables.Albums);
     // db.delete(Tables.Songs);
     // db.delete(Tables.CustomAlbums);
+
     // // Delete Songs
     // File("${(await getApplicationDocumentsDirectory()).path}/songs")
     //     .delete(recursive: true);
@@ -65,7 +68,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getTop() async {
-    // await dev();
+    await dev();
     var db = await getDB();
 
     var topSongs = SongData.fromMapArray(

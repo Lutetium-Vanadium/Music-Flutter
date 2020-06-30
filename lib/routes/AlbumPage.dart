@@ -2,7 +2,7 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import 'package:Music/bloc/data_bloc.dart';
+import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
