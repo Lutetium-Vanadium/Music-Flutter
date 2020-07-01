@@ -40,6 +40,8 @@ class PrevSong extends QueueEvent {}
 
 class ShuffleSongs extends QueueEvent {}
 
+class LoopSongs extends QueueEvent {}
+
 class ToggleLikedSong extends QueueEvent {
   final SongData song;
 

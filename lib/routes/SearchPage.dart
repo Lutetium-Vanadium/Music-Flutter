@@ -77,7 +77,7 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 Text(
                   "Music",
-                  style: TextStyle(color: Colors.white, fontSize: 1.5 * rem),
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ],
             ),

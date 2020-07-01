@@ -21,6 +21,7 @@ dependencies:
   equatable: ^1.2.0
   palette_generator: 0.2.3
   focused_menu: 1.0.1
+  assets_audio_player: 2.0.6+5
 
 dev_dependencies:
   flutter_test:

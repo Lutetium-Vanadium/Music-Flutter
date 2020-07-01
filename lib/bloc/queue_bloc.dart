@@ -3,7 +3,9 @@ import "dart:math";
 import "package:bloc/bloc.dart";
 import "package:equatable/equatable.dart";
 import "package:meta/meta.dart";
+import "package:assets_audio_player/assets_audio_player.dart";
 
+import "package:Music/constants.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 
@@ -11,6 +13,16 @@ part "queue_event.dart";
 part "queue_state.dart";
 
 class QueueBloc extends Bloc<QueueEvent, QueueState> {
+  AssetsAudioPlayer audioPlayer;
+
+  QueueBloc() {
+    audioPlayer = AssetsAudioPlayer.withId(playerId);
+
+    audioPlayer.playlistAudioFinished.listen((playing) {
+      this.add(NextSong());
+    });
+  }
+
   // Data
   List<SongData> _allSongs = []; // All songs in unshuffled order
   List<SongData> _songs = []; // Current queue
@@ -18,6 +30,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
   // Flags
   bool _isShuffled = false;
+  bool _loop = false;
 
   List<SongData> _shuffle(List<SongData> songs, {int cur = -1}) {
     var currentIndex = songs.length - 1;
@@ -45,6 +58,39 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     return songs;
   }
 
+  Future<void> _playSong(SongData song) async {
+    var db = await getDB();
+    var albumName = (await db.query(Tables.Albums,
+            where: "id LIKE ?", whereArgs: [song.albumId]))
+        .first["name"];
+
+    audioPlayer.open(
+      Audio.file(
+        song.filePath,
+        metas: Metas(
+          album: albumName,
+          artist: song.artist,
+          title: song.title,
+          image: MetasImage.file(song.thumbnail),
+          onImageLoadFail: MetasImage.asset("$imgs/music_symbol.png"),
+        ),
+      ),
+      showNotification: true,
+      notificationSettings: NotificationSettings(
+        customNextAction: (_) => this.add(NextSong()),
+        customPrevAction: (_) => this.add(PrevSong()),
+        customStopAction: (_) => this.add(DequeueSongs()),
+      ),
+    );
+
+    await db.rawUpdate(
+      "UPDATE ${Tables.Songs} SET numListens = numListens + 1 WHERE title LIKE ?",
+      [song.title],
+    );
+  }
+
+  SongData get _current => _songs.length > 0 ? _songs[_index] : null;
+
   @override
   QueueState get initialState => EmptyQueue();
 
@@ -61,26 +107,8 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
       } else {
         _songs = event.songs;
       }
-    } else if (event is DequeueSongs) {
-      _songs = [];
-      _allSongs = [];
-      _index = 0;
-    } else if (event is JumpToSong) {
-      _index = event.index;
-    } else if (event is NextSong) {
-      _index = (_index + 1) % _songs.length;
-    } else if (event is PrevSong) {
-      _index = (_index + _songs.length - 1) % _songs.length;
-    } else if (event is ShuffleSongs) {
-      if (_isShuffled) {
-        var cur = _songs[_index];
-        _songs = _allSongs;
-        _index = _songs.indexOf(cur);
-      } else {
-        _songs = _shuffle([..._allSongs], cur: _index);
-        _index = 0;
-      }
-      _isShuffled = !_isShuffled;
+
+      await _playSong(_current);
     } else if (event is ToggleLikedSong) {
       var liked = !event.song.liked;
 
@@ -106,6 +134,41 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
       updateData = true;
     }
 
+    if (_songs.length > 0) {
+      if (event is DequeueSongs) {
+        _songs = [];
+        _allSongs = [];
+        _index = 0;
+        audioPlayer.stop();
+      } else if (event is JumpToSong) {
+        _index = event.index;
+        await _playSong(_current);
+      } else if (event is NextSong) {
+        if (!_loop) {
+          _index = (_index + 1) % _songs.length;
+        }
+        await _playSong(_current);
+      } else if (event is PrevSong) {
+        if (!_loop) {
+          _index = (_index + _songs.length - 1) % _songs.length;
+        }
+        await _playSong(_current);
+      } else if (event is ShuffleSongs) {
+        if (_isShuffled) {
+          var cur = _songs[_index];
+          _songs = _allSongs;
+          _index = _songs.indexOf(cur);
+        } else {
+          _songs = _shuffle([..._allSongs], cur: _index);
+          _index = 0;
+        }
+        _isShuffled = !_isShuffled;
+        await _playSong(_current);
+      } else if (event is LoopSongs) {
+        _loop = !_loop;
+      }
+    }
+
     if (_songs.length == 0) {
       yield EmptyQueue(updateData: updateData);
     } else {
@@ -114,6 +177,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         index: _index,
         updateData: updateData,
         shuffled: _isShuffled,
+        loop: _loop,
       );
     }
   }

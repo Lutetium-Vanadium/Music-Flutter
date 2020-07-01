@@ -12,7 +12,7 @@ import "./SongView.dart";
 class AnimatedSongList extends StatelessWidget {
   final List<SongMetadata> songs;
   final void Function(SongMetadata, int) onClick;
-  final Icon Function(int) getIcon;
+  final Widget Function(int) getIcon;
   final bool isNetwork;
   final Widget before;
 

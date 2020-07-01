@@ -1,10 +1,11 @@
 import "dart:io";
-import "package:Music/helpers/displace.dart";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:palette_generator/palette_generator.dart";
+import "package:assets_audio_player/assets_audio_player.dart";
 
+import "package:Music/constants.dart";
+import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/formatLength.dart";
 import "package:Music/bloc/queue_bloc.dart";
 
@@ -20,6 +21,7 @@ class CurrentSongPage extends StatefulWidget {
 class _CurrentSongPageState extends State<CurrentSongPage> {
   String _albumId;
   Color _colour = Colors.transparent;
+  var audioPlayer = AssetsAudioPlayer.withId(playerId);
 
   Future<Color> generateColour(String path) async {
     var paletteGenerator =
@@ -56,7 +58,6 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
       builder: (context, state) {
         if (state is EmptyQueue) {
           Navigator.of(context).pop();
-          throw "EmptyQueue in CurrentSongPage.";
         } else if (state is PlayingQueue) {
           var song = state.song;
           var width10 = MediaQuery.of(context).size.width / 10;
@@ -74,8 +75,6 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
             );
           }
 
-          var time = formatTime(song.length ~/ 3, song.length);
-
           return Material(
             color: Theme.of(context).backgroundColor,
             child: Column(
@@ -87,27 +86,39 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                 ),
                 SizedBox(
                   width: width10 * 8,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Text(time.first),
-                      Expanded(
-                        child: Slider(
-                          min: 0,
-                          max: song.length.toDouble(),
-                          onChanged:
-                              (double value) {}, // TODO implement scrubbing
-                          value: song.length / 3, // TODO show correct value
-                          inactiveColor:
-                              Theme.of(context).colorScheme.secondary,
-                          activeColor: Theme.of(context).accentColor,
-                        ),
-                      ),
-                      Text(time.second),
-                    ],
-                  ),
+                  child: PlayerBuilder.currentPosition(
+                      player: audioPlayer,
+                      builder: (context, duration) {
+                        var time = formatTime(duration.inSeconds, song.length);
+
+                        return Row(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            Text(time.first),
+                            Expanded(
+                              child: Slider(
+                                min: 0,
+                                max: song.length.toDouble(),
+                                onChanged: (double value) {
+                                  audioPlayer
+                                      .seek(Duration(seconds: value.toInt()));
+                                },
+                                value: duration.inSeconds.toDouble(),
+                                inactiveColor:
+                                    Theme.of(context).colorScheme.secondary,
+                                activeColor: Theme.of(context).accentColor,
+                              ),
+                            ),
+                            Text(time.second),
+                          ],
+                        );
+                      }),
                 ),
-                ControlBar(song: song, shuffled: state.shuffled),
+                ControlBar(
+                  song: song,
+                  shuffled: state.shuffled,
+                  loop: state.loop,
+                ),
                 SizedBox(height: width10 / 2),
                 SizedBox(
                   width: 8 * width10,
@@ -116,6 +127,7 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
+                // TODO add queue reordering?
                 Expanded(
                   child: SongList(
                     songs: displaceWithoutIndex(state.songs, state.index),

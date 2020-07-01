@@ -22,17 +22,19 @@ class PlayingQueue extends QueueState {
   final int index;
   final bool updateData;
   final bool shuffled;
+  final bool loop;
 
   PlayingQueue({
     @required this.songs,
     this.index,
     this.updateData = false,
     this.shuffled = false,
+    this.loop = false,
   })  : assert(songs != null),
         assert(index != null),
         assert(index >= 0 && index < songs.length);
 
   SongData get song => songs[index];
 
-  List<Object> get props => [songs, index, updateData, shuffled];
+  List<Object> get props => [songs, index, updateData, shuffled, loop];
 }

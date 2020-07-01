@@ -1,17 +1,20 @@
 import "dart:io";
+import "package:assets_audio_player/assets_audio_player.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/constants.dart";
 import "package:Music/bloc/queue_bloc.dart";
+
+import "./PlayPause.dart";
 
 class CurrentSongBanner extends StatefulWidget {
   @override
   _CurrentSongBannerState createState() => _CurrentSongBannerState();
 }
 
-class _CurrentSongBannerState extends State<CurrentSongBanner>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
+class _CurrentSongBannerState extends State<CurrentSongBanner> {
+  AssetsAudioPlayer audioPlayer;
   DragStartDetails _dragStartDetails;
   DragUpdateDetails _dragUpdateDetails;
 
@@ -21,13 +24,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner>
   void initState() {
     super.initState();
 
-    const dur = Duration(milliseconds: 250);
-
-    _controller = AnimationController(
-      reverseDuration: dur,
-      duration: dur,
-      vsync: this,
-    );
+    audioPlayer = AssetsAudioPlayer.withId(playerId);
   }
 
   Widget _buildChild(BuildContext context, QueueState state) {
@@ -99,21 +96,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner>
                   ),
                 ],
               ),
-              IconButton(
-                iconSize: 25,
-                icon: AnimatedIcon(
-                  icon: AnimatedIcons.pause_play,
-                  progress: _controller,
-                ),
-                onPressed: () {
-                  // TODO proper play pause
-                  if (_controller.value == 0) {
-                    _controller.forward();
-                  } else {
-                    _controller.reverse();
-                  }
-                },
-              ),
+              PlayPause(audioPlayer),
             ],
           ),
         ),

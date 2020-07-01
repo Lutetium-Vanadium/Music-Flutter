@@ -1,36 +1,21 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:assets_audio_player/assets_audio_player.dart";
 
+import "package:Music/routes/widgets/PlayPause.dart";
+import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
 import "package:Music/CustomIcons.dart";
 import "package:Music/bloc/queue_bloc.dart";
 
-class ControlBar extends StatefulWidget {
+class ControlBar extends StatelessWidget {
   final SongData song;
   final bool shuffled;
+  final bool loop;
+  final AssetsAudioPlayer audioPlayer;
 
-  ControlBar({@required this.song, this.shuffled = false});
-
-  @override
-  _ControlBarState createState() => _ControlBarState();
-}
-
-class _ControlBarState extends State<ControlBar>
-    with SingleTickerProviderStateMixin {
-  AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    const dur = Duration(milliseconds: 250);
-
-    _controller = AnimationController(
-      reverseDuration: dur,
-      duration: dur,
-      vsync: this,
-    );
-  }
+  ControlBar({@required this.song, this.shuffled = false, this.loop = false})
+      : audioPlayer = AssetsAudioPlayer.withId(playerId);
 
   @override
   Widget build(BuildContext context) {
@@ -51,9 +36,7 @@ class _ControlBarState extends State<ControlBar>
             ),
             IconButton(
               icon: Icon(CustomIcons.shuffle),
-              color: widget.shuffled
-                  ? Theme.of(context).accentColor
-                  : Colors.white,
+              color: shuffled ? Theme.of(context).accentColor : Colors.white,
               onPressed: () {
                 BlocProvider.of<QueueBloc>(context).add(ShuffleSongs());
               },
@@ -65,20 +48,7 @@ class _ControlBarState extends State<ControlBar>
                 BlocProvider.of<QueueBloc>(context).add(PrevSong());
               },
             ),
-            IconButton(
-              icon: AnimatedIcon(
-                icon: AnimatedIcons.pause_play,
-                progress: _controller,
-              ),
-              onPressed: () {
-                // TODO proper play pause
-                if (_controller.value == 0) {
-                  _controller.forward();
-                } else {
-                  _controller.reverse();
-                }
-              },
-            ),
+            PlayPause(audioPlayer),
             IconButton(
               icon: Icon(Icons.fast_forward),
               disabledColor: Colors.grey[400],
@@ -88,16 +58,17 @@ class _ControlBarState extends State<ControlBar>
             ),
             IconButton(
               icon: Icon(CustomIcons.loop),
-              color: Colors.white, // TODO loop
-              onPressed: () {},
+              color: loop ? Theme.of(context).accentColor : Colors.white,
+              onPressed: () {
+                BlocProvider.of<QueueBloc>(context).add(LoopSongs());
+              },
             ),
             IconButton(
-              icon: widget.song.liked
+              icon: song.liked
                   ? Icon(Icons.favorite, color: Colors.red[900])
                   : Icon(Icons.favorite_border),
               onPressed: () {
-                BlocProvider.of<QueueBloc>(context)
-                    .add(ToggleLikedSong(widget.song));
+                BlocProvider.of<QueueBloc>(context).add(ToggleLikedSong(song));
               },
             ),
           ],

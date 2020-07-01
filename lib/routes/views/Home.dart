@@ -1,8 +1,8 @@
 // import "dart:io";
-import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
+import "package:assets_audio_player/assets_audio_player.dart";
 
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
@@ -27,13 +27,18 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
+    AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
+      print(notification.audioId);
+      return true;
+    });
+
     getTop();
   }
 
   Future<void> dev() async {
     // SECTION dev helpers
 
-    var db = await getDB();
+    // var db = await getDB();
     // // Print Database Contents
     // print("===== Songs =====");
     // SongData.fromMapArray(await db.query(Tables.Songs)).forEach(print);
@@ -68,7 +73,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getTop() async {
-    await dev();
+    // await dev();
     var db = await getDB();
 
     var topSongs = SongData.fromMapArray(

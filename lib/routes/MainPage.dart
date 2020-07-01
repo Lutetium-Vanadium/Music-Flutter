@@ -15,7 +15,8 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   int _currentPage = 0;
-  final _controller = PageController(initialPage: 0, keepPage: true);
+  final _pageController = PageController(initialPage: 0, keepPage: true);
+  final _textController = TextEditingController();
 
   final pages = <Widget>[
     Home(),
@@ -27,14 +28,15 @@ class _MainPageState extends State<MainPage> {
   void goHome() {
     setState(() {
       _currentPage = 0;
-      _controller.animateToPage(0,
+      _pageController.animateToPage(0,
           duration: Duration(milliseconds: 400), curve: Curves.easeOutCubic);
     });
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _pageController.dispose();
+    _textController.dispose();
     super.dispose();
   }
 
@@ -60,7 +62,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 Text(
                   "Music",
-                  style: TextStyle(color: Colors.white, fontSize: 1.5 * rem),
+                  style: Theme.of(context).textTheme.headline6,
                 ),
               ],
             ),
@@ -77,10 +79,15 @@ class _MainPageState extends State<MainPage> {
               children: <Widget>[
                 Input(
                   placeholder: "Download",
+                  controller: _textController,
                   onChange: (query) {
                     if (query.length > 0) {
                       Navigator.of(context)
-                          .pushNamed("/search", arguments: query);
+                          .pushNamed("/search", arguments: query)
+                          .then((_) {
+                        _textController.text = "";
+                        FocusScope.of(context).unfocus();
+                      });
                     }
                   },
                 ),
@@ -100,7 +107,7 @@ class _MainPageState extends State<MainPage> {
         onTap: (int index) {
           setState(() {
             _currentPage = index;
-            _controller.animateToPage(index,
+            _pageController.animateToPage(index,
                 duration: Duration(milliseconds: 400),
                 curve: Curves.easeOutCubic);
           });
@@ -144,7 +151,7 @@ class _MainPageState extends State<MainPage> {
           },
           physics: BouncingScrollPhysics(),
           itemCount: pages.length,
-          controller: _controller,
+          controller: _pageController,
         ),
       ),
     );

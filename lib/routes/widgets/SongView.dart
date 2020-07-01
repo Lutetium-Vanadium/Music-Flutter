@@ -13,7 +13,7 @@ import "package:Music/helpers/formatLength.dart";
 class SongView extends StatelessWidget {
   final SongMetadata song;
   final VoidCallback onClick;
-  final Icon icon;
+  final Widget icon;
   final Image image;
   final bool showFocusedMenuItems;
 

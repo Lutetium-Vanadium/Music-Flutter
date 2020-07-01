@@ -67,11 +67,10 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       maxProgress: maxProgress,
       progress: progress,
     );
-    var iOSPlatformChannelSpecifics = IOSNotificationDetails();
 
     var platformChannelSpecifics = NotificationDetails(
       androidPlatformChannelSpecifics,
-      iOSPlatformChannelSpecifics,
+      null,
     );
 
     await flutterLocalNotificationsPlugin.show(
