@@ -45,5 +45,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <meta-data
+            android:name="assets.audio.player.notification.icon"
+            android:resource="@drawable/app_icon"/>
     </application>
 </manifest>
