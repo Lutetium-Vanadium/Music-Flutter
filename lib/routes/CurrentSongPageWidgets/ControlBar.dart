@@ -32,7 +32,8 @@ class ControlBar extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.playlist_add),
-              onPressed: () {},
+              onPressed: () => Navigator.of(context)
+                  .pushNamed("/add-to-album", arguments: song),
             ),
             IconButton(
               icon: Icon(CustomIcons.shuffle),

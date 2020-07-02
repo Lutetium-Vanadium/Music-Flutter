@@ -12,8 +12,9 @@ import "./widgets/CurrentSongBanner.dart";
 
 class SearchPage extends StatefulWidget {
   final String intitalQuery;
+  final Future<List<NapsterSongData>> Function(String) search;
 
-  SearchPage(this.intitalQuery);
+  SearchPage(this.intitalQuery, {this.search = napster.search});
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -30,7 +31,7 @@ class _SearchPageState extends State<SearchPage> {
 
   void search(String query) async {
     if (query.length % 2 == 1) {
-      var res = await napster.search(query);
+      var res = await widget.search(query);
       if (!mounted) return;
       setState(() {
         _results = res;
@@ -121,8 +122,30 @@ class _SearchPageState extends State<SearchPage> {
           onClick: (songData, index) {
             BlocProvider.of<DataBloc>(context).add(DownloadSong(songData));
             scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Preparing to download ${songData.title}"),
+              content: Text("Preparing to download ${songData.title}."),
             ));
+          },
+          getIcon: (index) {
+            return BlocBuilder<DataBloc, DataState>(
+              builder: (context, state) {
+                if (state is ProgressNotification &&
+                    state.title == _results[index].title) {
+                  return SizedBox(
+                    height: 25,
+                    width: 25,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.transparent,
+                      valueColor:
+                          AlwaysStoppedAnimation(Theme.of(context).accentColor),
+                      value: state.percentage,
+                      strokeWidth: 2,
+                    ),
+                  );
+                } else {
+                  return Icon(Icons.arrow_downward);
+                }
+              },
+            );
           },
         ),
       ),

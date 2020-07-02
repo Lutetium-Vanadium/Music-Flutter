@@ -44,19 +44,28 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
   }
 
   Future<void> getSongs() async {
-    var db = await getDB();
+    try {
+      var db = await getDB();
 
-    String songNames = CustomAlbumData.toMap(widget.album)["songs"];
+      String songNames = (await db.query(
+        Tables.CustomAlbums,
+        where: "id LIKE ?",
+        whereArgs: [widget.album.id],
+      ))[0]["songs"];
 
-    var songs = SongData.fromMapArray(await db.rawQuery(
-      "SELECT * from ${Tables.Songs} WHERE title IN ($songNames) ORDER BY LOWER(title), title;",
-    ));
+      print(songNames);
 
-    if (!mounted) return;
+      var songs = SongData.fromMapArray(await db.rawQuery(
+        "SELECT * from ${Tables.Songs} WHERE title IN ($songNames) ORDER BY LOWER(title), title;",
+      ));
 
-    setState(() {
-      _songs = songs;
-    });
+      if (!mounted) return;
+
+      setState(() {
+        print(songs);
+        _songs = songs;
+      });
+    } catch (_) {}
   }
 
   @override
@@ -93,6 +102,7 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
           ),
         ),
         songs: _songs,
+        customAlbum: widget.album,
       ),
     );
   }

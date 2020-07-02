@@ -13,6 +13,7 @@ import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/helpers/db.dart";
 
 import "../widgets/CoverImage.dart";
+import "../widgets/showConfirm.dart";
 
 class Home extends StatefulWidget {
   @override
@@ -73,7 +74,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getTop() async {
-    // await dev();
+    await dev();
     var db = await getDB();
 
     var topSongs = SongData.fromMapArray(
@@ -208,6 +209,13 @@ class _HomeState extends State<Home> {
                           backgroundColor: Colors.transparent,
                         ),
                         FocusedMenuItem(
+                          onPressed: () => Navigator.of(context)
+                              .pushNamed("/add-to-album", arguments: song),
+                          title: Text("Add to Album"),
+                          trailingIcon: Icon(Icons.playlist_add),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        FocusedMenuItem(
                           onPressed: () {
                             BlocProvider.of<QueueBloc>(context)
                                 .add(ToggleLikedSong(song));
@@ -219,9 +227,15 @@ class _HomeState extends State<Home> {
                           backgroundColor: Colors.transparent,
                         ),
                         FocusedMenuItem(
-                          onPressed: () {
-                            BlocProvider.of<DataBloc>(context)
-                                .add(DeleteSong(song));
+                          onPressed: () async {
+                            if (await showConfirm(
+                              context,
+                              "Delete ${song.title}",
+                              "Are you sure you want to delete ${song.title} by ${song.artist}?",
+                            )) {
+                              BlocProvider.of<DataBloc>(context)
+                                  .add(DeleteSong(song));
+                            }
                           },
                           title: Text("Delete",
                               style: TextStyle(color: Colors.red)),

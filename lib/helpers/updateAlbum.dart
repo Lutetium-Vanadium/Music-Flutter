@@ -22,12 +22,19 @@ Future<void> updateAlbum(String albumId, String artist,
 
   var db = await getDB();
 
-  if ((await db.query(Tables.Albums, where: "id = ?", whereArgs: [albumId]))
-          .length >
-      0) {
-    db.execute("UPDATE albumdata SET numSongs = numSongs + 1 WHERE id LIKE ?",
-        [albumId]);
-    return db.close();
+  var count = (await db.query(
+    Tables.Albums,
+    where: "id = ?",
+    whereArgs: [albumId],
+  ))
+      .length;
+
+  if (count > 0) {
+    db.rawUpdate(
+      "UPDATE ${Tables.Albums} SET numSongs = ? WHERE id LIKE ?",
+      [count + 1, albumId],
+    );
+    return;
   }
 
   var albumInfo = await getAlbumInfo(albumId);
@@ -47,6 +54,4 @@ Future<void> updateAlbum(String albumId, String artist,
   );
 
   await db.insert(Tables.Albums, AlbumData.toMap(album));
-
-  await db.close();
 }

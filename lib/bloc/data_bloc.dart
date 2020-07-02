@@ -154,6 +154,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         yield ProgressNotification(
           bytesDownloaded: progress.first,
           totalBytes: progress.second,
+          title: song.title,
         );
       }
 
@@ -177,6 +178,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       ]);
 
       await db.delete(Tables.Albums, where: "numSongs < 1");
+    } else if (event is EditCustomAlbum) {
+      var db = await getDB();
+
+      await db.rawUpdate(
+        "UPDATE ${Tables.CustomAlbums} SET songs = ? WHERE id LIKE ?",
+        [stringifyArr(event.songs), event.id],
+      );
+
+      print("UPDATED ${event.id}");
     } else if (event is AddCustomAlbum) {
       var db = await getDB();
 
@@ -199,6 +209,21 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       await db.insert(Tables.CustomAlbums, CustomAlbumData.toMap(album));
 
       print("ADDED ${event.name}");
+    } else if (event is AddSongToCustomAlbum) {
+      var db = await getDB();
+
+      var album = CustomAlbumData.fromMapArray(await db.query(
+        Tables.CustomAlbums,
+        where: "id LIKE ?",
+        whereArgs: [event.id],
+      ))[0];
+
+      if (album.songs.contains(event.song.title)) return;
+
+      album.songs.add(event.song.title);
+
+      db.update(Tables.CustomAlbums, CustomAlbumData.toMap(album),
+          where: "id LIKE ?", whereArgs: [event.id]);
     } else if (event is DeleteCustomAlbum) {
       var db = await getDB();
 

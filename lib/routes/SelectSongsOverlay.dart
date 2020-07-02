@@ -16,7 +16,6 @@ class SelectSongsOverlay extends StatefulWidget {
 }
 
 class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
-  static const radius = Radius.circular(30);
   var _controller = TextEditingController();
   bool create;
   List<SelectedSongData> _songs;
@@ -57,49 +56,39 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      alignment: Alignment.bottomCenter,
-      widthFactor: 1,
-      heightFactor: 0.55,
-      child: ClipRRect(
-        borderRadius: BorderRadius.vertical(top: radius),
-        child: Container(
-          color: Theme.of(context).colorScheme.secondary,
-          child: Column(
-            children: <Widget>[
-              _buildNav(context),
-              Expanded(
-                child: SongList(
-                  songs: _songs,
-                  showFocusedMenuItems: false,
-                  onClick: (song, index) => setState(() {
-                    _songs[index] = _songs[index].toggleSelected();
-                    if (_songs[index].selected) {
-                      _numSelected++;
-                    } else {
-                      _numSelected--;
-                    }
-                  }),
-                  getIcon: (index) => _songs[index].selected
-                      ? Icon(
-                          Icons.check_box,
-                          size: 25,
-                          color: Theme.of(context).accentColor,
-                        )
-                      : Icon(Icons.check_box_outline_blank, size: 25),
-                ),
-              )
-            ],
+    return Column(
+      children: <Widget>[
+        _buildNav(context),
+        Expanded(
+          child: SongList(
+            songs: _songs,
+            showFocusedMenuItems: false,
+            onClick: (song, index) => setState(() {
+              _songs[index] = _songs[index].toggleSelected();
+              if (_songs[index].selected) {
+                _numSelected++;
+              } else {
+                _numSelected--;
+              }
+            }),
+            getIcon: (index) => _songs[index].selected
+                ? Icon(
+                    Icons.check_box,
+                    size: 25,
+                    color: Theme.of(context).accentColor,
+                  )
+                : Icon(Icons.check_box_outline_blank, size: 25),
           ),
-        ),
-      ),
+        )
+      ],
     );
   }
 
   Widget _buildNav(context) {
     var width10 = MediaQuery.of(context).size.width / 10;
 
-    var cantSubmit = _controller.text.length == 0 || _numSelected == 0;
+    var cantSubmit =
+        (create && _controller.text.length == 0) || _numSelected == 0;
 
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 8),
@@ -131,7 +120,11 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
                     ),
                     textAlign: TextAlign.center,
                   )
-                : Text("Name", style: Theme.of(context).textTheme.headline6),
+                : Text(
+                    widget.album.name,
+                    style: Theme.of(context).textTheme.headline6,
+                    textAlign: TextAlign.center,
+                  ),
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -144,13 +137,23 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
               onPressed: cantSubmit
                   ? null
                   : () {
-                      BlocProvider.of<DataBloc>(context).add(AddCustomAlbum(
-                        name: _controller.text,
-                        songs: _songs
-                            .where((s) => s.selected)
-                            .map((s) => s.title)
-                            .toList(),
-                      ));
+                      if (create) {
+                        BlocProvider.of<DataBloc>(context).add(AddCustomAlbum(
+                          name: _controller.text,
+                          songs: _songs
+                              .where((s) => s.selected)
+                              .map((s) => s.title)
+                              .toList(),
+                        ));
+                      } else {
+                        BlocProvider.of<DataBloc>(context).add(EditCustomAlbum(
+                          id: widget.album.id,
+                          songs: _songs
+                              .where((s) => s.selected)
+                              .map((s) => s.title)
+                              .toList(),
+                        ));
+                      }
 
                       Navigator.of(context).pop();
                     },

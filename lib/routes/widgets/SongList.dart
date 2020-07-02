@@ -36,7 +36,7 @@ class SongList extends StatelessWidget {
             borderRadius: BorderRadius.circular(25),
           ),
           child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation(Colors.white),
             strokeWidth: 5,
           ),
         ),

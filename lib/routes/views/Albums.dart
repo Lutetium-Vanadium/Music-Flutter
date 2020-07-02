@@ -8,7 +8,9 @@ import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 import "package:Music/constants.dart";
-import "package:Music/routes/widgets/CoverImage.dart";
+
+import "../widgets/showConfirm.dart";
+import "../widgets/CoverImage.dart";
 
 class Albums extends StatefulWidget {
   @override
@@ -57,7 +59,6 @@ class _AlbumsState extends State<Albums> {
       listeners: [
         BlocListener<DataBloc, DataState>(
           listener: (_, state) {
-            print(state);
             if (state is UpdateData) {
               getAlbums();
             }
@@ -176,8 +177,14 @@ class _AlbumsState extends State<Albums> {
                       ),
                       FocusedMenuItem(
                         onPressed: () async {
-                          BlocProvider.of<DataBloc>(context)
-                              .add(DeleteCustomAlbum(album.id));
+                          if (await showConfirm(
+                            context,
+                            "Delete ${album.name}",
+                            "Are you sure you want to delete ${album.name}?",
+                          )) {
+                            BlocProvider.of<DataBloc>(context)
+                                .add(DeleteCustomAlbum(album.id));
+                          }
                         },
                         title:
                             Text("Delete", style: TextStyle(color: Colors.red)),

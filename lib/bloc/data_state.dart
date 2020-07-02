@@ -10,7 +10,11 @@ class InitialData extends DataState {}
 class ProgressNotification extends DataState {
   final int bytesDownloaded;
   final int totalBytes;
-  ProgressNotification({this.bytesDownloaded, this.totalBytes}) : super();
+  final String title;
+  ProgressNotification({this.title, this.bytesDownloaded, this.totalBytes})
+      : super();
+
+  double get percentage => bytesDownloaded / totalBytes;
 }
 
 class UpdateData extends DataState {}

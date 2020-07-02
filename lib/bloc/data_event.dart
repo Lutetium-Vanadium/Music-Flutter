@@ -35,6 +35,26 @@ class AddCustomAlbum extends DataEvent {
   List<Object> get props => [name, songs];
 }
 
+class EditCustomAlbum extends DataEvent {
+  final String id;
+  final List<String> songs;
+
+  EditCustomAlbum({this.id, this.songs});
+
+  @override
+  List<Object> get props => [id, songs];
+}
+
+class AddSongToCustomAlbum extends DataEvent {
+  final String id;
+  final SongData song;
+
+  AddSongToCustomAlbum({this.id, this.song});
+
+  @override
+  List<Object> get props => [id, song];
+}
+
 class DeleteCustomAlbum extends DataEvent {
   final String id;
 

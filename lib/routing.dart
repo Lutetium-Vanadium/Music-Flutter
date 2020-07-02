@@ -1,8 +1,8 @@
 import "dart:ui";
 import "package:flutter/cupertino.dart";
-import "package:flutter/material.dart";
 
-import "models/models.dart";
+import "./models/models.dart";
+import "./OverlayPageRoute.dart";
 import "./routes/MainPage.dart";
 import "./routes/SearchPage.dart";
 import "./routes/ArtistPage.dart";
@@ -11,6 +11,7 @@ import "./routes/CustomAlbumPage.dart";
 import "./routes/LikedPage.dart";
 import "./routes/CurrentSongPage.dart";
 import "./routes/SelectSongsOverlay.dart";
+import "./routes/AddToAlbumOverlay.dart";
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -72,40 +73,13 @@ class Router {
       case "/select-songs":
         assert(settings.arguments == null ||
             settings.arguments is CustomAlbumData);
-        return PageRouteBuilder(
-          transitionDuration: Duration(milliseconds: 400),
-          fullscreenDialog: true,
-          opaque: false,
-          pageBuilder: (context, animation, secondaryAnimation) {
-            var size = MediaQuery.of(context).size;
-            var tween = Tween(begin: Offset(0, 1), end: Offset.zero).animate(
-                CurvedAnimation(curve: Curves.easeOutCubic, parent: animation));
-
-            return Scaffold(
-              backgroundColor: Colors.transparent,
-              body: GestureDetector(
-                onTap: Navigator.of(context).pop,
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(
-                    sigmaX: 4,
-                    sigmaY: 4,
-                  ),
-                  child: Container(
-                    width: size.width,
-                    height: size.height,
-                    color: Theme.of(context).backgroundColor.withOpacity(0.2),
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: SlideTransition(
-                        position: tween,
-                        child: SelectSongsOverlay(album: settings.arguments),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
+        return OverlayPageRoute(
+          child: SelectSongsOverlay(album: settings.arguments),
+        );
+      case "/add-to-album":
+        assert(settings.arguments is SongData);
+        return OverlayPageRoute(
+          child: AddToAlbumOverlay(settings.arguments),
         );
 
       default:

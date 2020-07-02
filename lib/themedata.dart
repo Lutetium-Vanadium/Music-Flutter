@@ -92,6 +92,10 @@ var themeData = ThemeData(
     color: Color.fromRGBO(23, 99, 212, 1),
   ),
   brightness: Brightness.dark,
+  snackBarTheme: SnackBarThemeData(
+    backgroundColor: Color.fromRGBO(50, 50, 50, 1),
+    contentTextStyle: textTheme.bodyText2,
+  ),
   pageTransitionsTheme: PageTransitionsTheme(
     builders: {
       TargetPlatform.android: CupertinoPageTransitionsBuilder(),

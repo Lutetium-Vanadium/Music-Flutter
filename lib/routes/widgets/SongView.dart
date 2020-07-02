@@ -10,6 +10,8 @@ import "package:Music/CustomSplashFactory.dart";
 import "package:Music/constants.dart";
 import "package:Music/helpers/formatLength.dart";
 
+import "./showConfirm.dart";
+
 class SongView extends StatelessWidget {
   final SongMetadata song;
   final VoidCallback onClick;
@@ -55,6 +57,13 @@ class SongView extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                   ),
                   FocusedMenuItem(
+                    onPressed: () => Navigator.of(context)
+                        .pushNamed("/add-to-album", arguments: song),
+                    title: Text("Add to Album"),
+                    trailingIcon: Icon(Icons.playlist_add),
+                    backgroundColor: Colors.transparent,
+                  ),
+                  FocusedMenuItem(
                     onPressed: () {
                       BlocProvider.of<QueueBloc>(context)
                           .add(ToggleLikedSong(song));
@@ -66,8 +75,15 @@ class SongView extends StatelessWidget {
                     backgroundColor: Colors.transparent,
                   ),
                   FocusedMenuItem(
-                    onPressed: () {
-                      BlocProvider.of<DataBloc>(context).add(DeleteSong(song));
+                    onPressed: () async {
+                      if (await showConfirm(
+                        context,
+                        "Delete ${song.title}",
+                        "Are you sure you want to delete ${song.title} by ${song.artist}?",
+                      )) {
+                        BlocProvider.of<DataBloc>(context)
+                            .add(DeleteSong(song));
+                      }
                     },
                     title: Text("Delete", style: TextStyle(color: Colors.red)),
                     trailingIcon: Icon(Icons.delete, color: Colors.red),

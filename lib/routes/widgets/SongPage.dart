@@ -3,6 +3,7 @@ import "dart:ui";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/displace.dart";
 import "package:Music/constants.dart";
@@ -10,12 +11,14 @@ import "package:Music/models/models.dart";
 
 import "./CurrentSongBanner.dart";
 import "./AnimatedSongList.dart";
+import "./showConfirm.dart";
 
 class SongPage extends StatefulWidget {
   final AnimationController controller;
   final List<SongData> songs;
   final String title;
   final String subtitle;
+  final CustomAlbumData customAlbum;
 
   final Hero hero;
 
@@ -26,6 +29,7 @@ class SongPage extends StatefulWidget {
     @required this.subtitle,
     @required this.hero,
     @required this.songs,
+    this.customAlbum,
   }) : super(key: key);
 
   @override
@@ -64,6 +68,7 @@ class _SongPageState extends State<SongPage> {
             title: widget.title,
             animationController: widget.controller,
             songs: widget.songs,
+            customAlbum: widget.customAlbum,
           ),
           SliverToBoxAdapter(
             child: AnimatedBuilder(
@@ -98,6 +103,7 @@ class CustomAppBar extends StatefulWidget {
   final AnimationController animationController;
   final List<SongData> songs;
   final ScrollController scrollController;
+  final CustomAlbumData customAlbum;
 
   CustomAppBar({
     Key key,
@@ -107,6 +113,7 @@ class CustomAppBar extends StatefulWidget {
     @required this.hero,
     @required this.songs,
     @required this.scrollController,
+    this.customAlbum,
   }) : super(key: key);
 
   @override
@@ -180,6 +187,34 @@ class _CustomAppBarState extends State<CustomAppBar> {
                   },
           ),
         ),
+        ...(widget.customAlbum != null
+            ? [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed("/select-songs",
+                        arguments: widget.customAlbum);
+                  },
+                  tooltip: "Edit Album",
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete),
+                  onPressed: () async {
+                    if (await showConfirm(
+                      context,
+                      "Delete ${widget.customAlbum.name}",
+                      "Are you sure you want to delete ${widget.customAlbum.name}?",
+                    )) {
+                      Navigator.of(context).pop();
+                      BlocProvider.of<DataBloc>(context)
+                          .add(DeleteCustomAlbum(widget.customAlbum.id));
+                    }
+                  },
+                  color: Colors.red,
+                  tooltip: "Delete Album",
+                ),
+              ]
+            : [])
       ],
       pinned: true,
       flexibleSpace: LayoutBuilder(builder: (context, constraints) {
