@@ -7,17 +7,19 @@ import "package:meta/meta.dart";
 import "package:path_provider/path_provider.dart";
 import "package:flutter_local_notifications/flutter_local_notifications.dart";
 
-import "package:Music/helpers/db.dart";
+import "package:Music/global_providers/database.dart";
+import "package:Music/models/models.dart";
 import "package:Music/helpers/downloader.dart";
 import "package:Music/helpers/getYoutubeDetails.dart";
 import "package:Music/helpers/updateAlbum.dart";
-import "package:Music/models/models.dart";
 
 part "data_event.dart";
 part "data_state.dart";
 
 class DataBloc extends Bloc<DataEvent, DataState> {
-  DataBloc() {
+  final DatabaseFunctions db;
+
+  DataBloc(this.db) {
     initNotifications();
   }
 
@@ -119,7 +121,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       var albumId = songData.albumId;
 
       print("Downloading ${songData.title}");
-      var updateAlbumFuture = updateAlbum(albumId, songData.artist);
+      var updateAlbumFuture = updateAlbum(albumId, songData.artist, db);
 
       var root = await getApplicationDocumentsDirectory();
 
@@ -134,9 +136,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         title: songData.title,
       );
 
-      var db = await getDB();
-
-      await db.insert(Tables.Songs, song.toMap());
+      await db.insertSong(song);
 
       await updateAlbumFuture;
       var progressStream = downloadSong(data.id, filename);
@@ -166,54 +166,40 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
     } else if (event is DeleteSong) {
       var songFile = File(event.song.filePath);
-      var db = await getDB();
 
       Future.wait([
         songFile.delete(),
-        db.delete(Tables.Songs,
-            where: "title LIKE ?", whereArgs: [event.song.title]),
-        db.rawUpdate(
-            "UPDATE ${Tables.Albums} SET numSongs = numSongs - 1 WHERE id LIKE ?",
-            [event.song.albumId]),
+        db.deleteSong(event.song.title),
+        db.update(
+          Tables.Albums,
+          {"numSongs": await db.getNumSongs(event.song.albumId)},
+          where: "id LIKE ?",
+          whereArgs: [event.song.albumId],
+        ),
       ]);
 
-      await db.delete(Tables.Albums, where: "numSongs < 1");
+      await db.deleteEmptyAlbums();
     } else if (event is EditCustomAlbum) {
-      var db = await getDB();
-
-      await db.rawUpdate(
-        "UPDATE ${Tables.CustomAlbums} SET songs = ? WHERE id LIKE ?",
-        [stringifyArr(event.songs), event.id],
+      await db.update(
+        Tables.CustomAlbums,
+        {"songs": stringifyArr(event.songs)},
+        where: "id LIKE ?",
+        whereArgs: [event.id],
       );
 
       print("UPDATED ${event.id}");
     } else if (event is AddCustomAlbum) {
-      var db = await getDB();
-
-      var ids = await db.query(
-        Tables.CustomAlbums,
-        orderBy: "id DESC",
-      );
-
-      int number = 0;
-      if (ids.length > 0) {
-        number = int.parse(ids.first["id"].substring(4)) + 1;
-      }
-
       var album = CustomAlbumData(
-        id: "cst.$number",
+        id: await db.nextCustomAlbumId(),
         name: event.name,
         songs: event.songs,
       );
 
-      await db.insert(Tables.CustomAlbums, album.toMap());
+      await db.insertCustomAlbum(album);
 
       print("ADDED ${event.name}");
     } else if (event is AddSongToCustomAlbum) {
-      var db = await getDB();
-
-      var album = CustomAlbumData.fromMapArray(await db.query(
-        Tables.CustomAlbums,
+      var album = (await db.getCustomAlbums(
         where: "id LIKE ?",
         whereArgs: [event.id],
       ))[0];
@@ -222,13 +208,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
       album.songs.add(event.song.title);
 
-      db.update(Tables.CustomAlbums, album.toMap(),
-          where: "id LIKE ?", whereArgs: [event.id]);
+      db.update(
+        Tables.CustomAlbums,
+        album.toMap(),
+        where: "id LIKE ?",
+        whereArgs: [event.id],
+      );
     } else if (event is DeleteCustomAlbum) {
-      var db = await getDB();
-
-      await db.delete(Tables.CustomAlbums,
-          where: "id LIKE ?", whereArgs: [event.id]);
+      await db.deleteCustomAlbum(event.id);
 
       print("DELETED ${event.id}");
     }

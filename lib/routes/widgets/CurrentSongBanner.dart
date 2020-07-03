@@ -1,9 +1,7 @@
 import "dart:io";
-import "package:assets_audio_player/assets_audio_player.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "package:Music/constants.dart";
 import "package:Music/bloc/queue_bloc.dart";
 
 import "./PlayPause.dart";
@@ -14,7 +12,6 @@ class CurrentSongBanner extends StatefulWidget {
 }
 
 class _CurrentSongBannerState extends State<CurrentSongBanner> {
-  AssetsAudioPlayer audioPlayer;
   DragStartDetails _dragStartDetails;
   DragUpdateDetails _dragUpdateDetails;
 
@@ -23,8 +20,6 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
   @override
   void initState() {
     super.initState();
-
-    audioPlayer = AssetsAudioPlayer.withId(playerId);
   }
 
   Widget _buildChild(BuildContext context, QueueState state) {
@@ -96,7 +91,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
                   ),
                 ],
               ),
-              PlayPause(audioPlayer),
+              PlayPause(),
             ],
           ),
         ),

@@ -2,10 +2,10 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 import "package:Music/constants.dart";
 
@@ -28,19 +28,14 @@ class _AlbumsState extends State<Albums> {
     getAlbums();
   }
 
-  getAlbums() async {
-    var db = await getDB();
+  Future<void> getAlbums() async {
+    var db = DatabaseProvider.getDB(context);
 
-    var albums = AlbumData.fromMapArray(
-      await db.query(Tables.Albums, orderBy: "LOWER(name), name"),
-    );
+    var albums = await db.getAlbums();
 
-    var customAlbums = CustomAlbumData.fromMapArray(
-      await db.query(Tables.CustomAlbums, orderBy: "LOWER(name), name"),
-    );
+    var customAlbums = await db.getCustomAlbums();
 
-    int numLiked = (await db.rawQuery(
-        "SELECT COUNT(*) AS cnt FROM ${Tables.Songs} WHERE liked;"))[0]["cnt"];
+    int numLiked = await db.numLiked;
 
     if (!mounted) return;
 
@@ -99,8 +94,10 @@ class _AlbumsState extends State<Albums> {
                       image: "liked.png",
                       isAssetImage: true,
                       title: "Liked",
-                      subtitle:
-                          generateSubtitle(type: "Album", numSongs: _numLiked),
+                      subtitle: generateSubtitle(
+                        type: "Album",
+                        numSongs: _numLiked,
+                      ),
                       isBig: true,
                       tag: "liked-songs",
                       onClick: () {
@@ -109,12 +106,8 @@ class _AlbumsState extends State<Albums> {
                       focusedMenuItems: [
                         FocusedMenuItem(
                           onPressed: () async {
-                            var db = await getDB();
-                            var songs = SongData.fromMapArray(await db.query(
-                              Tables.Songs,
-                              where: "liked",
-                              orderBy: "LOWER(title), title",
-                            ));
+                            var songs = await DatabaseProvider.getDB(context)
+                                .getSongs(where: "liked");
                             BlocProvider.of<QueueBloc>(context)
                                 .add(EnqueueSongs(songs: songs));
                           },
@@ -162,11 +155,9 @@ class _AlbumsState extends State<Albums> {
                     focusedMenuItems: [
                       FocusedMenuItem(
                         onPressed: () async {
-                          var db = await getDB();
                           String songNames = album.toMap()["songs"];
-                          var songs = SongData.fromMapArray(await db.rawQuery(
-                            "SELECT * from ${Tables.Songs} WHERE title IN ($songNames) ORDER BY LOWER(title), title;",
-                          ));
+                          var songs = await DatabaseProvider.getDB(context)
+                              .getSongs(where: "title IN ($songNames)");
                           BlocProvider.of<QueueBloc>(context)
                               .add(EnqueueSongs(songs: songs));
                         },
@@ -230,13 +221,11 @@ class _AlbumsState extends State<Albums> {
                     focusedMenuItems: [
                       FocusedMenuItem(
                         onPressed: () async {
-                          var db = await getDB();
-                          var songs = SongData.fromMapArray(await db.query(
-                            Tables.Songs,
-                            where: "albumId LIKE ?",
-                            whereArgs: [album.id],
-                            orderBy: "LOWER(title), title",
-                          ));
+                          var songs = await DatabaseProvider.getDB(context)
+                              .getSongs(
+                                  where: "albumId LIKE ?",
+                                  whereArgs: [album.id]);
+
                           BlocProvider.of<QueueBloc>(context)
                               .add(EnqueueSongs(songs: songs));
                         },

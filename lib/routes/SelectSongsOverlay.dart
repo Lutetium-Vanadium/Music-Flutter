@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/data_bloc.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 import "package:Music/routes/widgets/SongList.dart";
 
@@ -29,16 +29,13 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
   }
 
   Future<void> _getAllSongs() async {
-    var db = await getDB();
-
     var selected = Set<String>();
 
     if (!create) {
       selected = widget.album.songs.toSet();
     }
 
-    var songs = SongData.fromMapArray(
-        await db.query(Tables.Songs, orderBy: "LOWER(title), title"));
+    var songs = await DatabaseProvider.getDB(context).getSongs();
 
     var selectedSongs = List.generate(songs.length, (index) {
       var song = songs[index];

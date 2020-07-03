@@ -52,70 +52,64 @@ class SongList extends StatelessWidget {
       );
     }
 
-    return NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        FocusScope.of(notification.context).unfocus();
-        return true;
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      padding:
+          EdgeInsets.only(top: before == null ? rem / 2 : 0, bottom: 2 * rem),
+      itemCount: before == null ? songs.length : songs.length + 2,
+      itemBuilder: (context, _index) {
+        var index = before == null ? _index : _index - 2;
+
+        if (index == -2) {
+          return before;
+        } else if (index == -1) {
+          return SizedBox(height: rem / 2);
+        }
+
+        var song = songs[index];
+        return SongView(
+          icon: getIcon == null ? null : getIcon(index),
+          song: song,
+          onClick: () {
+            if (onClick != null) {
+              onClick(song, index);
+            }
+          },
+          showFocusedMenuItems: showFocusedMenuItems,
+          image: isNetwork
+              ? Image.network(
+                  song.thumbnail,
+                  fit: BoxFit.scaleDown,
+                  width: 4 * rem,
+                  height: 4 * rem,
+                  frameBuilder: (ctx, widget, frame, synchronouslyLoaded) {
+                    if (synchronouslyLoaded) {
+                      return widget;
+                    }
+
+                    return AnimatedCrossFade(
+                      firstChild: Image.asset(
+                        "$imgs/music_symbol.png",
+                        fit: BoxFit.scaleDown,
+                        width: 4 * rem,
+                        height: 4 * rem,
+                      ),
+                      secondChild: widget,
+                      crossFadeState: frame == null
+                          ? CrossFadeState.showFirst
+                          : CrossFadeState.showSecond,
+                      duration: Duration(milliseconds: 400),
+                    );
+                  },
+                )
+              : Image.file(
+                  File(song.thumbnail),
+                  fit: BoxFit.scaleDown,
+                  width: 4 * rem,
+                  height: 4 * rem,
+                ),
+        );
       },
-      child: ListView.builder(
-        physics: BouncingScrollPhysics(),
-        padding:
-            EdgeInsets.only(top: before == null ? rem / 2 : 0, bottom: 2 * rem),
-        itemCount: before == null ? songs.length : songs.length + 2,
-        itemBuilder: (context, _index) {
-          var index = before == null ? _index : _index - 2;
-
-          if (index == -2) {
-            return before;
-          } else if (index == -1) {
-            return SizedBox(height: rem / 2);
-          }
-
-          var song = songs[index];
-          return SongView(
-            icon: getIcon == null ? null : getIcon(index),
-            song: song,
-            onClick: () {
-              if (onClick != null) {
-                onClick(song, index);
-              }
-            },
-            showFocusedMenuItems: showFocusedMenuItems,
-            image: isNetwork
-                ? Image.network(
-                    song.thumbnail,
-                    fit: BoxFit.scaleDown,
-                    width: 4 * rem,
-                    height: 4 * rem,
-                    frameBuilder: (ctx, widget, frame, synchronouslyLoaded) {
-                      if (synchronouslyLoaded) {
-                        return widget;
-                      }
-
-                      return AnimatedCrossFade(
-                        firstChild: Image.asset(
-                          "$imgs/music_symbol.png",
-                          fit: BoxFit.scaleDown,
-                          width: 4 * rem,
-                          height: 4 * rem,
-                        ),
-                        secondChild: widget,
-                        crossFadeState: frame == null
-                            ? CrossFadeState.showFirst
-                            : CrossFadeState.showSecond,
-                        duration: Duration(milliseconds: 400),
-                      );
-                    },
-                  )
-                : Image.file(
-                    File(song.thumbnail),
-                    fit: BoxFit.scaleDown,
-                    width: 4 * rem,
-                    height: 4 * rem,
-                  ),
-          );
-        },
-      ),
     );
   }
 }

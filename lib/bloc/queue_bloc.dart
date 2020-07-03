@@ -5,20 +5,19 @@ import "package:equatable/equatable.dart";
 import "package:meta/meta.dart";
 import "package:assets_audio_player/assets_audio_player.dart";
 
-import "package:Music/constants.dart";
-import "package:Music/helpers/db.dart";
+import "package:Music/global_providers/audio_player.dart";
+import "package:Music/global_providers/database.dart";
 import "package:Music/models/models.dart";
 
 part "queue_event.dart";
 part "queue_state.dart";
 
 class QueueBloc extends Bloc<QueueEvent, QueueState> {
-  AssetsAudioPlayer audioPlayer;
+  final AudioPlayer audioPlayer;
+  final DatabaseFunctions db;
 
-  QueueBloc() {
-    audioPlayer = AssetsAudioPlayer.withId(playerId);
-
-    audioPlayer.playlistAudioFinished.listen((playing) {
+  QueueBloc(this.db, this.audioPlayer) {
+    audioPlayer.onNext(() {
       this.add(NextSong());
     });
   }
@@ -59,34 +58,24 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
   }
 
   Future<void> _playSong(SongData song) async {
-    var db = await getDB();
-    var albumName = (await db.query(Tables.Albums,
-            where: "id LIKE ?", whereArgs: [song.albumId]))
-        .first["name"];
+    var albumName = (await db.getAlbums(
+      where: "id LIKE ?",
+      whereArgs: [song.albumId],
+    ))
+        .first
+        .name;
 
-    audioPlayer.open(
-      Audio.file(
-        song.filePath,
-        metas: Metas(
-          album: albumName,
-          artist: song.artist,
-          title: song.title,
-          image: MetasImage.file(song.thumbnail),
-          onImageLoadFail: MetasImage.asset("$imgs/music_symbol.png"),
-        ),
-      ),
-      showNotification: true,
-      notificationSettings: NotificationSettings(
+    audioPlayer.playSong(
+      song,
+      albumName,
+      NotificationSettings(
         customNextAction: (_) => this.add(NextSong()),
         customPrevAction: (_) => this.add(PrevSong()),
         customStopAction: (_) => this.add(DequeueSongs()),
       ),
     );
 
-    await db.rawUpdate(
-      "UPDATE ${Tables.Songs} SET numListens = numListens + 1 WHERE title LIKE ?",
-      [song.title],
-    );
+    await db.incrementNumListens(song);
   }
 
   SongData get _current => _songs.length > 0 ? _songs[_index] : null;
@@ -121,8 +110,6 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
       if (songsIndex >= 0) {
         _songs[songsIndex] = SongData.override(event.song, liked: liked);
       }
-
-      var db = await getDB();
 
       await db.update(
         Tables.Songs,

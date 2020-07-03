@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/models/models.dart";
 import "package:Music/bloc/data_bloc.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/constants.dart";
 import "package:Music/CustomSplashFactory.dart";
 
@@ -21,10 +21,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
   List<CustomAlbumData> _albums = [];
 
   Future<void> getAlbums() async {
-    var db = await getDB();
-
-    var albums =
-        CustomAlbumData.fromMapArray(await db.query(Tables.CustomAlbums));
+    var albums = await DatabaseProvider.getDB(context).getCustomAlbums();
 
     if (!mounted) return;
 

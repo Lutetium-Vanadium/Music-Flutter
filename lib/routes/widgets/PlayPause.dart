@@ -1,11 +1,8 @@
 import "package:flutter/material.dart";
-import "package:assets_audio_player/assets_audio_player.dart";
+
+import "package:Music/global_providers/audio_player.dart";
 
 class PlayPause extends StatefulWidget {
-  final AssetsAudioPlayer audioPlayer;
-
-  const PlayPause(this.audioPlayer, {Key key}) : super(key: key);
-
   @override
   _PlayPauseState createState() => _PlayPauseState();
 }
@@ -36,8 +33,8 @@ class _PlayPauseState extends State<PlayPause>
 
   @override
   Widget build(BuildContext context) {
-    return PlayerBuilder.isPlaying(
-      player: widget.audioPlayer,
+    return AudioPlayerBuilder.isPlaying(
+      context: context,
       builder: (context, isPlaying) {
         if (isPlaying != _playing) {
           if (_playing) {
@@ -54,7 +51,7 @@ class _PlayPauseState extends State<PlayPause>
             progress: _controller,
           ),
           onPressed: () {
-            widget.audioPlayer.playOrPause();
+            AudioPlayerProvider.getPlayer(context).togglePlay();
           },
         );
       },

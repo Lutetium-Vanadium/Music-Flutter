@@ -2,9 +2,9 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/models/models.dart";
 import "./widgets/SongPage.dart";
@@ -44,14 +44,10 @@ class _AlbumPageState extends State<AlbumPage>
   }
 
   Future<void> getSongs() async {
-    var db = await getDB();
-
-    var songs = SongData.fromMapArray(await db.query(
-      Tables.Songs,
+    var songs = await DatabaseProvider.getDB(context).getSongs(
       where: "albumId LIKE ?",
       whereArgs: [widget.album.id],
-      orderBy: "LOWER(title), title",
-    ));
+    );
 
     if (!mounted) return;
 

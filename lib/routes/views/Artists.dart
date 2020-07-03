@@ -2,10 +2,10 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/constants.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/models/models.dart";
 import "package:Music/routes/widgets/CoverImage.dart";
@@ -25,25 +25,7 @@ class _ArtistsState extends State<Artists> {
   }
 
   getArtists() async {
-    var db = await getDB();
-
-    var preSongs = PreArtist.fromMapArray(await db.rawQuery(
-        "SELECT artist as name, COUNT(*) as numSongs FROM songdata GROUP BY artist;"));
-
-    List<ArtistData> artists = [];
-
-    for (var preSong in preSongs) {
-      var images = await db.query(
-        Tables.Albums,
-        where: "artist LIKE ?",
-        whereArgs: [preSong.name],
-        columns: ["imagePath"],
-        orderBy: "numSongs DESC",
-        limit: 4,
-      );
-
-      artists.add(ArtistData.fromMapAndPreArtist(images, preSong));
-    }
+    var artists = await DatabaseProvider.getDB(context).getArtists();
 
     if (!mounted) return;
 
@@ -112,13 +94,11 @@ class _ArtistsState extends State<Artists> {
                     focusedMenuItems: [
                       FocusedMenuItem(
                         onPressed: () async {
-                          var db = await getDB();
-                          var songs = SongData.fromMapArray(await db.query(
-                            Tables.Songs,
-                            where: "artist LIKE ?",
-                            whereArgs: [artist.name],
-                            orderBy: "LOWER(title), title",
-                          ));
+                          var songs = await DatabaseProvider.getDB(context)
+                              .getSongs(
+                                  where: "artist LIKE ?",
+                                  whereArgs: [artist.name]);
+
                           BlocProvider.of<QueueBloc>(context)
                               .add(EnqueueSongs(songs: songs));
                         },

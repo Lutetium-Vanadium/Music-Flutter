@@ -1,16 +1,15 @@
-// import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:focused_menu/modals.dart";
 import "package:assets_audio_player/assets_audio_player.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
 import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/helpers/db.dart";
 
 import "../widgets/CoverImage.dart";
 import "../widgets/showConfirm.dart";
@@ -28,28 +27,22 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
 
-    AssetsAudioPlayer.setupNotificationsOpenAction((notification) {
-      print(notification.audioId);
-      return true;
-    });
-
     getTop();
   }
 
   Future<void> dev() async {
     // SECTION dev helpers
 
-    // var db = await getDB();
+    // var db = DatabaseProvider.getDB(context);
     // // Print Database Contents
     // print("===== Songs =====");
-    // SongData.fromMapArray(await db.query(Tables.Songs)).forEach(print);
+    // (await db.getSongs()).forEach(print);
     // print("===== Albums ====");
-    // AlbumData.fromMapArray(await db.query(Tables.Albums)).forEach(print);
+    // (await db.getAlbums()).forEach(print);
     // print("== CustomAlbums =");
-    // CustomAlbumData.fromMapArray(await db.query(Tables.CustomAlbums))
-    //     .forEach(print);
+    // (await db.getCustomAlbums()).forEach(print);
     // print("==================");
-    // Clear Database Contents
+    // // Clear Database Contents
     // db.delete(Tables.Albums);
     // db.delete(Tables.Songs);
     // db.delete(Tables.CustomAlbums);
@@ -75,21 +68,14 @@ class _HomeState extends State<Home> {
 
   Future<void> getTop() async {
     // await dev();
-    var db = await getDB();
-
-    var topSongs = SongData.fromMapArray(
-      await db.query(Tables.Songs,
-          orderBy: "not liked, numListens DESC", limit: 5),
-    );
-    var topAlbums = AlbumData.fromMapArray(
-      await db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),
-    );
+    var db = DatabaseProvider.getDB(context);
+    var topData = await db.getTopData();
 
     if (!mounted) return;
 
     setState(() {
-      _topSongs = topSongs;
-      _topAlbums = topAlbums;
+      _topSongs = topData.first;
+      _topAlbums = topData.second;
     });
   }
 
@@ -148,13 +134,10 @@ class _HomeState extends State<Home> {
                       focusedMenuItems: [
                         FocusedMenuItem(
                           onPressed: () async {
-                            var db = await getDB();
-                            var songs = SongData.fromMapArray(await db.query(
-                              Tables.Songs,
-                              where: "albumId LIKE ?",
-                              whereArgs: [album.id],
-                              orderBy: "LOWER(title), title",
-                            ));
+                            var songs = await DatabaseProvider.getDB(context)
+                                .getSongs(
+                                    where: "albumId LIKE ?",
+                                    whereArgs: [album.id]);
                             BlocProvider.of<QueueBloc>(context)
                                 .add(EnqueueSongs(songs: songs));
                           },

@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
-import "package:assets_audio_player/assets_audio_player.dart";
 
 import "package:Music/routes/widgets/PlayPause.dart";
-import "package:Music/constants.dart";
 import "package:Music/models/models.dart";
 import "package:Music/CustomIcons.dart";
 import "package:Music/bloc/queue_bloc.dart";
@@ -12,10 +10,8 @@ class ControlBar extends StatelessWidget {
   final SongData song;
   final bool shuffled;
   final bool loop;
-  final AssetsAudioPlayer audioPlayer;
 
-  ControlBar({@required this.song, this.shuffled = false, this.loop = false})
-      : audioPlayer = AssetsAudioPlayer.withId(playerId);
+  ControlBar({@required this.song, this.shuffled = false, this.loop = false});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +45,7 @@ class ControlBar extends StatelessWidget {
                 BlocProvider.of<QueueBloc>(context).add(PrevSong());
               },
             ),
-            PlayPause(audioPlayer),
+            PlayPause(),
             IconButton(
               icon: Icon(Icons.fast_forward),
               disabledColor: Colors.grey[400],

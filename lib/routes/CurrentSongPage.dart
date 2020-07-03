@@ -2,9 +2,8 @@ import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:palette_generator/palette_generator.dart";
-import "package:assets_audio_player/assets_audio_player.dart";
 
-import "package:Music/constants.dart";
+import "package:Music/global_providers/audio_player.dart";
 import "package:Music/helpers/displace.dart";
 import "package:Music/helpers/formatLength.dart";
 import "package:Music/bloc/queue_bloc.dart";
@@ -21,7 +20,6 @@ class CurrentSongPage extends StatefulWidget {
 class _CurrentSongPageState extends State<CurrentSongPage> {
   String _albumId;
   Color _colour = Colors.transparent;
-  var audioPlayer = AssetsAudioPlayer.withId(playerId);
 
   Future<Color> generateColour(String path) async {
     var paletteGenerator =
@@ -86,10 +84,10 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                 ),
                 SizedBox(
                   width: width10 * 8,
-                  child: PlayerBuilder.currentPosition(
-                      player: audioPlayer,
+                  child: AudioPlayerBuilder.currentPosition(
+                      context: context,
                       builder: (context, duration) {
-                        var time = formatTime(duration.inSeconds, song.length);
+                        var time = formatTime(duration, song.length);
 
                         return Row(
                           mainAxisSize: MainAxisSize.max,
@@ -100,10 +98,10 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                                 min: 0,
                                 max: song.length.toDouble(),
                                 onChanged: (double value) {
-                                  audioPlayer
-                                      .seek(Duration(seconds: value.toInt()));
+                                  AudioPlayerProvider.getPlayer(context)
+                                      .seek(value.toInt());
                                 },
-                                value: duration.inSeconds.toDouble(),
+                                value: duration.toDouble(),
                                 inactiveColor:
                                     Theme.of(context).colorScheme.secondary,
                                 activeColor: Theme.of(context).accentColor,

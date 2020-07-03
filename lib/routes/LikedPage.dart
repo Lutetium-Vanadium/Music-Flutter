@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/models/models.dart";
 import "package:Music/constants.dart";
@@ -40,13 +40,7 @@ class _LikedPageState extends State<LikedPage>
   }
 
   Future<void> getSongs() async {
-    var db = await getDB();
-
-    var songs = SongData.fromMapArray(await db.query(
-      Tables.Songs,
-      where: "liked",
-      orderBy: "LOWER(title), title",
-    ));
+    var songs = await DatabaseProvider.getDB(context).getSongs(where: "liked");
 
     if (!mounted) return;
 

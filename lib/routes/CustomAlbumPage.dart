@@ -1,10 +1,10 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/constants.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/helpers/generateSubtitle.dart";
 import "package:Music/models/models.dart";
 import "./widgets/SongPage.dart";
@@ -45,19 +45,17 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
 
   Future<void> getSongs() async {
     try {
-      var db = await getDB();
+      var db = DatabaseProvider.getDB(context);
 
-      String songNames = (await db.query(
-        Tables.CustomAlbums,
+      String songNames = stringifyArr((await db.getCustomAlbums(
         where: "id LIKE ?",
         whereArgs: [widget.album.id],
-      ))[0]["songs"];
+      ))[0]
+          .songs);
 
       print(songNames);
 
-      var songs = SongData.fromMapArray(await db.rawQuery(
-        "SELECT * from ${Tables.Songs} WHERE title IN ($songNames) ORDER BY LOWER(title), title;",
-      ));
+      var songs = await db.getSongs(where: "title IN ($songNames)");
 
       if (!mounted) return;
 

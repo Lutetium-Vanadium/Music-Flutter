@@ -2,11 +2,11 @@ import "dart:math";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/constants.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/helpers/displace.dart";
-import "package:Music/helpers/db.dart";
 import "package:Music/models/models.dart";
 import "../widgets/SongList.dart";
 
@@ -16,7 +16,7 @@ class Music extends StatefulWidget {
 }
 
 class _MusicState extends State<Music> {
-  List<SongData> songs = [];
+  List<SongData> _songs = [];
 
   @override
   void initState() {
@@ -26,16 +26,12 @@ class _MusicState extends State<Music> {
   }
 
   Future<void> getSongs() async {
-    var db = await getDB();
-
-    var allSongs = SongData.fromMapArray(
-      await db.query(Tables.Songs, orderBy: "LOWER(title), title"),
-    );
+    var songs = await DatabaseProvider.getDB(context).getSongs();
 
     if (!mounted) return;
 
     setState(() {
-      songs = allSongs;
+      _songs = songs;
     });
   }
 
@@ -80,8 +76,8 @@ class _MusicState extends State<Music> {
                 onPressed: () {
                   var random = Random();
                   BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                      songs: songs,
-                      index: random.nextInt(songs.length),
+                      songs: _songs,
+                      index: random.nextInt(_songs.length),
                       shuffle: true));
                 },
                 child: Text("Play Random"),
@@ -89,10 +85,10 @@ class _MusicState extends State<Music> {
             ],
           ),
         ),
-        songs: songs,
+        songs: _songs,
         onClick: (song, index) {
           BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-            songs: displace(songs, index),
+            songs: displace(_songs, index),
           ));
         },
       ),
