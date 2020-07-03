@@ -47,24 +47,17 @@ class SongData extends SongMetadata {
         this.thumbnail = thumbnail ?? song.thumbnail,
         this.length = length ?? song.length;
 
-  static Map<String, dynamic> toMap(SongData song) {
+  Map<String, dynamic> toMap() {
     return {
-      "filePath": song.filePath,
-      "title": song.title,
-      "thumbnail": song.thumbnail,
-      "albumId": song.albumId,
-      "artist": song.artist,
-      "length": song.length,
-      "liked": song.liked ? 1 : 0,
-      "numListens": song.numListens,
+      "filePath": this.filePath,
+      "title": this.title,
+      "thumbnail": this.thumbnail,
+      "albumId": this.albumId,
+      "artist": this.artist,
+      "length": this.length,
+      "liked": this.liked ? 1 : 0,
+      "numListens": this.numListens,
     };
-  }
-
-  static List<Map<String, dynamic>> toMapArray(List<SongData> songs) {
-    return List.generate(
-      songs.length,
-      (i) => SongData.toMap(songs[i]),
-    );
   }
 
   static SongData fromMap(Map<String, dynamic> map) {
@@ -84,6 +77,15 @@ class SongData extends SongMetadata {
     return List.generate(
       maps.length,
       (i) => SongData.fromMap(maps[i]),
+    );
+  }
+}
+
+extension SongDataMapping on List<SongData> {
+  List<Map<String, dynamic>> toMapArray() {
+    return List.generate(
+      this.length,
+      (i) => this.elementAt(i).toMap(),
     );
   }
 }

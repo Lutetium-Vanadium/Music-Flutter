@@ -62,7 +62,7 @@ void main() {
     });
     test("to map", () {
       expect(
-        SongData.toMap(SongData(
+        SongData(
           albumId: "albumId",
           artist: "artist",
           filePath: "/file/path",
@@ -71,7 +71,7 @@ void main() {
           numListens: 10,
           thumbnail: "thumbnail.png",
           title: "title",
-        )),
+        ).toMap(),
         {
           "albumId": "albumId",
           "artist": "artist",
@@ -86,21 +86,19 @@ void main() {
     });
     test("to map array", () {
       expect(
-        SongData.toMapArray(
-          List.generate(
-            10,
-            (index) => SongData(
-              albumId: "albumId",
-              artist: "artist",
-              filePath: "/file/path",
-              length: index,
-              liked: true,
-              numListens: index,
-              thumbnail: "thumbnail.png",
-              title: "title",
-            ),
+        List.generate(
+          10,
+          (index) => SongData(
+            albumId: "albumId",
+            artist: "artist",
+            filePath: "/file/path",
+            length: index,
+            liked: true,
+            numListens: index,
+            thumbnail: "thumbnail.png",
+            title: "title",
           ),
-        ),
+        ).toMapArray(),
         List.generate(
           10,
           (index) => {
@@ -164,13 +162,13 @@ void main() {
     });
     test("to map", () {
       expect(
-        AlbumData.toMap(AlbumData(
+        AlbumData(
           id: "id",
           artist: "artist",
           imagePath: "/image/path",
           numSongs: 10,
           name: "name",
-        )),
+        ).toMap(),
         {
           "id": "id",
           "artist": "artist",
@@ -182,18 +180,16 @@ void main() {
     });
     test("to map array", () {
       expect(
-        AlbumData.toMapArray(
-          List.generate(
-            10,
-            (index) => AlbumData(
-              id: "id",
-              artist: "artist",
-              imagePath: "/image/path",
-              numSongs: index,
-              name: "name",
-            ),
+        List.generate(
+          10,
+          (index) => AlbumData(
+            id: "id",
+            artist: "artist",
+            imagePath: "/image/path",
+            numSongs: index,
+            name: "name",
           ),
-        ),
+        ).toMapArray(),
         List.generate(
           10,
           (index) => {
@@ -247,11 +243,11 @@ void main() {
     });
     test("to map", () {
       expect(
-        CustomAlbumData.toMap(CustomAlbumData(
+        CustomAlbumData(
           id: "id",
           name: "name",
           songs: ["song'1", "song2"],
-        )),
+        ).toMap(),
         {
           "id": "id",
           "name": "name",
@@ -261,16 +257,14 @@ void main() {
     });
     test("to map array", () {
       expect(
-        CustomAlbumData.toMapArray(
-          List.generate(
-            10,
-            (index) => CustomAlbumData(
-              id: "id",
-              name: "name",
-              songs: ["song1", "song2"],
-            ),
+        List.generate(
+          10,
+          (index) => CustomAlbumData(
+            id: "id",
+            name: "name",
+            songs: ["song1", "song2"],
           ),
-        ),
+        ).toMapArray(),
         List.generate(
           10,
           (index) => {

@@ -27,19 +27,12 @@ class CustomAlbumData extends Equatable {
   @override
   List<Object> get props => [id, name, songs];
 
-  static Map<String, dynamic> toMap(CustomAlbumData album) {
+  Map<String, dynamic> toMap() {
     return {
-      "id": album.id,
-      "name": album.name,
-      "songs": stringifyArr(album.songs),
+      "id": this.id,
+      "name": this.name,
+      "songs": stringifyArr(this.songs),
     };
-  }
-
-  static List<Map<String, dynamic>> toMapArray(List<CustomAlbumData> albums) {
-    return List.generate(
-      albums.length,
-      (i) => CustomAlbumData.toMap(albums[i]),
-    );
   }
 
   static CustomAlbumData fromMap(Map<String, dynamic> map) {
@@ -54,6 +47,15 @@ class CustomAlbumData extends Equatable {
     return List.generate(
       maps.length,
       (i) => CustomAlbumData.fromMap(maps[i]),
+    );
+  }
+}
+
+extension CustomAlbumDataMapping on List<CustomAlbumData> {
+  List<Map<String, dynamic>> toMapArray() {
+    return List.generate(
+      this.length,
+      (i) => this.elementAt(i).toMap(),
     );
   }
 }

@@ -136,7 +136,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
       var db = await getDB();
 
-      await db.insert(Tables.Songs, SongData.toMap(song));
+      await db.insert(Tables.Songs, song.toMap());
 
       await updateAlbumFuture;
       var progressStream = downloadSong(data.id, filename);
@@ -206,7 +206,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         songs: event.songs,
       );
 
-      await db.insert(Tables.CustomAlbums, CustomAlbumData.toMap(album));
+      await db.insert(Tables.CustomAlbums, album.toMap());
 
       print("ADDED ${event.name}");
     } else if (event is AddSongToCustomAlbum) {
@@ -222,7 +222,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
       album.songs.add(event.song.title);
 
-      db.update(Tables.CustomAlbums, CustomAlbumData.toMap(album),
+      db.update(Tables.CustomAlbums, album.toMap(),
           where: "id LIKE ?", whereArgs: [event.id]);
     } else if (event is DeleteCustomAlbum) {
       var db = await getDB();

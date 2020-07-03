@@ -16,21 +16,14 @@ class AlbumData extends Equatable {
   @override
   List<Object> get props => [id, imagePath, name, numSongs, artist];
 
-  static Map<String, dynamic> toMap(AlbumData album) {
+  Map<String, dynamic> toMap() {
     return {
-      "id": album.id,
-      "imagePath": album.imagePath,
-      "name": album.name,
-      "numSongs": album.numSongs,
-      "artist": album.artist,
+      "id": this.id,
+      "imagePath": this.imagePath,
+      "name": this.name,
+      "numSongs": this.numSongs,
+      "artist": this.artist,
     };
-  }
-
-  static List<Map<String, dynamic>> toMapArray(List<AlbumData> albums) {
-    return List.generate(
-      albums.length,
-      (i) => AlbumData.toMap(albums[i]),
-    );
   }
 
   static AlbumData fromMap(Map<String, dynamic> map) {
@@ -45,5 +38,14 @@ class AlbumData extends Equatable {
 
   static List<AlbumData> fromMapArray(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) => AlbumData.fromMap(maps[i]));
+  }
+}
+
+extension AlbumDataMapping on List<AlbumData> {
+  List<Map<String, dynamic>> toMapArray() {
+    return List.generate(
+      this.length,
+      (i) => this.elementAt(i).toMap(),
+    );
   }
 }

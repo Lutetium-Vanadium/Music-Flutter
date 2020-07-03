@@ -127,7 +127,6 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ),
-                // TODO add queue reordering?
                 Expanded(
                   child: SongList(
                     songs: displaceWithoutIndex(state.songs, state.index),

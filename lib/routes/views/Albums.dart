@@ -163,8 +163,7 @@ class _AlbumsState extends State<Albums> {
                       FocusedMenuItem(
                         onPressed: () async {
                           var db = await getDB();
-                          String songNames =
-                              CustomAlbumData.toMap(album)["songs"];
+                          String songNames = album.toMap()["songs"];
                           var songs = SongData.fromMapArray(await db.rawQuery(
                             "SELECT * from ${Tables.Songs} WHERE title IN ($songNames) ORDER BY LOWER(title), title;",
                           ));

@@ -74,7 +74,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<void> getTop() async {
-    await dev();
+    // await dev();
     var db = await getDB();
 
     var topSongs = SongData.fromMapArray(

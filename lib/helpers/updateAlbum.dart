@@ -53,5 +53,5 @@ Future<void> updateAlbum(String albumId, String artist,
     artist: artist,
   );
 
-  await db.insert(Tables.Albums, AlbumData.toMap(album));
+  await db.insert(Tables.Albums, album.toMap());
 }
