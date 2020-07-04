@@ -6,6 +6,7 @@ import "./bloc/data_bloc.dart";
 import "./bloc/queue_bloc.dart";
 import "./routing.dart";
 import "./themedata.dart";
+import "./notifications.dart";
 import "./global_providers/database.dart";
 import "./global_providers/audio_player.dart";
 
@@ -24,13 +25,14 @@ void main() {
 class App extends StatelessWidget {
   final db = DatabaseFunctions();
   final audioPlayer = AudioPlayer();
+  final notificationHandler = NotificationHandler();
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider<DataBloc>(
-          create: (_) => DataBloc(db),
+          create: (_) => DataBloc(db, notificationHandler),
         ),
         BlocProvider<QueueBloc>(
           create: (_) => QueueBloc(db, audioPlayer),

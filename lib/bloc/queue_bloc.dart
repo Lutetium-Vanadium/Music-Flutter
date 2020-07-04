@@ -16,7 +16,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
   final AudioPlayer audioPlayer;
   final DatabaseFunctions db;
 
-  QueueBloc(this.db, this.audioPlayer) {
+  QueueBloc(this.db, this.audioPlayer) : super(EmptyQueue()) {
     audioPlayer.onNext(() {
       this.add(NextSong());
     });
@@ -79,9 +79,6 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
   }
 
   SongData get _current => _songs.length > 0 ? _songs[_index] : null;
-
-  @override
-  QueueState get initialState => EmptyQueue();
 
   @override
   Stream<QueueState> mapEventToState(QueueEvent event) async* {
