@@ -12,6 +12,7 @@ import "./routes/LikedPage.dart";
 import "./routes/CurrentSongPage.dart";
 import "./routes/SelectSongsOverlay.dart";
 import "./routes/AddToAlbumOverlay.dart";
+import "./routes/RegisterApiKeys.dart";
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -70,6 +71,8 @@ class Router {
           pageBuilder: (context, animation, secondAnimation) =>
               CurrentSongPage(),
         );
+      case "/register-apikeys":
+        return CupertinoPageRoute(builder: (_) => RegisterApiKeys());
       case "/select-songs":
         assert(settings.arguments == null ||
             settings.arguments is CustomAlbumData);

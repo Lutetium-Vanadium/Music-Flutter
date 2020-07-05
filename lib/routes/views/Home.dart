@@ -106,10 +106,11 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding:
-                    EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-                child: Text("Top Albums",
-                    style: Theme.of(context).textTheme.headline3),
+                padding: EdgeInsets.only(left: width10 / 2, top: 30, bottom: 7),
+                child: Text(
+                  "Top Albums",
+                  style: Theme.of(context).textTheme.headline3,
+                ),
               ),
               Container(
                 height: 4.3 * width10 + 3 * rem,
@@ -155,9 +156,11 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Padding(
-                padding: EdgeInsets.only(left: width10 / 4 * 2, bottom: 7),
-                child: Text("Top Songs",
-                    style: Theme.of(context).textTheme.headline3),
+                padding: EdgeInsets.only(left: width10 / 2, bottom: 7),
+                child: Text(
+                  "Top Songs",
+                  style: Theme.of(context).textTheme.headline3,
+                ),
               ),
               Container(
                 height: 4.3 * width10 + 3 * rem,

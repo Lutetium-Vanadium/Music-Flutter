@@ -2,6 +2,7 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
+import "package:Music/global_providers/database.dart";
 import "package:Music/bloc/data_bloc.dart";
 import "package:Music/models/models.dart";
 import "package:Music/constants.dart";
@@ -24,14 +25,12 @@ class _SearchPageState extends State<SearchPage> {
   List<NapsterSongData> _results;
   TextEditingController _textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  var _titles = Set<String>();
 
-  void goHome() {
-    Navigator.of(context).pop();
-  }
-
-  void search(String query) async {
+  Future<void> search(String query) async {
     if (query.length % 2 == 1) {
       var res = await widget.search(query);
+      res.removeWhere((song) => _titles.contains(song));
       if (!mounted) return;
       setState(() {
         _results = res;
@@ -39,8 +38,19 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
+  Future<void> _getTitles() async {
+    var titles =
+        (await DatabaseProvider.getDB(context).getSongs()).map((s) => s.title);
+
+    if (!mounted) return;
+    setState(() {
+      _titles = titles.toSet();
+    });
+  }
+
   @override
   void initState() {
+    _getTitles();
     super.initState();
     _textController = TextEditingController(text: widget.intitalQuery);
   }
@@ -68,7 +78,7 @@ class _SearchPageState extends State<SearchPage> {
         title: Hero(
           tag: "navbar-title",
           child: GestureDetector(
-            onTap: goHome,
+            onTap: Navigator.of(context).pop,
             child: Row(
               children: <Widget>[
                 Image(

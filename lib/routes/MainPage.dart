@@ -1,6 +1,7 @@
 import "package:flutter/material.dart";
 
 import "../constants.dart";
+import "../apiKeys.dart";
 import "./widgets/Input.dart";
 import "./widgets/CurrentSongBanner.dart";
 import "./views/Albums.dart";
@@ -31,6 +32,20 @@ class _MainPageState extends State<MainPage> {
       _pageController.animateToPage(0,
           duration: Duration(milliseconds: 400), curve: Curves.easeOutCubic);
     });
+  }
+
+  Future<void> _checkForApiKeys() async {
+    if (await keys.needsApiKeys) {
+      await Future.delayed(Duration(milliseconds: 300));
+      Navigator.of(context).pushNamed("/register-apikeys");
+    }
+  }
+
+  @override
+  void initState() {
+    _checkForApiKeys();
+
+    super.initState();
   }
 
   @override
