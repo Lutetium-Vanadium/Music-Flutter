@@ -1,15 +1,14 @@
 import "package:flutter/material.dart";
+import "package:flutter/services.dart";
 import "package:assets_audio_player/assets_audio_player.dart";
+import "package:rxdart/rxdart.dart";
 
 import "package:Music/constants.dart";
 import "package:Music/models/song_data.dart";
-import 'package:flutter/services.dart';
 
 class AudioPlayerProvider extends StatelessWidget {
   final Widget child;
   final AudioPlayer player;
-
-  String yeet() => "YEEEEE";
 
   const AudioPlayerProvider({Key key, this.player, this.child})
       : super(key: key);
@@ -35,6 +34,7 @@ class AudioPlayerProvider extends StatelessWidget {
     assert(context != null);
     final AudioPlayerProvider result =
         context.findAncestorWidgetOfExactType<AudioPlayerProvider>();
+
     if (result != null) return result.player;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
@@ -96,18 +96,18 @@ class AudioPlayerBuilder<T> extends StatelessWidget {
     switch (_type) {
       case _AudioPlayerBuilder.Playing:
         return StreamBuilder<bool>(
-          stream: player.player.isPlaying,
+          stream: player.isPlaying,
           initialData: false,
           builder: (context, snapshot) {
             return builder(context, snapshot.data as T);
           },
         );
       case _AudioPlayerBuilder.CurrentPosition:
-        return StreamBuilder<Duration>(
-          stream: player.player.currentPosition,
-          initialData: Duration.zero,
+        return StreamBuilder<int>(
+          stream: player.currentPosition,
+          initialData: 0,
           builder: (context, snapshot) {
-            return builder(context, snapshot.data.inSeconds as T);
+            return builder(context, snapshot.data as T);
           },
         );
       default:
@@ -161,4 +161,8 @@ class AudioPlayer {
   Future<void> seek(int time) => player.seek(Duration(seconds: time));
 
   Future<void> togglePlay() => player.playOrPause();
+
+  ValueStream<bool> get isPlaying => player.isPlaying;
+  ValueStream<int> get currentPosition =>
+      player.currentPosition.map((duration) => duration.inSeconds);
 }

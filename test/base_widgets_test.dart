@@ -1,14 +1,25 @@
 import "dart:io";
-
 import "package:flutter/material.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
 import "package:flutter_test/flutter_test.dart";
 import "package:focused_menu/focused_menu.dart";
+import "package:mockito/mockito.dart";
+import "package:rxdart/rxdart.dart";
 
 import "package:Music/models/models.dart";
+import "package:Music/bloc/queue_bloc.dart";
+import "package:Music/global_providers/database.dart";
+import "package:Music/global_providers/audio_player.dart";
+import "package:Music/routes/widgets/PlayPause.dart";
 import "package:Music/routes/widgets/SongList.dart";
+import "package:Music/routes/widgets/SongPage.dart";
 import "package:Music/routes/widgets/SongView.dart";
 import "package:Music/routes/widgets/Mozaic.dart";
 import "package:Music/routes/widgets/CoverImage.dart";
+
+class MockAudioPlayer extends Mock implements AudioPlayer {}
+
+class MockDatabaseFunctions extends Mock implements DatabaseFunctions {}
 
 void main() {
   group("Mozaic", () {
@@ -84,7 +95,6 @@ void main() {
       expect(find.byType(Mozaic), findsOneWidget);
     });
   });
-
   group("Song View", () {
     var mockSong1 = SongData(
       albumId: "id",
@@ -140,8 +150,20 @@ void main() {
 
       expect(find.byType(Icon), findsOneWidget);
     });
-  });
+    testWidgets("Renders correct data", (tester) async {
+      await tester.pumpWidget(MaterialApp(
+        home: SongView(
+          image: image,
+          song: mockSong2,
+          icon: Icon(Icons.timer),
+        ),
+      ));
 
+      expect(find.text("t"), findsOneWidget);
+      expect(find.text("A"), findsOneWidget);
+      expect(find.text("0:00"), findsOneWidget);
+    });
+  });
   group("Song List", () {
     var mockSongs = List.generate(
       5,
@@ -175,6 +197,134 @@ void main() {
       ));
 
       expect(find.byType(FocusedMenuHolder), findsNothing);
+    });
+    testWidgets("Has correct number of icons", (tester) async {
+      var special = Icon(Icons.ac_unit);
+      var regular = Icon(Icons.access_alarm);
+
+      await tester.pumpWidget(MaterialApp(
+        home: SongList(
+          songs: mockSongs,
+          getIcon: (index) => index == 2 ? special : regular,
+        ),
+      ));
+
+      expect(find.byWidget(special, skipOffstage: false), findsOneWidget);
+      expect(find.byWidget(regular, skipOffstage: false), findsNWidgets(4));
+    });
+  });
+
+  group("Song Page", () {
+    MockDatabaseFunctions db;
+    MockAudioPlayer ap;
+    QueueBloc bloc;
+
+    final mockAlbum = AlbumData(
+      artist: "a",
+      id: "id",
+      imagePath: "i",
+      name: "n",
+      numSongs: 2,
+    );
+
+    final mockSongs = List.generate(
+      5,
+      (index) => SongData(
+        albumId: "id",
+        artist: "A",
+        filePath: "f",
+        length: index,
+        liked: false,
+        numListens: index,
+        thumbnail: "t",
+        title: "t",
+      ),
+    );
+
+    setUp(() {
+      db = MockDatabaseFunctions();
+      ap = MockAudioPlayer();
+      bloc = QueueBloc(db, ap);
+
+      when(db.getAlbums(
+        where: anyNamed("where"),
+        whereArgs: anyNamed("whereArgs"),
+      )).thenAnswer((_) => Future.value([mockAlbum]));
+    });
+
+    tearDown(() {
+      bloc?.close();
+    });
+
+    testWidgets("Correct Layout", (tester) async {
+      var controller = AnimationController(vsync: tester);
+
+      await tester.pumpWidget(BlocProvider(
+        create: (_) => bloc,
+        child: MaterialApp(
+          home: SongPage(
+            controller: controller,
+            hero: Hero(child: Placeholder(), tag: "placeholder"),
+            songs: mockSongs,
+            title: "T",
+            subtitle: "s",
+          ),
+        ),
+      ));
+
+      expect(find.byType(IconButton), findsNWidgets(2));
+      expect(find.text("T"), findsNWidgets(2));
+      expect(find.text("s"), findsOneWidget);
+      expect(find.byType(FlatButton), findsNWidgets(2));
+    });
+    testWidgets("Has 2 extra icon buttons with CustomAlbum", (tester) async {
+      var controller = AnimationController(vsync: tester);
+
+      await tester.pumpWidget(BlocProvider(
+        create: (_) => QueueBloc(db, ap),
+        child: MaterialApp(
+          home: SongPage(
+            controller: controller,
+            hero: Hero(child: Placeholder(), tag: "placeholder"),
+            songs: mockSongs,
+            title: "T",
+            subtitle: "s",
+            customAlbum: CustomAlbumData(),
+          ),
+        ),
+      ));
+
+      expect(find.byType(IconButton), findsNWidgets(4));
+    });
+  });
+
+  group("Play Pause", () {
+    MockAudioPlayer ap;
+
+    setUp(() {
+      ap = MockAudioPlayer();
+    });
+
+    testWidgets("Plays and Pauses", (tester) async {
+      var isPlaying = BehaviorSubject<bool>.seeded(false);
+
+      when(ap.isPlaying).thenAnswer((_) => isPlaying.stream);
+
+      await tester.pumpWidget(MaterialApp(
+        home: AudioPlayerProvider(
+          player: ap,
+          child: Material(child: PlayPause()),
+        ),
+      ));
+
+      var btn = find.byType(IconButton);
+
+      expect(btn, findsOneWidget);
+      await tester.tap(btn);
+
+      expect(verify(ap.togglePlay()).callCount, 1);
+
+      isPlaying.close();
     });
   });
 }
