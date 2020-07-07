@@ -103,11 +103,11 @@ class AudioPlayerBuilder<T> extends StatelessWidget {
           },
         );
       case _AudioPlayerBuilder.CurrentPosition:
-        return StreamBuilder<int>(
+        return StreamBuilder<Duration>(
           stream: player.currentPosition,
-          initialData: 0,
+          initialData: Duration.zero,
           builder: (context, snapshot) {
-            return builder(context, snapshot.data as T);
+            return builder(context, snapshot.data.inSeconds as T);
           },
         );
       default:
@@ -163,6 +163,5 @@ class AudioPlayer {
   Future<void> togglePlay() => player.playOrPause();
 
   ValueStream<bool> get isPlaying => player.isPlaying;
-  ValueStream<int> get currentPosition =>
-      player.currentPosition.map((duration) => duration.inSeconds);
+  ValueStream<Duration> get currentPosition => player.currentPosition;
 }

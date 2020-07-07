@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 
 import "../constants.dart";
@@ -117,40 +118,44 @@ class _MainPageState extends State<MainPage> {
         ],
         primary: true,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentPage,
-        onTap: (int index) {
-          setState(() {
-            _currentPage = index;
-            _pageController.animateToPage(index,
-                duration: Duration(milliseconds: 400),
-                curve: Curves.easeOutCubic);
-          });
-        },
-        backgroundColor: Theme.of(context).backgroundColor,
-        selectedItemColor: Theme.of(context).accentTextTheme.bodyText1.color,
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            title: Text("Home"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.music_note),
-            title: Text("My Music"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.library_music),
-            title: Text("Albums"),
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.people),
-            title: Text("Artists"),
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          CurrentSongBanner(),
+          BottomNavigationBar(
+            currentIndex: _currentPage,
+            onTap: (int index) {
+              setState(() {
+                _currentPage = index;
+                _pageController.animateToPage(index,
+                    duration: Duration(milliseconds: 400),
+                    curve: Curves.easeOutCubic);
+              });
+            },
+            backgroundColor: Theme.of(context).backgroundColor,
+            selectedItemColor:
+                Theme.of(context).accentTextTheme.bodyText1.color,
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                title: Text("Home"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.music_note),
+                title: Text("My Music"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.library_music),
+                title: Text("Albums"),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.people),
+                title: Text("Artists"),
+              ),
+            ],
           ),
         ],
       ),
-      persistentFooterButtons: <Widget>[
-        CurrentSongBanner(),
-      ],
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();

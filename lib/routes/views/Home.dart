@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
     // // List all files ignoring flutter stuff
     // var dirs =
     //     (await getApplicationDocumentsDirectory()).listSync(recursive: true);
-    // var base = "/data/user/0/com.example.Music/app_flutter";
+    // var base = "/data/user/0/com.Lutetium-Vanadium.Music/app_flutter";
     // var toSee = [RegExp("$base/songs/*"), RegExp("$base/album_images/*")];
     // dirs.retainWhere((element) =>
     //     toSee[0].hasMatch(element.path) || toSee[1].hasMatch(element.path));

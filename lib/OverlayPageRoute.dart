@@ -48,7 +48,7 @@ class OverlayPageRoute<T> extends PageRoute<T> {
                   child: ClipRRect(
                     borderRadius: BorderRadius.vertical(top: radius),
                     child: Container(
-                      color: Theme.of(context).colorScheme.secondary,
+                      color: Theme.of(context).colorScheme.secondaryVariant,
                       child: child,
                     ),
                   ),

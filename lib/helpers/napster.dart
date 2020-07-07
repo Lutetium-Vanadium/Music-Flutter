@@ -99,7 +99,7 @@ NapsterAlbumData formatAlbumData(Map<String, dynamic> data) => NapsterAlbumData(
 
 /// formatTrackData()
 ///
-/// @param track track The track object given by the napster api
+/// @param The track object given by the napster api
 ///
 /// Returns the song details required from the track data
 NapsterSongData formatTrackData(Map<String, dynamic> track) => NapsterSongData(

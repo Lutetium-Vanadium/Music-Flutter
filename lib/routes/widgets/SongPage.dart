@@ -54,9 +54,7 @@ class _SongPageState extends State<SongPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      persistentFooterButtons: <Widget>[
-        CurrentSongBanner(),
-      ],
+      bottomNavigationBar: CurrentSongBanner(),
       body: CustomScrollView(
         controller: _scrollController,
         physics: BouncingScrollPhysics(),
@@ -74,8 +72,13 @@ class _SongPageState extends State<SongPage> {
             child: AnimatedBuilder(
               animation: widget.controller,
               builder: (context, _) {
-                var percent = clamp(widget.controller.value, 0.5, 1);
-                return SizedBox(height: 20 + percent * 20);
+                var tween = Tween<double>(begin: 20, end: 40).animate(
+                  CurvedAnimation(
+                    parent: widget.controller,
+                    curve: Interval(0.5, 1, curve: Curves.easeOutCubic),
+                  ),
+                );
+                return SizedBox(height: tween.value);
               },
             ),
           ),

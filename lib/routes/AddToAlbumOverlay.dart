@@ -38,40 +38,58 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        _buildNav(context),
-        Expanded(
-          child: _albums.length == 0
-              ? Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: Text(
-                    "No Custom Albums",
-                    style: Theme.of(context).textTheme.bodyText1,
-                  ),
-                )
-              : ListView.builder(
-                  itemCount: _albums.length,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: EdgeInsets.symmetric(
-                        vertical: 0.6 * rem,
-                        horizontal: 1.2 * rem,
-                      ),
+    return BlocListener<DataBloc, DataState>(
+      listener: (context, state) {
+        if (state is UpdateData) {
+          getAlbums();
+        }
+      },
+      child: Column(
+        children: <Widget>[
+          _buildNav(context),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _albums.length + 1,
+              physics: BouncingScrollPhysics(),
+              itemBuilder: (context, index) {
+                if (index == _albums.length) {
+                  return Center(
+                    child: Container(
+                      width: 60,
+                      height: 60,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(rem / 2),
-                        color: Theme.of(context).colorScheme.secondary,
+                        borderRadius: BorderRadius.circular(30),
+                        color: Theme.of(context).colorScheme.primaryVariant,
                       ),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: _buildAlbumDetails(context, index),
+                      child: IconButton(
+                        color: Colors.white,
+                        icon: Icon(Icons.add),
+                        onPressed: () =>
+                            Navigator.of(context).pushNamed("/select-songs"),
                       ),
-                    );
-                  },
-                ),
-        ),
-      ],
+                    ),
+                  );
+                }
+
+                return Container(
+                  margin: EdgeInsets.symmetric(
+                    vertical: 0.6 * rem,
+                    horizontal: 1.2 * rem,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(rem / 2),
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: _buildAlbumDetails(context, index),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 

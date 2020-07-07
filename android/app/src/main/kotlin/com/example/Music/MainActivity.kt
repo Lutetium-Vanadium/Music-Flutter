@@ -1,4 +1,4 @@
-package com.example.Music
+package com.Lutetium-Vanadium.Music
 
 import io.flutter.embedding.android.FlutterActivity
 

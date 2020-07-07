@@ -23,6 +23,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<NapsterSongData> _results;
+  bool _errored = false;
   TextEditingController _textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   var _titles = Set<String>();
@@ -30,9 +31,10 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> search(String query) async {
     if (query.length % 2 == 1) {
       var res = await widget.search(query);
-      res.removeWhere((song) => _titles.contains(song));
+      res?.removeWhere((song) => _titles.contains(song));
       if (!mounted) return;
       setState(() {
+        _errored = _results == null;
         _results = res;
       });
     }
@@ -118,46 +120,62 @@ class _SearchPageState extends State<SearchPage> {
         ],
         primary: true,
       ),
-      persistentFooterButtons: <Widget>[
-        CurrentSongBanner(),
-      ],
+      bottomNavigationBar: CurrentSongBanner(),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
         },
-        child: SongList(
-          songs: _results,
-          isNetwork: true,
-          showFocusedMenuItems: false,
-          onClick: (songData, index) {
-            BlocProvider.of<DataBloc>(context).add(DownloadSong(songData));
-            scaffoldKey.currentState.showSnackBar(SnackBar(
-              content: Text("Preparing to download ${songData.title}."),
-            ));
-          },
-          getIcon: (index) {
-            return BlocBuilder<DataBloc, DataState>(
-              builder: (context, state) {
-                if (state is ProgressNotification &&
-                    state.title == _results[index].title) {
-                  return SizedBox(
-                    height: 25,
-                    width: 25,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.transparent,
-                      valueColor:
-                          AlwaysStoppedAnimation(Theme.of(context).accentColor),
-                      value: state.percentage,
-                      strokeWidth: 2,
+        child: _errored
+            ? Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.error, color: Colors.red),
+                    Text(
+                      " Error",
+                      style: Theme.of(context).textTheme.headline5,
                     ),
+                  ],
+                ),
+              )
+            : SongList(
+                songs: _results,
+                isNetwork: true,
+                showFocusedMenuItems: false,
+                onClick: (songData, index) {
+                  BlocProvider.of<DataBloc>(context)
+                      .add(DownloadSong(songData));
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                    content: Text("Preparing to download ${songData.title}."),
+                  ));
+                },
+                getIcon: (index) {
+                  return BlocBuilder<DataBloc, DataState>(
+                    builder: (context, state) {
+                      if (state is ProgressNotification &&
+                          state.title == _results[index].title) {
+                        return SizedBox(
+                          height: 25,
+                          width: 25,
+                          child: CircularProgressIndicator(
+                            backgroundColor: Colors.transparent,
+                            valueColor: AlwaysStoppedAnimation(
+                                Theme.of(context).accentColor),
+                            value: state.percentage,
+                            strokeWidth: 2,
+                          ),
+                        );
+                      } else {
+                        return Image.asset(
+                          "$imgs/download.png",
+                          height: 1.3 * rem,
+                        );
+                      }
+                    },
                   );
-                } else {
-                  return Icon(Icons.arrow_downward);
-                }
-              },
-            );
-          },
-        ),
+                },
+              ),
       ),
     );
   }
