@@ -56,42 +56,71 @@ class _MusicState extends State<Music> {
           },
         ),
       ],
-      child: SongList(
-        before: Padding(
-          padding: EdgeInsets.only(
-            left: width10 / 2,
-            right: width10 / 2,
-            top: 30,
-            bottom: 7,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("My Music", style: Theme.of(context).textTheme.headline3),
-              FlatButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(1.25 * rem)),
-                color: Theme.of(context).buttonColor,
-                onPressed: () {
-                  var random = Random();
-                  BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                      songs: _songs,
-                      index: random.nextInt(_songs.length),
-                      shuffle: true));
-                },
-                child: Text("Play Random"),
+      child: _songs.length == 0
+          ? Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: width10 / 2, vertical: 40),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "My Music",
+                    style: Theme.of(context).textTheme.headline3,
+                  ),
+                  SizedBox(height: 20),
+                  RichText(
+                    text: TextSpan(children: [
+                      TextSpan(
+                        text: "No songs are downloaded.\n\n",
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      TextSpan(
+                        text:
+                            "Download songs by searching through the above Search Box.\n",
+                        style: Theme.of(context).textTheme.bodyText2,
+                      ),
+                    ]),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-        songs: _songs,
-        onClick: (song, index) {
-          BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-            songs: displace(_songs, index),
-          ));
-        },
-      ),
+            )
+          : SongList(
+              before: Padding(
+                padding: EdgeInsets.only(
+                  left: width10 / 2,
+                  right: width10 / 2,
+                  top: 30,
+                  bottom: 7,
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("My Music",
+                        style: Theme.of(context).textTheme.headline3),
+                    FlatButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1.25 * rem)),
+                      color: Theme.of(context).buttonColor,
+                      onPressed: () {
+                        var random = Random();
+                        BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                            songs: _songs,
+                            index: random.nextInt(_songs.length),
+                            shuffle: true));
+                      },
+                      child: Text("Play Random"),
+                    ),
+                  ],
+                ),
+              ),
+              songs: _songs,
+              onClick: (song, index) {
+                BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
+                  songs: displace(_songs, index),
+                ));
+              },
+            ),
     );
   }
 }

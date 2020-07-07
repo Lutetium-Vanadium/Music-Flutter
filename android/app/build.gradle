@@ -37,7 +37,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.Lutetium-Vanadium.Music"
+        applicationId "com.LutetiumVanadium.Music"
         minSdkVersion 16
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()

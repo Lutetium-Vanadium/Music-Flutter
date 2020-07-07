@@ -188,58 +188,64 @@ class _AlbumsState extends State<Albums> {
               ),
             ),
           ),
-          SliverToBoxAdapter(
-            child: Padding(
-              padding:
-                  EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-              child:
-                  Text("Albums", style: Theme.of(context).textTheme.headline3),
-            ),
-          ),
-          SliverPadding(
-            padding: EdgeInsets.all(0.3 * width10),
-            sliver: SliverGrid(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: (4.1 * width10) / (4.1 * width10 + 3 * rem),
-              ),
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  var album = _albums[index];
-
-                  return CoverImage(
-                    image: album.imagePath,
-                    title: album.name,
-                    subtitle: generateSubtitle(
-                        type: "Album", numSongs: album.numSongs),
-                    isBig: true,
-                    tag: album.id,
-                    onClick: () {
-                      Navigator.of(context)
-                          .pushNamed("/album", arguments: album);
-                    },
-                    focusedMenuItems: [
-                      FocusedMenuItem(
-                        onPressed: () async {
-                          var songs = await DatabaseProvider.getDB(context)
-                              .getSongs(
-                                  where: "albumId LIKE ?",
-                                  whereArgs: [album.id]);
-
-                          BlocProvider.of<QueueBloc>(context)
-                              .add(EnqueueSongs(songs: songs));
-                        },
-                        title: Text("Play"),
-                        trailingIcon: Icon(Icons.playlist_play),
-                        backgroundColor: Colors.transparent,
+          ...(_albums.length == 0
+              ? []
+              : [
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          left: width10 / 4 * 2, top: 30, bottom: 7),
+                      child: Text("Albums",
+                          style: Theme.of(context).textTheme.headline3),
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: EdgeInsets.all(0.3 * width10),
+                    sliver: SliverGrid(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio:
+                            (4.1 * width10) / (4.1 * width10 + 3 * rem),
                       ),
-                    ],
-                  );
-                },
-                childCount: _albums.length,
-              ),
-            ),
-          ),
+                      delegate: SliverChildBuilderDelegate(
+                        (context, index) {
+                          var album = _albums[index];
+
+                          return CoverImage(
+                            image: album.imagePath,
+                            title: album.name,
+                            subtitle: generateSubtitle(
+                                type: "Album", numSongs: album.numSongs),
+                            isBig: true,
+                            tag: album.id,
+                            onClick: () {
+                              Navigator.of(context)
+                                  .pushNamed("/album", arguments: album);
+                            },
+                            focusedMenuItems: [
+                              FocusedMenuItem(
+                                onPressed: () async {
+                                  var songs =
+                                      await DatabaseProvider.getDB(context)
+                                          .getSongs(
+                                              where: "albumId LIKE ?",
+                                              whereArgs: [album.id]);
+
+                                  BlocProvider.of<QueueBloc>(context)
+                                      .add(EnqueueSongs(songs: songs));
+                                },
+                                title: Text("Play"),
+                                trailingIcon: Icon(Icons.playlist_play),
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ],
+                          );
+                        },
+                        childCount: _albums.length,
+                      ),
+                    ),
+                  ),
+                ]),
         ],
       ),
     );

@@ -57,7 +57,7 @@ class _HomeState extends State<Home> {
     // // List all files ignoring flutter stuff
     // var dirs =
     //     (await getApplicationDocumentsDirectory()).listSync(recursive: true);
-    // var base = "/data/user/0/com.Lutetium-Vanadium.Music/app_flutter";
+    // var base = "/data/user/0/com.LutetiumVanadium.Music/app_flutter";
     // var toSee = [RegExp("$base/songs/*"), RegExp("$base/album_images/*")];
     // dirs.retainWhere((element) =>
     //     toSee[0].hasMatch(element.path) || toSee[1].hasMatch(element.path));
@@ -99,143 +99,167 @@ class _HomeState extends State<Home> {
           },
         ),
       ],
-      child: ListView(
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: width10 / 2, top: 30, bottom: 7),
-                child: Text(
-                  "Top Albums",
-                  style: Theme.of(context).textTheme.headline3,
-                ),
+      child: _topSongs.length == 0
+          ? Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: width10 / 2, vertical: 40),
+              child: RichText(
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: "No songs are downloaded.\n\n",
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  TextSpan(
+                    text:
+                        "Download songs by searching through the above Search Box.\n",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                ]),
               ),
-              Container(
-                height: 4.3 * width10 + 3 * rem,
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: width10 / 4),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _topAlbums.length,
-                  itemBuilder: (ctx, index) {
-                    var album = _topAlbums[index];
-                    return CoverImage(
-                      image: album.imagePath,
-                      title: album.name,
-                      subtitle:
-                          generateSubtitle(type: "Album", artist: album.artist),
-                      tag: album.id,
-                      onClick: () {
-                        Navigator.of(context)
-                            .pushNamed("/album", arguments: album);
-                      },
-                      focusedMenuItems: [
-                        FocusedMenuItem(
-                          onPressed: () async {
-                            var songs = await DatabaseProvider.getDB(context)
-                                .getSongs(
-                                    where: "albumId LIKE ?",
-                                    whereArgs: [album.id]);
-                            BlocProvider.of<QueueBloc>(context)
-                                .add(EnqueueSongs(songs: songs));
-                          },
-                          title: Text("Play"),
-                          trailingIcon: Icon(Icons.playlist_play),
-                          backgroundColor: Colors.transparent,
-                        ),
-                      ],
-                    );
-                  },
+            )
+          : ListView(
+              physics: BouncingScrollPhysics(),
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: width10 / 2, top: 30, bottom: 7),
+                      child: Text(
+                        "Top Albums",
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ),
+                    Container(
+                      height: 4.3 * width10 + 3 * rem,
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: width10 / 4),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _topAlbums.length,
+                        itemBuilder: (ctx, index) {
+                          var album = _topAlbums[index];
+                          return CoverImage(
+                            image: album.imagePath,
+                            title: album.name,
+                            subtitle: generateSubtitle(
+                                type: "Album", artist: album.artist),
+                            tag: album.id,
+                            onClick: () {
+                              Navigator.of(context)
+                                  .pushNamed("/album", arguments: album);
+                            },
+                            focusedMenuItems: [
+                              FocusedMenuItem(
+                                onPressed: () async {
+                                  var songs =
+                                      await DatabaseProvider.getDB(context)
+                                          .getSongs(
+                                              where: "albumId LIKE ?",
+                                              whereArgs: [album.id]);
+                                  BlocProvider.of<QueueBloc>(context)
+                                      .add(EnqueueSongs(songs: songs));
+                                },
+                                title: Text("Play"),
+                                trailingIcon: Icon(Icons.playlist_play),
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(left: width10 / 2, bottom: 7),
-                child: Text(
-                  "Top Songs",
-                  style: Theme.of(context).textTheme.headline3,
-                ),
-              ),
-              Container(
-                height: 4.3 * width10 + 3 * rem,
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  padding: EdgeInsets.symmetric(horizontal: width10 / 4),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: _topSongs.length,
-                  itemBuilder: (ctx, index) {
-                    var song = _topSongs[index];
-                    return CoverImage(
-                      image: song.thumbnail,
-                      title: song.title,
-                      subtitle:
-                          generateSubtitle(type: "Song", artist: song.artist),
-                      onClick: () {
-                        BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                          songs: displace(_topSongs, index),
-                        ));
-                      },
-                      focusedMenuItems: [
-                        FocusedMenuItem(
-                          onPressed: () {
-                            BlocProvider.of<QueueBloc>(context)
-                                .add(EnqueueSongs(
-                              songs: displace(_topSongs, index),
-                            ));
-                          },
-                          title: Text("Play"),
-                          trailingIcon: Icon(Icons.play_arrow),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        FocusedMenuItem(
-                          onPressed: () => Navigator.of(context)
-                              .pushNamed("/add-to-album", arguments: song),
-                          title: Text("Add to Album"),
-                          trailingIcon: Icon(Icons.playlist_add),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        FocusedMenuItem(
-                          onPressed: () {
-                            BlocProvider.of<QueueBloc>(context)
-                                .add(ToggleLikedSong(song));
-                          },
-                          title: song.liked ? Text("Unlike") : Text("Like"),
-                          trailingIcon: song.liked
-                              ? Icon(Icons.favorite)
-                              : Icon(Icons.favorite_border),
-                          backgroundColor: Colors.transparent,
-                        ),
-                        FocusedMenuItem(
-                          onPressed: () async {
-                            if (await showConfirm(
-                              context,
-                              "Delete ${song.title}",
-                              "Are you sure you want to delete ${song.title} by ${song.artist}?",
-                            )) {
-                              BlocProvider.of<DataBloc>(context)
-                                  .add(DeleteSong(song));
-                            }
-                          },
-                          title: Text("Delete",
-                              style: TextStyle(color: Colors.red)),
-                          trailingIcon: Icon(Icons.delete, color: Colors.red),
-                          backgroundColor: Colors.transparent,
-                        ),
-                      ],
-                    );
-                  },
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(left: width10 / 2, bottom: 7),
+                      child: Text(
+                        "Top Songs",
+                        style: Theme.of(context).textTheme.headline3,
+                      ),
+                    ),
+                    Container(
+                      height: 4.3 * width10 + 3 * rem,
+                      child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: width10 / 4),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _topSongs.length,
+                        itemBuilder: (ctx, index) {
+                          var song = _topSongs[index];
+                          return CoverImage(
+                            image: song.thumbnail,
+                            title: song.title,
+                            subtitle: generateSubtitle(
+                                type: "Song", artist: song.artist),
+                            onClick: () {
+                              BlocProvider.of<QueueBloc>(context)
+                                  .add(EnqueueSongs(
+                                songs: displace(_topSongs, index),
+                              ));
+                            },
+                            focusedMenuItems: [
+                              FocusedMenuItem(
+                                onPressed: () {
+                                  BlocProvider.of<QueueBloc>(context)
+                                      .add(EnqueueSongs(
+                                    songs: displace(_topSongs, index),
+                                  ));
+                                },
+                                title: Text("Play"),
+                                trailingIcon: Icon(Icons.play_arrow),
+                                backgroundColor: Colors.transparent,
+                              ),
+                              FocusedMenuItem(
+                                onPressed: () => Navigator.of(context)
+                                    .pushNamed("/add-to-album",
+                                        arguments: song),
+                                title: Text("Add to Album"),
+                                trailingIcon: Icon(Icons.playlist_add),
+                                backgroundColor: Colors.transparent,
+                              ),
+                              FocusedMenuItem(
+                                onPressed: () {
+                                  BlocProvider.of<QueueBloc>(context)
+                                      .add(ToggleLikedSong(song));
+                                },
+                                title:
+                                    song.liked ? Text("Unlike") : Text("Like"),
+                                trailingIcon: song.liked
+                                    ? Icon(Icons.favorite)
+                                    : Icon(Icons.favorite_border),
+                                backgroundColor: Colors.transparent,
+                              ),
+                              FocusedMenuItem(
+                                onPressed: () async {
+                                  if (await showConfirm(
+                                    context,
+                                    "Delete ${song.title}",
+                                    "Are you sure you want to delete ${song.title} by ${song.artist}?",
+                                  )) {
+                                    BlocProvider.of<DataBloc>(context)
+                                        .add(DeleteSong(song));
+                                  }
+                                },
+                                title: Text("Delete",
+                                    style: TextStyle(color: Colors.red)),
+                                trailingIcon:
+                                    Icon(Icons.delete, color: Colors.red),
+                                backgroundColor: Colors.transparent,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
     );
   }
 }

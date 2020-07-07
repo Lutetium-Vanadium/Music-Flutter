@@ -22,12 +22,13 @@ dependencies:
   palette_generator: 0.2.3
   focused_menu: 1.0.1
   assets_audio_player: 2.0.6+5
+  url_launcher: ^5.4.11
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
-  url_launcher: ^5.4.11
+  flutter_launcher_icons: "^0.7.3"
 
 flutter:
   assets:
@@ -38,3 +39,9 @@ flutter:
         - asset: assets/fonts/CustomIcons.ttf
 
   uses-material-design: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/icon.png"
+  adaptive_icon_background: "#1a1947"
