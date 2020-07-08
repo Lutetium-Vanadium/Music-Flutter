@@ -96,12 +96,13 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
           Padding(
             padding:
                 EdgeInsets.only(left: 0.25 * width10, right: 0.4 * width10),
-            child: Material(
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(40),
-              color: Colors.transparent,
-              child: IconButton(
-                icon: Icon(Icons.arrow_back_ios),
-                onPressed: Navigator.of(context).pop,
+              child: Material(
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back_ios),
+                  onPressed: Navigator.of(context).pop,
+                ),
               ),
             ),
           ),

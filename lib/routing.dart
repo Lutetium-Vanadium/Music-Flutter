@@ -72,7 +72,10 @@ class Router {
               CurrentSongPage(),
         );
       case "/register-apikeys":
-        return CupertinoPageRoute(builder: (_) => RegisterApiKeys());
+        return CupertinoPageRoute(
+          maintainState: false,
+          builder: (_) => RegisterApiKeys(),
+        );
       case "/select-songs":
         assert(settings.arguments == null ||
             settings.arguments is CustomAlbumData);

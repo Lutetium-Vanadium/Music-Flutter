@@ -2,8 +2,9 @@ import "dart:convert";
 import "package:http/http.dart" as http;
 
 import "package:Music/models/models.dart";
+
 import "./generateUri.dart";
-import "../apiKeys.dart";
+import "../keys.dart";
 
 const SEARCH_LIMIT = "15";
 
@@ -14,11 +15,11 @@ const SEARCH_LIMIT = "15";
 /// Gets the info for an album
 Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
   try {
-    await keys.isReady;
+    await apiKeys.isReady;
 
     var response = await http
         .get(generateUri("https://api.napster.com/v2.2/albums/$albumId", {
-      "apikey": keys.napster,
+      "apikey": apiKeys.napster,
     }));
 
     if (response.statusCode != 200) throw response.headers["status"];
@@ -37,10 +38,10 @@ Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
 /// Gets the info for only one particular song
 Future<NapsterSongData> getSongInfo(String query) async {
   try {
-    await keys.isReady;
+    await apiKeys.isReady;
     var response =
         await http.get(generateUri("https://api.napster.com/v2.2/search", {
-      "apikey": keys.napster,
+      "apikey": apiKeys.napster,
       "type": "track",
       "per_type_limit": "1",
       "query": query,
@@ -63,10 +64,10 @@ Future<NapsterSongData> getSongInfo(String query) async {
 /// Returns the top 10 songs which fit the query
 Future<List<NapsterSongData>> search(String query) async {
   try {
-    await keys.isReady;
+    await apiKeys.isReady;
     var response =
         await http.get(generateUri("https://api.napster.com/v2.2/search", {
-      "apikey": keys.napster,
+      "apikey": apiKeys.napster,
       "type": "track",
       "per_type_limit": SEARCH_LIMIT,
       "query": query,

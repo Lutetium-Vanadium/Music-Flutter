@@ -4,6 +4,10 @@ class NotificationHandler {
   final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   NotificationAppLaunchDetails notificationAppLaunchDetails;
 
+  NotificationHandler() {
+    initNotifications();
+  }
+
   void initNotifications() async {
     notificationAppLaunchDetails =
         await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();

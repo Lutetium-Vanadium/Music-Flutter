@@ -1,4 +1,5 @@
 import "dart:io";
+import "dart:ui";
 import "package:flutter/material.dart";
 
 import "package:Music/models/song_data.dart";
@@ -42,57 +43,73 @@ class _HeaderImageState extends State<HeaderImage> {
               Navigator.of(context).pop();
             }
           },
-          child: AnimatedContainer(
-            duration: Duration(milliseconds: 400),
-            width: 10 * width10,
-            height: 10 * width10,
-            padding: EdgeInsets.only(
-              left: width10,
-              right: width10,
-              top: 2 * width10,
-            ),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  widget.colour.withOpacity(0.9),
-                  widget.colour.withOpacity(0),
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              ClipRect(
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                  child: Image.file(
+                    File(widget.song.thumbnail),
+                    width: width10 * 10,
+                  ),
+                ),
               ),
-            ),
-            child: Column(
-              children: <Widget>[
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(15),
-                  child: Hero(
-                    tag: "${widget.song.albumId}-player",
-                    child: Image.file(
-                      File(widget.song.thumbnail),
-                      height: width10 * 6,
-                      width: width10 * 6,
+              Container(
+                width: 10 * width10,
+                height: 10 * width10,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Theme.of(context).backgroundColor.withOpacity(0.2),
+                      Theme.of(context).backgroundColor.withOpacity(0.4),
+                      Theme.of(context).backgroundColor.withOpacity(1),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                  left: width10,
+                  right: width10,
+                  top: 1.65 * width10,
+                ),
+                child: Column(
+                  children: <Widget>[
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(15),
+                      child: Hero(
+                        tag: "${widget.song.albumId}-player",
+                        child: Image.file(
+                          File(widget.song.thumbnail),
+                          height: width10 * 6,
+                          width: width10 * 6,
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(
+                      height: width10 / 2,
+                    ),
+                    Container(
+                      constraints: BoxConstraints(maxWidth: width10 * 9),
+                      child: Text(
+                        widget.song.title,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.headline4,
+                      ),
+                    ),
+                    Text(
+                      widget.song.artist,
+                      style: Theme.of(context).textTheme.subtitle1,
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: width10 / 2,
-                ),
-                Container(
-                  constraints: BoxConstraints(maxWidth: width10 * 9),
-                  child: Text(
-                    widget.song.title,
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.headline4,
-                  ),
-                ),
-                Text(
-                  widget.song.artist,
-                  style: Theme.of(context).textTheme.subtitle1,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
         SafeArea(

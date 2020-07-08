@@ -1,12 +1,6 @@
-import "dart:convert";
-import "package:http/http.dart" as http;
+import "package:youtube_explode_dart/youtube_explode_dart.dart";
 
 import "package:Music/models/models.dart";
-import "./generateUri.dart";
-import "../apiKeys.dart";
-
-var searchUri = "https://www.googleapis.com/youtube/v3/search";
-var detailsUri = "https://www.googleapis.com/youtube/v3/videos";
 
 /// getYoutubeId()
 ///
@@ -15,56 +9,19 @@ var detailsUri = "https://www.googleapis.com/youtube/v3/videos";
 /// Returns the first result's youtube id from a search query
 Future<YoutubeDetails> getYoutubeDetails(NapsterSongData song) async {
   try {
-    // Makes sure to get the right video
     var query = "${song.title} ${song.artist} official music video";
-
-    await keys.isReady;
-
-    query = query.replaceAll(" ", "+");
-
-    var result = await http.get(generateUri(searchUri, {
-      "key": keys.youtube,
-      "q": query,
-      "part": "snippet",
-    }));
-
-    // var id = result.items[0].id.videoId;
-    var id = jsonDecode(result.body)["items"][0]["id"]["videoId"];
-
-    var response = await http.get(generateUri(detailsUri, {
-      "key": keys.youtube,
-      "part": "contentDetails",
-      "id": id,
-    }));
-
-    var duration =
-        jsonDecode(response.body)["items"][0]["contentDetails"]["duration"];
-
-    return YoutubeDetails(
-      id: id,
-      length: parseDuration(duration),
+    var yt = YoutubeExplode();
+    var res = await yt.search.getVideosAsync(query).first;
+    yt.close();
+    var _ = YoutubeDetails(
+      id: res.id.value,
+      length: res.duration.inSeconds,
     );
+
+    print(_);
+    return _;
   } catch (err) {
     print(err);
     return null;
   }
-}
-
-int parseDuration(String dur) {
-  var hourMatch = RegExp("[0-9]*H").stringMatch(dur);
-  var hours = hourMatch != null
-      ? int.parse(hourMatch.substring(0, hourMatch.length - 1))
-      : 0;
-
-  var minMatch = RegExp("[0-9]*M").stringMatch(dur);
-  var mins = minMatch != null
-      ? int.parse(minMatch.substring(0, minMatch.length - 1))
-      : 0;
-
-  var secMatch = RegExp("[0-9]*S").stringMatch(dur);
-  var secs = secMatch != null
-      ? int.parse(secMatch.substring(0, secMatch.length - 1))
-      : 0;
-
-  return hours * 3600 + mins * 60 + secs;
 }

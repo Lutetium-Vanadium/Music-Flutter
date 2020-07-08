@@ -7,6 +7,7 @@ import "./bloc/queue_bloc.dart";
 import "./routing.dart";
 import "./themedata.dart";
 import "./notifications.dart";
+import "./sync.dart";
 import "./global_providers/database.dart";
 import "./global_providers/audio_player.dart";
 
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
   final db = DatabaseFunctions();
   final audioPlayer = AudioPlayer();
   final notificationHandler = NotificationHandler();
+  final firstoreSync = FirestoreSync();
 
   @override
   Widget build(BuildContext context) {

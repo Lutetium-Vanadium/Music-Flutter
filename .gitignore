@@ -1,5 +1,5 @@
-assets/keys/apiKeys.json
 test.dart
+android/key.properties
 
 # Miscellaneous
 *.class

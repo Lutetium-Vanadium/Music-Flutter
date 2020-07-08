@@ -24,6 +24,8 @@ class Input extends StatelessWidget {
         maxLines: 1,
         controller: controller,
         decoration: InputDecoration(
+          contentPadding: EdgeInsets.zero,
+          isDense: true,
           border: InputBorder.none,
           hintText: placeholder,
           hintStyle: TextStyle(color: Theme.of(context).hintColor),

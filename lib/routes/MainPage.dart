@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import "package:flutter/material.dart";
 
 import "../constants.dart";
-import "../apiKeys.dart";
+import "../keys.dart";
 import "./widgets/Input.dart";
 import "./widgets/CurrentSongBanner.dart";
 import "./views/Albums.dart";
@@ -36,7 +35,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<void> _checkForApiKeys() async {
-    if (await keys.needsApiKeys) {
+    if (await apiKeys.needsApiKeys) {
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pushNamed("/register-apikeys");
     }
@@ -101,8 +100,8 @@ class _MainPageState extends State<MainPage> {
                       Navigator.of(context)
                           .pushNamed("/search", arguments: query)
                           .then((_) {
-                        _textController.text = "";
                         FocusScope.of(context).unfocus();
+                        _textController.text = "";
                       });
                     }
                   },

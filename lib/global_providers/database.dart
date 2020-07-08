@@ -8,8 +8,6 @@ class DatabaseProvider extends StatelessWidget {
   final Widget child;
   final DatabaseFunctions database;
 
-  String yeet() => "YEEEEE";
-
   const DatabaseProvider({Key key, this.database, this.child})
       : super(key: key);
 
