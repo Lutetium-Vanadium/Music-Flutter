@@ -1,3 +1,4 @@
+import "dart:io";
 import "package:equatable/equatable.dart";
 
 class AlbumData extends Equatable {
@@ -16,6 +17,15 @@ class AlbumData extends Equatable {
   @override
   List<Object> get props => [id, imagePath, name, numSongs, artist];
 
+  Map<String, dynamic> toFirebase() {
+    return {
+      "id": this.id,
+      "name": this.name,
+      "numSongs": this.numSongs,
+      "artist": this.artist,
+    };
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "id": this.id,
@@ -24,6 +34,16 @@ class AlbumData extends Equatable {
       "numSongs": this.numSongs,
       "artist": this.artist,
     };
+  }
+
+  static AlbumData fromFirebase(Map<String, dynamic> map, Directory root) {
+    return AlbumData(
+      id: map["id"],
+      artist: map["artist"],
+      name: map["name"],
+      numSongs: map["numSongs"],
+      imagePath: "${root.path}/album_images/${map["id"]}.jpg",
+    );
   }
 
   static AlbumData fromMap(Map<String, dynamic> map) {

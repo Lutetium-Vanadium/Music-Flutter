@@ -36,11 +36,26 @@ class DatabaseProvider extends StatelessWidget {
 class DatabaseFunctions {
   Database _db;
   final _completer = Completer<void>();
+  Completer<void> _end;
+
+  Transaction _trans;
 
   Future<void> get isReady => _completer.future;
-  Future<Database> get db async {
-    await isReady;
-    return _db;
+  DatabaseExecutor get db => _trans ?? _db;
+
+  void startTransaction() {
+    _db.transaction((txn) async {
+      _trans = txn;
+      _end = Completer<void>();
+      await _end.future;
+    });
+  }
+
+  void endTransaction() {
+    if (!(_end?.isCompleted ?? true)) {
+      _end.complete();
+      _end = null;
+    }
   }
 
   Future<int> get numLiked async {
@@ -95,11 +110,11 @@ class DatabaseFunctions {
 
     return Pair(
       SongData.fromMapArray(
-        await _db.query(Tables.Songs,
+        await db.query(Tables.Songs,
             orderBy: "not liked, numListens DESC", limit: 5),
       ),
       AlbumData.fromMapArray(
-        await _db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),
+        await db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),
       ),
     );
   }
@@ -110,7 +125,7 @@ class DatabaseFunctions {
   }) async {
     await isReady;
 
-    return SongData.fromMapArray(await _db.query(
+    return SongData.fromMapArray(await db.query(
       Tables.Songs,
       orderBy: "LOWER(title), title",
       where: where,
@@ -124,7 +139,7 @@ class DatabaseFunctions {
   }) async {
     await isReady;
 
-    return AlbumData.fromMapArray(await _db.query(
+    return AlbumData.fromMapArray(await db.query(
       Tables.Albums,
       orderBy: "LOWER(name), name",
       where: where,
@@ -138,7 +153,7 @@ class DatabaseFunctions {
   }) async {
     await isReady;
 
-    return CustomAlbumData.fromMapArray(await _db.query(
+    return CustomAlbumData.fromMapArray(await db.query(
       Tables.CustomAlbums,
       orderBy: "LOWER(name), name",
       where: where,
@@ -149,7 +164,7 @@ class DatabaseFunctions {
   Future<int> getNumSongs(String albumId) async {
     await isReady;
 
-    return (await _db.rawQuery(
+    return (await db.rawQuery(
       "SELECT COUNT(*) AS cnt FROM ${Tables.Songs} WHERE albumId LIKE ?;",
       [albumId],
     ))[0]["cnt"];
@@ -158,13 +173,13 @@ class DatabaseFunctions {
   Future<List<ArtistData>> getArtists() async {
     await isReady;
 
-    var preSongs = PreArtist.fromMapArray(await _db.rawQuery(
+    var preSongs = PreArtist.fromMapArray(await db.rawQuery(
         "SELECT artist as name, COUNT(*) as numSongs FROM songdata GROUP BY artist;"));
 
     List<ArtistData> artists = [];
 
     for (var preSong in preSongs) {
-      var images = await _db.query(
+      var images = await db.query(
         Tables.Albums,
         where: "artist LIKE ?",
         whereArgs: [preSong.name],
@@ -181,7 +196,7 @@ class DatabaseFunctions {
 
   Future<void> insert(String table, Map<String, dynamic> values) async {
     await isReady;
-    _db.insert(table, values);
+    db.insert(table, values);
   }
 
   Future<void> insertSong(SongData song) async {
@@ -203,29 +218,35 @@ class DatabaseFunctions {
   }) async {
     await isReady;
 
-    return _db.delete(table, where: where, whereArgs: whereArgs);
+    return db.delete(table, where: where, whereArgs: whereArgs);
   }
 
   Future<int> deleteSong(String title) async {
     await isReady;
 
-    return _db.delete(
+    return db.delete(
       Tables.Songs,
       where: "title LIKE ?",
       whereArgs: [title],
     );
   }
 
+  Future<int> deleteAlbum(String id) async {
+    await isReady;
+
+    return db.delete(Tables.Albums, where: "id LIKE ?", whereArgs: [id]);
+  }
+
   Future<int> deleteEmptyAlbums() async {
     await isReady;
 
-    return _db.delete(Tables.Albums, where: "numSongs < 1");
+    return db.delete(Tables.Albums, where: "numSongs < 1");
   }
 
   Future<int> deleteCustomAlbum(String id) async {
     await isReady;
 
-    return _db.delete(
+    return db.delete(
       Tables.CustomAlbums,
       where: "id LIKE ?",
       whereArgs: [id],
@@ -240,13 +261,13 @@ class DatabaseFunctions {
   }) async {
     await isReady;
 
-    return _db.update(table, values, where: where, whereArgs: whereArgs);
+    return db.update(table, values, where: where, whereArgs: whereArgs);
   }
 
   Future<int> incrementNumListens(SongData song) async {
     await isReady;
 
-    return _db.rawUpdate(
+    return db.rawUpdate(
       "UPDATE ${Tables.Songs} SET numListens = numListens + 1 WHERE title LIKE ?",
       [song.title],
     );
@@ -255,7 +276,7 @@ class DatabaseFunctions {
   Future<String> nextCustomAlbumId() async {
     await isReady;
 
-    var ids = await _db.query(
+    var ids = await db.query(
       Tables.CustomAlbums,
       orderBy: "id DESC",
     );
@@ -265,6 +286,21 @@ class DatabaseFunctions {
       number = int.parse(ids.first["id"].substring(4)) + 1;
     }
     return "cst.$number";
+  }
+
+  Future<void> cleanup() async {
+    await isReady;
+
+    var data = await db.rawQuery(
+        "SELECT COUNT(*) as cnt, albumId as id FROM ${Tables.Songs} ORDER BY albumId;");
+    var batch = db.batch();
+
+    data.forEach((element) {
+      batch.update(Tables.Albums, {"numSongs": element["cnt"]},
+          where: "id LIKE ?", whereArgs: [element["id"]]);
+    });
+
+    await batch.commit();
   }
 }
 

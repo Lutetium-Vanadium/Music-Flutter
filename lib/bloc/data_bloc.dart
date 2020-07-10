@@ -6,6 +6,7 @@ import "package:flutter/material.dart";
 import "package:meta/meta.dart";
 import "package:path_provider/path_provider.dart";
 
+import "package:Music/sync.dart";
 import "package:Music/notifications.dart";
 import "package:Music/global_providers/database.dart";
 import "package:Music/models/models.dart";
@@ -19,8 +20,15 @@ part "data_state.dart";
 class DataBloc extends Bloc<DataEvent, DataState> {
   final DatabaseFunctions db;
   final NotificationHandler notificationHandler;
+  final FirestoreSync syncDb;
 
-  DataBloc(this.db, this.notificationHandler) : super(InitialData());
+  DataBloc(
+      {DatabaseFunctions database,
+      this.notificationHandler,
+      FirestoreSync syncDatabase})
+      : db = database,
+        syncDb = syncDatabase,
+        super(InitialData());
 
   @override
   Stream<DataState> mapEventToState(
@@ -29,15 +37,15 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     if (event is DownloadSong) {
       var songData = event.song;
 
-      var data = await getYoutubeDetails(songData);
+      var ytDetails = await getYoutubeDetails(songData.title, songData.artist);
 
-      if (data == null) return;
+      if (ytDetails == null) return;
 
       var filename = songData.title + ".mp3";
       var albumId = songData.albumId;
 
       print("Downloading ${songData.title}");
-      var updateAlbumFuture = updateAlbum(albumId, songData.artist, db);
+      var updateAlbumFuture = updateAlbum(albumId, songData.artist, db, syncDb);
 
       var root = await getApplicationDocumentsDirectory();
 
@@ -45,17 +53,20 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         albumId: albumId,
         artist: songData.artist,
         filePath: "${root.path}/songs/$filename",
-        length: data.length,
+        length: ytDetails.length,
         liked: false,
         numListens: 0,
         thumbnail: "${root.path}/album_images/$albumId.jpg",
         title: songData.title,
       );
 
-      await db.insertSong(song);
+      await Future.wait([
+        db.insertSong(song),
+        syncDb.insertSong(song, ytDetails.id),
+      ]);
 
       await updateAlbumFuture;
-      var progressStream = downloadSong(data.id, filename);
+      var progressStream = downloadSong(ytDetails.id, filename);
 
       final body = "\nDownloading ${song.title} by ${song.artist}";
 
@@ -83,15 +94,19 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     } else if (event is DeleteSong) {
       var songFile = File(event.song.filePath);
 
+      var data = {"numSongs": await db.getNumSongs(event.song.albumId)};
+
       Future.wait([
         songFile.delete(),
         db.deleteSong(event.song.title),
+        syncDb.delete(SyncTables.Songs, event.song.title),
         db.update(
           Tables.Albums,
-          {"numSongs": await db.getNumSongs(event.song.albumId)},
+          data,
           where: "id LIKE ?",
           whereArgs: [event.song.albumId],
         ),
+        syncDb.update(SyncTables.Albums, event.song.albumId, data),
       ]);
 
       await db.deleteEmptyAlbums();
@@ -102,16 +117,24 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         songs: event.songs,
       );
 
-      await db.insertCustomAlbum(album);
+      await Future.wait([
+        db.insertCustomAlbum(album),
+        syncDb.insertCustomAlbum(album),
+      ]);
 
       print("ADDED ${event.name}");
     } else if (event is EditCustomAlbum) {
-      await db.update(
-        Tables.CustomAlbums,
-        {"songs": stringifyArr(event.songs)},
-        where: "id LIKE ?",
-        whereArgs: [event.id],
-      );
+      var data = {"songs": stringifyArr(event.songs)};
+
+      await Future.wait([
+        db.update(
+          Tables.CustomAlbums,
+          data,
+          where: "id LIKE ?",
+          whereArgs: [event.id],
+        ),
+        syncDb.update(SyncTables.CustomAlbums, event.id, data),
+      ]);
 
       print("UPDATED ${event.id}");
     } else if (event is AddSongToCustomAlbum) {
@@ -124,14 +147,20 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
       album.songs.add(event.song.title);
 
-      db.update(
-        Tables.CustomAlbums,
-        album.toMap(),
-        where: "id LIKE ?",
-        whereArgs: [event.id],
-      );
+      await Future.wait([
+        db.update(
+          Tables.CustomAlbums,
+          album.toMap(),
+          where: "id LIKE ?",
+          whereArgs: [event.id],
+        ),
+        syncDb.update(SyncTables.CustomAlbums, event.id, album.toFirebase()),
+      ]);
     } else if (event is DeleteCustomAlbum) {
-      await db.deleteCustomAlbum(event.id);
+      await Future.wait([
+        db.deleteCustomAlbum(event.id),
+        syncDb.delete(SyncTables.CustomAlbums, event.id),
+      ]);
 
       print("DELETED ${event.id}");
     }

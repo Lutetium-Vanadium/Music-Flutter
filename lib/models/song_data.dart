@@ -1,3 +1,5 @@
+import "dart:io";
+
 import "./song_metadata.dart";
 
 class SongData extends SongMetadata {
@@ -47,6 +49,18 @@ class SongData extends SongMetadata {
         this.thumbnail = thumbnail ?? song.thumbnail,
         this.length = length ?? song.length;
 
+  Map<String, dynamic> toFirebase([String youtubeId = ""]) {
+    return {
+      "title": this.title,
+      "albumId": this.albumId,
+      "artist": this.artist,
+      "length": this.length,
+      "liked": this.liked,
+      "numListens": this.numListens,
+      "youtubeId": youtubeId,
+    };
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "filePath": this.filePath,
@@ -60,13 +74,27 @@ class SongData extends SongMetadata {
     };
   }
 
+  static SongData fromFirestore(
+      Map<String, dynamic> map, int length, Directory root) {
+    return SongData(
+      albumId: map["albumId"],
+      artist: map["artist"],
+      filePath: "${root.path}/songs/${map["title"]}.mp3",
+      length: length,
+      numListens: map["numListens"],
+      thumbnail: "${root.path}/album_images/${map["albumId"]}.jpg",
+      title: map["title"],
+      liked: map["liked"],
+    );
+  }
+
   static SongData fromMap(Map<String, dynamic> map) {
     return SongData(
       albumId: map["albumId"],
       artist: map["artist"],
       filePath: map["filePath"],
       length: map["length"],
-      liked: map["liked"] == 0 ? false : true,
+      liked: map["liked"] == 1,
       numListens: map["numListens"],
       thumbnail: map["thumbnail"],
       title: map["title"],

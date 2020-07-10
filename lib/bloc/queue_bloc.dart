@@ -5,6 +5,7 @@ import "package:equatable/equatable.dart";
 import "package:meta/meta.dart";
 import "package:assets_audio_player/assets_audio_player.dart";
 
+import "package:Music/sync.dart";
 import "package:Music/global_providers/audio_player.dart";
 import "package:Music/global_providers/database.dart";
 import "package:Music/models/models.dart";
@@ -15,8 +16,15 @@ part "queue_state.dart";
 class QueueBloc extends Bloc<QueueEvent, QueueState> {
   final AudioPlayer audioPlayer;
   final DatabaseFunctions db;
+  final FirestoreSync syncDb;
 
-  QueueBloc(this.db, this.audioPlayer) : super(EmptyQueue()) {
+  QueueBloc(
+      {DatabaseFunctions database,
+      this.audioPlayer,
+      FirestoreSync syncDatabase})
+      : db = database,
+        syncDb = syncDatabase,
+        super(EmptyQueue()) {
     audioPlayer.onNext(() {
       this.add(NextSong());
     });
@@ -76,6 +84,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     );
 
     await db.incrementNumListens(song);
+    await syncDb.incrementNumListens(song);
   }
 
   SongData get _current => _songs.length > 0 ? _songs[_index] : null;
@@ -108,12 +117,15 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         _songs[songsIndex] = SongData.override(event.song, liked: liked);
       }
 
-      await db.update(
-        Tables.Songs,
-        {"liked": liked},
-        where: "title LIKE ?",
-        whereArgs: [event.song.title],
-      );
+      await Future.wait([
+        db.update(
+          Tables.Songs,
+          {"liked": liked},
+          where: "title LIKE ?",
+          whereArgs: [event.song.title],
+        ),
+        syncDb.update(SyncTables.Songs, event.song.title, {"liked": liked}),
+      ]);
 
       updateData = true;
     }

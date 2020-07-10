@@ -1,5 +1,4 @@
 import "dart:convert";
-
 import "package:equatable/equatable.dart";
 
 String stringifyArr(List<dynamic> arr) {
@@ -27,12 +26,28 @@ class CustomAlbumData extends Equatable {
   @override
   List<Object> get props => [id, name, songs];
 
+  Map<String, dynamic> toFirebase() {
+    return {
+      "id": this.id,
+      "name": this.name,
+      "songs": this.songs,
+    };
+  }
+
   Map<String, dynamic> toMap() {
     return {
       "id": this.id,
       "name": this.name,
       "songs": stringifyArr(this.songs),
     };
+  }
+
+  static CustomAlbumData fromFirebase(Map<String, dynamic> map) {
+    return CustomAlbumData(
+      id: map["id"],
+      name: map["name"],
+      songs: map["songs"],
+    );
   }
 
   static CustomAlbumData fromMap(Map<String, dynamic> map) {

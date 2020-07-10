@@ -1,5 +1,6 @@
 import "package:path_provider/path_provider.dart";
 
+import "package:Music/sync.dart";
 import "package:Music/global_providers/database.dart";
 import "package:Music/models/models.dart";
 
@@ -9,7 +10,8 @@ import "./downloader.dart" show downloadImage;
 Future<void> updateAlbum(
   String albumId,
   String artist,
-  DatabaseFunctions db, {
+  DatabaseFunctions db,
+  FirestoreSync syncDb, {
   int numSongs = 1,
 }) async {
   var root = await getApplicationDocumentsDirectory();
@@ -20,12 +22,16 @@ Future<void> updateAlbum(
   var count = await db.getNumSongs(albumId);
 
   if (count > 0) {
-    db.update(
-      Tables.Albums,
-      {"numSongs": count + 1},
-      where: "id LIKE ?",
-      whereArgs: [albumId],
-    );
+    await Future.wait([
+      db.update(
+        Tables.Albums,
+        {"numSongs": count + 1},
+        where: "id LIKE ?",
+        whereArgs: [albumId],
+      ),
+      syncDb.update(SyncTables.Albums, albumId, {"numSongs": count + 1}),
+    ]);
+
     return;
   }
 
@@ -45,5 +51,8 @@ Future<void> updateAlbum(
     artist: artist,
   );
 
-  await db.insertAlbum(album);
+  await Future.wait([
+    db.insertAlbum(album),
+    syncDb.insertAlbum(album),
+  ]);
 }

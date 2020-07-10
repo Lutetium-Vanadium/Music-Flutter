@@ -19,25 +19,37 @@ void main() {
     DeviceOrientation.portraitDown,
   ]).then((_) {
     print("READY");
-    runApp(App());
+    runApp(App(DatabaseFunctions()));
   });
 }
 
 class App extends StatelessWidget {
-  final db = DatabaseFunctions();
+  final DatabaseFunctions db;
   final audioPlayer = AudioPlayer();
   final notificationHandler = NotificationHandler();
-  final firstoreSync = FirestoreSync();
+  final FirestoreSync firestoreSync;
+
+  App(this.db) : firestoreSync = FirestoreSync(db);
 
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<DataBloc>(
-          create: (_) => DataBloc(db, notificationHandler),
-        ),
+        BlocProvider<DataBloc>(create: (_) {
+          var bloc = DataBloc(
+            database: db,
+            notificationHandler: notificationHandler,
+            syncDatabase: firestoreSync,
+          );
+          firestoreSync.onUpdate = () => bloc.add(ForceUpdate());
+          return bloc;
+        }),
         BlocProvider<QueueBloc>(
-          create: (_) => QueueBloc(db, audioPlayer),
+          create: (_) => QueueBloc(
+            database: db,
+            audioPlayer: audioPlayer,
+            syncDatabase: firestoreSync,
+          ),
         ),
       ],
       child: DatabaseProvider(

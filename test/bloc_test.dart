@@ -1,8 +1,9 @@
-import 'package:Music/models/album_data.dart';
-import 'package:Music/models/models.dart';
+import "package:Music/models/album_data.dart";
+import "package:Music/models/models.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:mockito/mockito.dart";
 
+import "package:Music/sync.dart";
 import "package:Music/notifications.dart";
 import "package:Music/global_providers/database.dart";
 import "package:Music/global_providers/audio_player.dart";
@@ -16,6 +17,8 @@ class MockNotificationHandler extends Mock implements NotificationHandler {}
 
 class MockAudioPlayer extends Mock implements AudioPlayer {}
 
+class MockFirestoreSync extends Mock implements FirestoreSync {}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
 
@@ -23,14 +26,16 @@ void main() {
     DataBloc bloc;
     MockDatabaseFunctions db;
     MockNotificationHandler nf;
+    MockFirestoreSync fs;
 
     final mockAlbum = CustomAlbumData(id: "id", name: "n", songs: []);
 
     setUp(() {
       db = MockDatabaseFunctions();
       nf = MockNotificationHandler();
+      fs = MockFirestoreSync();
 
-      bloc = DataBloc(db, nf);
+      bloc = DataBloc(database: db, notificationHandler: nf, syncDatabase: fs);
     });
 
     tearDown(() {
@@ -40,6 +45,12 @@ void main() {
     test("Custom Album added properly", () async {
       when(db.nextCustomAlbumId()).thenAnswer((_) => Future.value("id"));
       when(db.insertCustomAlbum(
+        captureAny,
+      )).thenAnswer((invocation) {
+        expect(invocation.positionalArguments.last, mockAlbum);
+        return Future.value();
+      });
+      when(fs.insertCustomAlbum(
         captureAny,
       )).thenAnswer((invocation) {
         expect(invocation.positionalArguments.last, mockAlbum);
@@ -55,6 +66,17 @@ void main() {
         captureAny,
         where: anyNamed("where"),
         whereArgs: anyNamed("whereArgs"),
+      )).thenAnswer((invocation) {
+        expect(
+          invocation.positionalArguments.last,
+          {"songs": '"song1","song2"'},
+        );
+        return Future.value();
+      });
+      when(fs.update(
+        SyncTables.CustomAlbums,
+        captureAny,
+        captureAny,
       )).thenAnswer((invocation) {
         expect(
           invocation.positionalArguments.last,
@@ -83,6 +105,21 @@ void main() {
             "id": "id",
             "name": "n",
             "songs": '"song"',
+          },
+        );
+        return Future.value();
+      });
+      when(fs.update(
+        SyncTables.CustomAlbums,
+        captureAny,
+        captureAny,
+      )).thenAnswer((invocation) {
+        expect(
+          invocation.positionalArguments.last,
+          {
+            "id": "id",
+            "name": "n",
+            "songs": ["song"],
           },
         );
         return Future.value();
@@ -120,16 +157,29 @@ void main() {
     QueueBloc bloc;
     MockDatabaseFunctions db;
     MockAudioPlayer ap;
+    MockFirestoreSync fs;
 
     setUp(() {
       db = MockDatabaseFunctions();
       ap = MockAudioPlayer();
+      fs = MockFirestoreSync();
       when(db.getAlbums(
         where: anyNamed("where"),
         whereArgs: anyNamed("whereArgs"),
       )).thenAnswer((_) => Future.value([mockAlbum]));
+      when(db.update(
+        Tables.Songs,
+        captureAny,
+        where: captureAnyNamed("where"),
+        whereArgs: captureAnyNamed("whereArgs"),
+      )).thenAnswer((_) => Future.value());
+      when(fs.update(
+        SyncTables.Songs,
+        captureAny,
+        captureAny,
+      )).thenAnswer((_) => Future.value());
 
-      bloc = QueueBloc(db, ap);
+      bloc = QueueBloc(database: db, audioPlayer: ap, syncDatabase: fs);
     });
 
     tearDown(() {

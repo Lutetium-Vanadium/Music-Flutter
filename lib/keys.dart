@@ -62,8 +62,6 @@ class SyncKeys {
   }
 
   Future<void> setKeys({String appId, String projectId, String apiKey}) async {
-    _ready = Completer<void>();
-
     this.appId = appId;
     this.projectId = projectId;
     this.apiKey = apiKey;

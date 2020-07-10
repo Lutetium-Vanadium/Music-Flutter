@@ -1,11 +1,12 @@
 import "dart:io";
 import "package:flutter/material.dart";
-import 'package:flutter_bloc/flutter_bloc.dart';
+import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_test/flutter_test.dart";
 import "package:focused_menu/focused_menu.dart";
 import "package:mockito/mockito.dart";
 import "package:rxdart/rxdart.dart";
 
+import "package:Music/sync.dart";
 import "package:Music/models/models.dart";
 import "package:Music/bloc/queue_bloc.dart";
 import "package:Music/global_providers/database.dart";
@@ -20,6 +21,8 @@ import "package:Music/routes/widgets/CoverImage.dart";
 class MockAudioPlayer extends Mock implements AudioPlayer {}
 
 class MockDatabaseFunctions extends Mock implements DatabaseFunctions {}
+
+class MockFirestoreSync extends Mock implements FirestoreSync {}
 
 void main() {
   group("Mozaic", () {
@@ -216,6 +219,7 @@ void main() {
 
   group("Song Page", () {
     MockDatabaseFunctions db;
+    MockFirestoreSync fs;
     MockAudioPlayer ap;
     QueueBloc bloc;
 
@@ -244,7 +248,8 @@ void main() {
     setUp(() {
       db = MockDatabaseFunctions();
       ap = MockAudioPlayer();
-      bloc = QueueBloc(db, ap);
+      fs = MockFirestoreSync();
+      bloc = QueueBloc(database: db, audioPlayer: ap, syncDatabase: fs);
 
       when(db.getAlbums(
         where: anyNamed("where"),
@@ -281,7 +286,8 @@ void main() {
       var controller = AnimationController(vsync: tester);
 
       await tester.pumpWidget(BlocProvider(
-        create: (_) => QueueBloc(db, ap),
+        create: (_) =>
+            QueueBloc(database: db, audioPlayer: ap, syncDatabase: fs),
         child: MaterialApp(
           home: SongPage(
             controller: controller,
