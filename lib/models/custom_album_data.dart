@@ -46,7 +46,7 @@ class CustomAlbumData extends Equatable {
     return CustomAlbumData(
       id: map["id"],
       name: map["name"],
-      songs: map["songs"],
+      songs: map["songs"].map((e) => e.toString()).toList(),
     );
   }
 

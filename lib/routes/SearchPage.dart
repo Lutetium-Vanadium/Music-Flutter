@@ -31,10 +31,10 @@ class _SearchPageState extends State<SearchPage> {
   Future<void> search(String query) async {
     if (query.length % 2 == 1) {
       var res = await widget.search(query);
-      res?.removeWhere((song) => _titles.contains(song));
+      res?.removeWhere((song) => _titles.contains(song.title));
       if (!mounted) return;
       setState(() {
-        _errored = _results == null;
+        _errored = res == null;
         _results = res;
       });
     }

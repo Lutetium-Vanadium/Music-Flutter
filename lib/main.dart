@@ -9,6 +9,7 @@ import "./themedata.dart";
 import "./notifications.dart";
 import "./sync.dart";
 import "./global_providers/database.dart";
+import "./global_providers/sync_provider.dart";
 import "./global_providers/audio_player.dart";
 
 void main() {
@@ -56,19 +57,22 @@ class App extends StatelessWidget {
         database: db,
         child: AudioPlayerProvider(
           player: audioPlayer,
-          child: NotificationListener<DraggableScrollableNotification>(
-            onNotification: (notification) {
-              // Close keyboard if list is scrolled
-              FocusScope.of(notification.context).unfocus();
-              return true;
-            },
-            child: MaterialApp(
-              title: "Music",
-              theme: themeData,
-              darkTheme: themeData,
-              initialRoute: "/",
-              onGenerateRoute: Router.generateRoute,
-              themeMode: ThemeMode.dark,
+          child: SyncProvider(
+            syncDatabase: firestoreSync,
+            child: NotificationListener<DraggableScrollableNotification>(
+              onNotification: (notification) {
+                // Close keyboard if list is scrolled
+                FocusScope.of(notification.context).unfocus();
+                return true;
+              },
+              child: MaterialApp(
+                title: "Music",
+                theme: themeData,
+                darkTheme: themeData,
+                initialRoute: "/",
+                onGenerateRoute: Router.generateRoute,
+                themeMode: ThemeMode.dark,
+              ),
             ),
           ),
         ),

@@ -35,62 +35,87 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     DataEvent event,
   ) async* {
     if (event is DownloadSong) {
-      var songData = event.song;
+      try {
+        var songData = event.song;
 
-      var ytDetails = await getYoutubeDetails(songData.title, songData.artist);
+        var ytDetailsArr =
+            await getYoutubeDetails(songData.title, songData.artist);
 
-      if (ytDetails == null) return;
+        if (ytDetailsArr == null) throw "Failed to get Youtube Id";
 
-      var filename = songData.title + ".mp3";
-      var albumId = songData.albumId;
+        var ytDetails = ytDetailsArr.removeAt(0);
+        var youtubeId = ytDetails.id;
 
-      print("Downloading ${songData.title}");
-      var updateAlbumFuture = updateAlbum(albumId, songData.artist, db, syncDb);
+        var filename = songData.title + ".mp3";
+        var albumId = songData.albumId;
 
-      var root = await getApplicationDocumentsDirectory();
+        print("Downloading ${songData.title}");
+        var root = await getApplicationDocumentsDirectory();
 
-      var song = SongData(
-        albumId: albumId,
-        artist: songData.artist,
-        filePath: "${root.path}/songs/$filename",
-        length: ytDetails.length,
-        liked: false,
-        numListens: 0,
-        thumbnail: "${root.path}/album_images/$albumId.jpg",
-        title: songData.title,
-      );
+        var progressStream = downloadSong(ytDetails.id, filename,
+            backup: ytDetailsArr.map((song) => song.id).toList());
 
-      await Future.wait([
-        db.insertSong(song),
-        syncDb.insertSong(song, ytDetails.id),
-      ]);
+        SongData song;
 
-      await updateAlbumFuture;
-      var progressStream = downloadSong(ytDetails.id, filename);
+        final body = "\nDownloading ${songData.title} by ${songData.artist}";
 
-      final body = "\nDownloading ${song.title} by ${song.artist}";
+        await for (var progress in progressStream) {
+          if (progress.first < 0) {
+            var idx = progress.second;
 
-      await for (var progress in progressStream) {
-        notificationHandler.showProgressNotification(
-          progress.first,
-          progress.second,
+            var length = idx == 0 ? ytDetails.length : ytDetailsArr[idx].length;
+
+            if (idx >= 0) {
+              youtubeId = ytDetailsArr[idx].id;
+            }
+
+            song = SongData(
+              albumId: albumId,
+              artist: songData.artist,
+              filePath: "${root.path}/songs/$filename",
+              length: length,
+              liked: false,
+              numListens: 0,
+              thumbnail: "${root.path}/album_images/$albumId.jpg",
+              title: songData.title,
+            );
+          } else {
+            notificationHandler.showProgressNotification(
+              progress.first,
+              progress.second,
+              title: song.title,
+              body: body,
+              path: song.thumbnail,
+            );
+            yield ProgressNotification(
+              bytesDownloaded: progress.first,
+              totalBytes: progress.second,
+              title: song.title,
+            );
+          }
+        }
+
+        print("Downloaded");
+        await db.insertSong(song);
+
+        await Future.wait([
+          updateAlbum(albumId, songData.artist, db, syncDb),
+          syncDb.insertSong(song, youtubeId),
+        ]);
+
+        notificationHandler.showNotification(
           title: song.title,
-          body: body,
+          body: "Finished Downloading ${song.title} by ${song.artist}",
           path: song.thumbnail,
         );
-        yield ProgressNotification(
-          bytesDownloaded: progress.first,
-          totalBytes: progress.second,
-          title: song.title,
+      } catch (e) {
+        notificationHandler.showNotification(
+          title: event.song.title,
+          body:
+              "Failed to download ${event.song.title} by ${event.song.artist}",
         );
+        print(e);
       }
-
-      print("Downloaded");
-      notificationHandler.showNotification(
-        title: song.title,
-        body: "Finished Downloading ${song.title} by ${song.artist}",
-        path: song.thumbnail,
-      );
     } else if (event is DeleteSong) {
       var songFile = File(event.song.filePath);
 

@@ -62,6 +62,7 @@ class CoverImage extends StatelessWidget {
       height: imgWidth + 3 * rem,
       margin: EdgeInsets.all(isBig ? width10 * 0.3 : width10 / 4),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           ClipRRect(
             child: tag == null
@@ -77,6 +78,7 @@ class CoverImage extends StatelessWidget {
             title,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
+            softWrap: true,
             style: TextStyle(fontWeight: FontWeight.w600),
           ),
           Text(

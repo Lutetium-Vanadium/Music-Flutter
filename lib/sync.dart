@@ -1,3 +1,4 @@
+import "dart:async";
 import "dart:io";
 import "package:flutter/foundation.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
@@ -10,6 +11,7 @@ import "package:Music/models/models.dart";
 
 import "./global_providers/database.dart";
 import "./keys.dart";
+import "./sync_status.dart";
 
 class FirestoreSync {
   Firestore firestore;
@@ -24,9 +26,18 @@ class FirestoreSync {
     connect();
   }
 
+  final _controller = StreamController<SyncStatus>.broadcast();
+
+  Stream<SyncStatus> get status => _controller.stream;
+
   VoidCallback onUpdate;
 
+  void dispose() {
+    _controller.close();
+  }
+
   Future<void> connect() async {
+    _controller.add(SyncInitial());
     await syncKeys.isReady;
     _root = await getApplicationDocumentsDirectory();
 
@@ -53,19 +64,22 @@ class FirestoreSync {
         .snapshots()
         .listen(_customAlbumHandler);
 
-    print((await db.getSongs()).length);
-
+    _controller.add(SyncSongsInitial());
     print("Starting songs");
     await _initSongs();
     print("Finished songs");
+    _controller.add(SyncAlbumsInitial());
     print("Starting albums");
     await _initAlbums();
     print("Finished albums");
+    _controller.add(SyncCustomAlbumsInitial());
     print("Starting customalbums");
     await _initCustomAlbums();
     print("Finished customalbums");
 
+    _controller.add(SyncCleaningUp());
     db.cleanup();
+    _controller.add(SyncComplete());
 
     if (onUpdate != null) onUpdate();
   }
@@ -91,7 +105,8 @@ class FirestoreSync {
   }
 
   Future<void> insertCustomAlbum(CustomAlbumData album) async {
-    if (syncing) return insert(SyncTables.Albums, album.id, album.toFirebase());
+    if (syncing)
+      return insert(SyncTables.CustomAlbums, album.id, album.toFirebase());
   }
 
   Future<void> delete(String table, String id) async {
@@ -109,6 +124,7 @@ class FirestoreSync {
   }
 
   Future<void> incrementNumListens(SongData song) async {
+    if (!syncing) return;
     await firestore
         .collection(SyncTables.Songs)
         .document(song.title)
@@ -155,34 +171,59 @@ class FirestoreSync {
   }
 
   Future<void> _addSong(Map<String, dynamic> firestoreSong) async {
+    String title = firestoreSong["title"];
     String youtubeId = firestoreSong["youtubeId"];
-    int length = firestoreSong["length"];
+    try {
+      int length = firestoreSong["length"];
 
-    if (youtubeId.length == 0) {
-      var ytDetails = await getYoutubeDetails(
-          firestoreSong["title"], firestoreSong["artist"]);
-      length = ytDetails.length;
-      youtubeId = ytDetails.id;
+      List<YoutubeDetails> backup = [];
+
+      if (youtubeId.length == 0) {
+        var ytDetailsArr =
+            await getYoutubeDetails(title, firestoreSong["artist"]);
+        var ytDetails = ytDetailsArr.removeAt(0);
+        length = ytDetails.length;
+        youtubeId = ytDetails.id;
+        backup = ytDetailsArr;
+      }
+
+      var progressStream = downloadSong(youtubeId, "$title.mp3",
+          backup: backup.map((vid) => vid.id).toList());
+
+      await for (var progress in progressStream) {
+        if (progress.first < 0) {
+          var idx = progress.second;
+
+          if (idx > 0) {
+            length = backup[idx].length;
+          }
+        } else {
+          _controller
+              .add(SyncSongsProgress(progress.first, progress.second, title));
+        }
+      }
+
+      var song = SongData.fromFirestore(firestoreSong, length, _root);
+
+      await db.insertSong(song);
+    } catch (e) {
+      print(e);
+      print("Failed $title; id: $youtubeId");
     }
-
-    var song = SongData.fromFirestore(firestoreSong, length, _root);
-    await Future.wait([
-      db.insertSong(song),
-      downloadSong(youtubeId, "${song.title}.mp3").toList(),
-    ]);
   }
 
   Future<void> _deleteSong(String title) async {
+    var file = File("${_root.path}/songs/$title.mp3");
     await Future.wait([
       db.deleteSong(title),
-      File("${_root.path}/songs/$title.mp3").delete(),
+      file.exists().then((exists) => exists ? file.delete() : Future.value()),
     ]);
   }
 
   void _songHandler(QuerySnapshot snapshot) async {
-    if (snapshot.documents.length != snapshot.documentChanges.length) {
+    if (!snapshot.metadata.hasPendingWrites &&
+        snapshot.documents.length != snapshot.documentChanges.length) {
       snapshot.documentChanges.forEach((change) async {
-        print(change.document.documentID);
         print(change.document.data);
         switch (change.type) {
           case DocumentChangeType.added:
@@ -215,9 +256,11 @@ class FirestoreSync {
     var diff = _diff(dbSongs, firestoreSongs);
 
     for (var idx in diff.first) {
+      _controller.add(SyncSongsName(snapshot.documents[idx].documentID, false));
       await _addSong(snapshot.documents[idx].data);
     }
     for (var title in diff.second) {
+      _controller.add(SyncSongsName(title, true));
       await _deleteSong(title);
     }
   }
@@ -234,9 +277,9 @@ class FirestoreSync {
   }
 
   void _albumHandler(QuerySnapshot snapshot) async {
-    if (snapshot.documents.length != snapshot.documentChanges.length) {
+    if (!snapshot.metadata.hasPendingWrites &&
+        snapshot.documents.length != snapshot.documentChanges.length) {
       snapshot.documentChanges.forEach((change) async {
-        print(change.document.documentID);
         print(change.document.data);
         switch (change.type) {
           case DocumentChangeType.added:
@@ -261,22 +304,24 @@ class FirestoreSync {
   }
 
   Future _initAlbums() async {
-    var snapshot = await firestore.collection(Tables.Albums).getDocuments();
+    var snapshot = await firestore.collection(SyncTables.Albums).getDocuments();
 
     var dbAlbums = (await db.getAlbums()).map((s) => s.id).toList();
     var firestoreAlbums = snapshot.documents.map((d) => d.documentID).toList();
 
     var diff = _diff(dbAlbums, firestoreAlbums);
 
-    await Future.wait(
-        diff.first.map((idx) => _addAlbum(snapshot.documents[idx].data)));
+    await Future.wait(diff.first.map((idx) {
+      _controller.add(SyncAlbumsName(snapshot.documents[idx].data["name"]));
+      return _addAlbum(snapshot.documents[idx].data);
+    }));
     await Future.wait(diff.second.map(db.deleteAlbum));
   }
 
   void _customAlbumHandler(QuerySnapshot snapshot) async {
-    if (snapshot.documents.length != snapshot.documentChanges.length) {
+    if (!snapshot.metadata.hasPendingWrites &&
+        snapshot.documents.length != snapshot.documentChanges.length) {
       snapshot.documentChanges.forEach((change) async {
-        print(change.document.documentID);
         print(change.document.data);
         switch (change.type) {
           case DocumentChangeType.added:
@@ -309,8 +354,12 @@ class FirestoreSync {
 
     var diff = _diff(dbAlbums, firestoreAlbums);
 
-    await Future.wait(diff.first.map((idx) => db.insertCustomAlbum(
-        CustomAlbumData.fromFirebase(snapshot.documents[idx].data))));
+    await Future.wait(diff.first.map((idx) {
+      _controller
+          .add(SyncCustomAlbumsName(snapshot.documents[idx].data["name"]));
+      return db.insertCustomAlbum(
+          CustomAlbumData.fromFirebase(snapshot.documents[idx].data));
+    }));
     await Future.wait(diff.second.map(db.deleteCustomAlbum));
   }
 }
@@ -322,6 +371,7 @@ extension on String {
       if (codeUnitAt(i) != other.codeUnitAt(i)) {
         return codeUnitAt(i) < other.codeUnitAt(i);
       }
+      i++;
     }
 
     return length < other.length;

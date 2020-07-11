@@ -38,11 +38,11 @@ class AudioPlayerProvider extends StatelessWidget {
     if (result != null) return result.player;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
-          "DatabaseProvider.of() called with a context that does not contain a DatabaseProvider."),
+          "AudioPlayerProvider.getPlayer() called with a context that does not contain a AudioPlayerProvider."),
       ErrorDescription(
-          "No DatabaseProvider ancestor could be found starting from the context that was passed to DatabaseProvider.of(). "
+          "No AudioPlayerProvider ancestor could be found starting from the context that was passed to AudioPlayerProvider.getPlayer(). "
           "This usually happens when the context provided is from the same StatefulWidget as that "
-          "whose build function actually creates the DatabaseProvider widget being sought."),
+          "whose build function actually creates the AudioPlayerProvider widget being sought."),
       context.describeElement("The context used was")
     ]);
   }
@@ -125,6 +125,8 @@ class AudioPlayer {
   AssetsAudioPlayer player;
   VoidCallback _callback;
 
+  bool _playing = false;
+
   void onNext(VoidCallback callback) {
     _callback = callback;
   }
@@ -140,6 +142,7 @@ class AudioPlayer {
     String albumName,
     NotificationSettings notificationSettings,
   ) {
+    _playing = true;
     return player.open(
       Audio.file(
         song.filePath,
@@ -156,11 +159,16 @@ class AudioPlayer {
     );
   }
 
-  Future<void> stop() => player.stop();
+  Future<void> stop() {
+    _playing = false;
+    return player.stop();
+  }
 
   Future<void> seek(int time) => player.seek(Duration(seconds: time));
 
-  Future<void> togglePlay() => player.playOrPause();
+  Future<void> togglePlay() async {
+    if (_playing) await player.playOrPause();
+  }
 
   ValueStream<bool> get isPlaying => player.isPlaying;
   ValueStream<Duration> get currentPosition => player.currentPosition;

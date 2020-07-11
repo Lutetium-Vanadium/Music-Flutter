@@ -23,9 +23,9 @@ class DatabaseProvider extends StatelessWidget {
     if (result != null) return result.database;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
-          "DatabaseProvider.of() called with a context that does not contain a DatabaseProvider."),
+          "DatabaseProvider.getDB() called with a context that does not contain a DatabaseProvider."),
       ErrorDescription(
-          "No DatabaseProvider ancestor could be found starting from the context that was passed to DatabaseProvider.of(). "
+          "No DatabaseProvider ancestor could be found starting from the context that was passed to DatabaseProvider.getDB(). "
           "This usually happens when the context provided is from the same StatefulWidget as that "
           "whose build function actually creates the DatabaseProvider widget being sought."),
       context.describeElement("The context used was")
@@ -292,13 +292,19 @@ class DatabaseFunctions {
     await isReady;
 
     var data = await db.rawQuery(
-        "SELECT COUNT(*) as cnt, albumId as id FROM ${Tables.Songs} ORDER BY albumId;");
+        "SELECT COUNT(*) as cnt, albumId as id FROM ${Tables.Songs} GROUP BY albumId;");
     var batch = db.batch();
 
+    // Update numSongs to be correct
     data.forEach((element) {
       batch.update(Tables.Albums, {"numSongs": element["cnt"]},
           where: "id LIKE ?", whereArgs: [element["id"]]);
     });
+
+    var albumIds = stringifyArr(data.map((e) => e["id"]).toList());
+
+    // Delete albums which do not appear in songdata
+    batch.delete(Tables.Albums, where: "id NOT IN ($albumIds)");
 
     await batch.commit();
   }

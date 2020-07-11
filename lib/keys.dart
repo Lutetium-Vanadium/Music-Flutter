@@ -69,13 +69,13 @@ class SyncKeys {
     var root = await getApplicationDocumentsDirectory();
     var file = File("${root.path}/syncKeys.json");
 
+    _ready.complete();
+
     await file.writeAsString(json.encode({
       "APP_ID": appId,
       "PROJECT_ID": projectId,
       "API_KEY": apiKey,
     }));
-
-    _ready.complete();
   }
 
   Future<void> _load() async {

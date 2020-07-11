@@ -5,12 +5,30 @@ import "package:youtube_explode_dart/youtube_explode_dart.dart";
 
 import "package:Music/models/models.dart";
 
-Stream<Pair<int, int>> downloadSong(String id, String filename) async* {
+Stream<Pair<int, int>> downloadSong(String id, String filename,
+    {List<String> backup = const []}) async* {
   try {
     var yt = YoutubeExplode();
-    print("Starting: $id");
-    var manifest = await yt.videos.streamsClient.getManifest(id);
 
+    StreamManifest manifest;
+
+    var downloadId = id;
+    var i = 0;
+
+    while (manifest == null) {
+      try {
+        manifest = await yt.videos.streamsClient.getManifest(downloadId);
+      } catch (e) {
+        print(downloadId + " errored");
+        if (i == backup.length) throw "Couldn't get manifest";
+        downloadId = backup[i++];
+      }
+    }
+
+    // -1 to show that its not a percent, but the index of song chosen
+    yield Pair(-1, i - 1);
+
+    print("Starting: $downloadId");
     Uri uri;
 
     if (manifest.audioOnly.length > 0) {
@@ -70,7 +88,7 @@ Stream<Pair<int, int>> downloadSong(String id, String filename) async* {
     print("Finished $filename");
   } catch (err) {
     print(err);
-    print("filename: $filename, id: $id");
+    throw "filename: $filename, id: $id";
   }
 }
 

@@ -182,13 +182,23 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
             if (_state == VerifyState.ToVerify) {
               _verifyApiKeys();
             } else if (_state == VerifyState.Verified) {
+              var apiKey = _apiKeyController.text.trim();
+              var appId = _appIdController.text.trim();
+              var projectId = _projectIdController.text.trim();
+
               apiKeys.setKeys(napster: _napsterController.text.trim());
-              syncKeys.setKeys(
-                apiKey: _apiKeyController.text.trim(),
-                appId: _appIdController.text.trim(),
-                projectId: _projectIdController.text.trim(),
-              );
-              Navigator.of(context).pop();
+              if (apiKey.length > 0 &&
+                  appId.length > 0 &&
+                  projectId.length > 0) {
+                syncKeys.setKeys(
+                  apiKey: apiKey,
+                  appId: appId,
+                  projectId: projectId,
+                );
+
+                Navigator.of(context).pushReplacementNamed("/sync-status");
+              } else
+                Navigator.of(context).pop();
             }
           },
           child: child,
