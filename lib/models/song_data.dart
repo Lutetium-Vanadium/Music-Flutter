@@ -27,19 +27,8 @@ class SongData extends SongMetadata implements DbCollection {
   }
 
   @override
-  List<Object> get props {
-    print("OVERRIDE0");
-    return [
-      title,
-      artist,
-      albumId,
-      filePath,
-      numListens,
-      liked,
-      thumbnail,
-      length
-    ];
-  }
+  List<Object> get props =>
+      [title, artist, albumId, filePath, numListens, liked, thumbnail, length];
 
   SongData.override(
     SongData song, {
