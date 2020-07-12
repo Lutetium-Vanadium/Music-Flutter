@@ -32,9 +32,7 @@ class _AlbumsState extends State<Albums> {
     var db = DatabaseProvider.getDB(context);
 
     var albums = await db.getAlbums();
-
     var customAlbums = await db.getCustomAlbums();
-
     int numLiked = await db.numLiked;
 
     if (!mounted) return;

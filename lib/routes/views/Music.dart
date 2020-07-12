@@ -31,7 +31,7 @@ class _MusicState extends State<Music> {
     if (!mounted) return;
 
     setState(() {
-      _songs = songs;
+      _songs = songs.length > 0 ? songs : null;
     });
   }
 
@@ -56,7 +56,7 @@ class _MusicState extends State<Music> {
           },
         ),
       ],
-      child: _songs.length == 0
+      child: _songs == null
           ? Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: width10 / 2, vertical: 40),
@@ -85,6 +85,7 @@ class _MusicState extends State<Music> {
               ),
             )
           : SongList(
+              showEmptyText: false,
               before: Padding(
                 padding: EdgeInsets.only(
                   left: width10 / 2,

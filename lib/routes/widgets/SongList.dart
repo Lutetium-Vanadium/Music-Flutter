@@ -13,6 +13,7 @@ class SongList extends StatelessWidget {
   final bool isNetwork;
   final bool showFocusedMenuItems;
   final Widget before;
+  final bool showEmptyText;
 
   SongList({
     @required this.songs,
@@ -21,6 +22,7 @@ class SongList extends StatelessWidget {
     this.before,
     this.isNetwork = false,
     this.showFocusedMenuItems = true,
+    this.showEmptyText = true,
   });
 
   @override
@@ -44,11 +46,14 @@ class SongList extends StatelessWidget {
     }
 
     if (songs.length == 0) {
-      return Center(
-        child: Text(
-          isNetwork ? "No Results." : "Empty.",
-          style: Theme.of(context).textTheme.headline4,
-        ),
+      return Padding(
+        padding: EdgeInsets.all(20),
+        child: showEmptyText
+            ? Text(
+                isNetwork ? "No Results." : "Empty.",
+                style: Theme.of(context).textTheme.headline4,
+              )
+            : Container(),
       );
     }
 

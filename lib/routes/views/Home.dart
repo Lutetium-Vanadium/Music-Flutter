@@ -73,8 +73,8 @@ class _HomeState extends State<Home> {
     if (!mounted) return;
 
     setState(() {
-      _topSongs = topData.first;
-      _topAlbums = topData.second;
+      _topSongs = topData.first.length > 0 ? topData.first : null;
+      _topAlbums = topData.second.length > 0 ? topData.second : null;
     });
   }
 
@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
           },
         ),
       ],
-      child: _topSongs.length == 0
+      child: _topSongs == null
           ? Padding(
               padding:
                   EdgeInsets.symmetric(horizontal: width10 / 2, vertical: 40),

@@ -30,7 +30,7 @@ class _ArtistsState extends State<Artists> {
     if (!mounted) return;
 
     setState(() {
-      _artists = artists;
+      _artists = artists.length > 0 ? artists : null;
     });
   }
 
@@ -66,7 +66,7 @@ class _ArtistsState extends State<Artists> {
                   Text("Artists", style: Theme.of(context).textTheme.headline3),
             ),
           ),
-          _artists.length == 0
+          _artists == null
               ? SliverToBoxAdapter(
                   child: Padding(
                     padding: EdgeInsets.symmetric(
