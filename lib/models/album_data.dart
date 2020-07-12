@@ -1,7 +1,8 @@
-import "dart:io";
 import "package:equatable/equatable.dart";
 
-class AlbumData extends Equatable {
+import "./get_id.dart";
+
+class AlbumData extends Equatable implements DbCollection {
   final String id;
   final String imagePath;
   final String name;
@@ -36,13 +37,13 @@ class AlbumData extends Equatable {
     };
   }
 
-  static AlbumData fromFirebase(Map<String, dynamic> map, Directory root) {
+  static AlbumData fromFirebase(Map<String, dynamic> map, String root) {
     return AlbumData(
       id: map["id"],
       artist: map["artist"],
       name: map["name"],
       numSongs: map["numSongs"],
-      imagePath: "${root.path}/album_images/${map["id"]}.jpg",
+      imagePath: "$root/album_images/${map["id"]}.jpg",
     );
   }
 
@@ -59,6 +60,16 @@ class AlbumData extends Equatable {
   static List<AlbumData> fromMapArray(List<Map<String, dynamic>> maps) {
     return List.generate(maps.length, (i) => AlbumData.fromMap(maps[i]));
   }
+
+  @override
+  String get getId => id;
+
+  @override
+  bool needsUpdate(other) =>
+      other["id"] != id ||
+      other["artist"] != artist ||
+      other["name"] != name ||
+      other["numSongs"] != numSongs;
 }
 
 extension AlbumDataMapping on List<AlbumData> {

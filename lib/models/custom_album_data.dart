@@ -1,6 +1,8 @@
 import "dart:convert";
 import "package:equatable/equatable.dart";
 
+import "./get_id.dart";
+
 String stringifyArr(List<dynamic> arr) {
   var strArr = jsonEncode(arr);
   return strArr.substring(1, strArr.length - 1);
@@ -12,7 +14,7 @@ List<String> parseArr(String arr) {
   return lst.map((el) => el.toString()).toList();
 }
 
-class CustomAlbumData extends Equatable {
+class CustomAlbumData extends Equatable implements DbCollection {
   final String id;
   final String name;
   final List<String> songs;
@@ -64,6 +66,13 @@ class CustomAlbumData extends Equatable {
       (i) => CustomAlbumData.fromMap(maps[i]),
     );
   }
+
+  @override
+  String get getId => id;
+
+  @override
+  bool needsUpdate(other) =>
+      id != other["id"] || name != other["name"] || songs != other["songs"];
 }
 
 extension CustomAlbumDataMapping on List<CustomAlbumData> {

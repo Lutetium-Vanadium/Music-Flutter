@@ -1,5 +1,5 @@
 <div style="text-align: center">
-  <img src="assets/images/icon.png">
+  <img src="assets/images/icon.png" height=200 width=200>
 </div>
 
 ![FluterCI](https://github.com/Lutetium-Vanadium/Music-Flutter/workflows/FlutterCI/badge.svg)

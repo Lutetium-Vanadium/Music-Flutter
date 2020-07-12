@@ -1,6 +1,7 @@
 export "album_data.dart";
 export "artist_data.dart";
 export "custom_album_data.dart";
+export "get_id.dart";
 export "napster_album_data.dart";
 export "napster_song_data.dart";
 export "pair.dart";

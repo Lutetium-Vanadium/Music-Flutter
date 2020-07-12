@@ -1,8 +1,7 @@
-import "dart:io";
-
 import "./song_metadata.dart";
+import "./get_id.dart";
 
-class SongData extends SongMetadata {
+class SongData extends SongMetadata implements DbCollection {
   final String title;
   final String artist;
   final String albumId;
@@ -27,8 +26,20 @@ class SongData extends SongMetadata {
     return "{\n\ttitle: $title,\n\tartist: $artist,\n\talbumId: $albumId,\n\tfilePath: $filePath,\n\tnumListens: $numListens,\n\tliked: $liked,\n\tthumbnail: $thumbnail,\n\tlength: $length\n}";
   }
 
-  List<Object> get props =>
-      [title, artist, albumId, filePath, numListens, liked, thumbnail, length];
+  @override
+  List<Object> get props {
+    print("OVERRIDE0");
+    return [
+      title,
+      artist,
+      albumId,
+      filePath,
+      numListens,
+      liked,
+      thumbnail,
+      length
+    ];
+  }
 
   SongData.override(
     SongData song, {
@@ -74,15 +85,15 @@ class SongData extends SongMetadata {
     };
   }
 
-  static SongData fromFirestore(
-      Map<String, dynamic> map, int length, Directory root) {
+  static SongData fromFirestore(Map<String, dynamic> map,
+      [int length = -1, String root = ""]) {
     return SongData(
       albumId: map["albumId"],
       artist: map["artist"],
-      filePath: "${root.path}/songs/${map["title"]}.mp3",
+      filePath: "$root}/songs/${map["title"]}.mp3",
       length: length,
       numListens: map["numListens"],
-      thumbnail: "${root.path}/album_images/${map["albumId"]}.jpg",
+      thumbnail: "$root/album_images/${map["albumId"]}.jpg",
       title: map["title"],
       liked: map["liked"],
     );
@@ -107,6 +118,17 @@ class SongData extends SongMetadata {
       (i) => SongData.fromMap(maps[i]),
     );
   }
+
+  @override
+  String get getId => title;
+
+  @override
+  bool needsUpdate(other) =>
+      other["title"] != title ||
+      other["artist"] != artist ||
+      other["liked"] != liked ||
+      other["albumId"] != albumId ||
+      other["numListens"] != numListens;
 }
 
 extension SongDataMapping on List<SongData> {
