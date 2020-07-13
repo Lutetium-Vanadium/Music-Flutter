@@ -12,11 +12,13 @@ Download and play songs from your phone.
 
 If you have any issues or suggestions, feel free to [open a pull request](https://github.com/Lutetium-Vanadium/music-flutter/pulls) or [file an issue](https://github.com/Lutetium-Vanadium/music-flutter/issues)
 
-## Installation
+If you wish to customize or learn more about the project, go [here](docs/codestructure.md).
+
+## Downloading
 
 ### Build Dependecies
 
-First [install flutter](https://flutter.dev/docs/get-started/install). After that run
+First [install flutter](https://flutter.dev/docs/get-started/install). After that run:
 
 ```sh
 flutter pub get
@@ -26,10 +28,9 @@ This will install dependecies.
 
 ### Api keys
 
-The app requires 2 API Keys to function:
+The app requires [A Napster API Key](https://developer.napster.com/api/v2.2#getting-started), to function. You can also optionally add [Firebase](https://firebase.google.com/) for syncing.
 
-- [A napster API Key](https://developer.napster.com/api/v2.2#getting-started)
-- [A Youtube data API Key](https://developers.google.com/youtube/v3/getting-started)
+Steps to create the API Keys can be viewed [here](docs/apikeys.md).
 
 Once you have those created, you can move onto running the app.
 You will need to enter the api keys directly in the app.
@@ -50,7 +51,7 @@ If you wish to test the app to see if it works, connect a device or run an emula
 flutter run --profile
 ```
 
-### Installation
+### Building
 
 > TODO
 
@@ -60,4 +61,4 @@ For reference see flutter's [android](https://flutter.dev/docs/deployment/androi
 
 ### IOS
 
-The app was built with an android testing device and so it may no function fully as intended in ios. In general the UI will look and work the same, but special things like notifications may not. For example, android allows for notifications to show while the app is open, but for ios thats not true.
+The app was built with an android testing device and so it may no function fully as intended in ios. In general the UI will look and work the same, but platform specific things like notifications may not. For example, android allows for notifications to show while the app is open, but for ios does not.
