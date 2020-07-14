@@ -1,4 +1,4 @@
-<div style="text-align: center">
+<div align="center">
   <img src="assets/images/icon.png" height=200 width=200>
 </div>
 
@@ -13,35 +13,32 @@ Go [here](#downloading) for installation.
 
 ### Easily play and download songs
 
-<div style="display: flex; justify-content: space-around;">
-  <img style="max-width: 45%; height: auto;" src="docs/images/phone_home.png">
-  <img style="max-width: 45%; height: auto;" src="docs/images/phone_search.png">
+<div align="center">
+  <img width="49%" src="docs/images/phone_home.png"> <img width="49%" src="docs/images/phone_search.png">
 </div>
 
 <br>
 
 ### View all songs and by artists
 
-<div style="display: flex; justify-content: space-around;">
-  <img style="max-width: 45%; height: auto;" src="docs/images/phone_mymusic.png">
-  <img  style="max-width: 45%; height: auto;" src="docs/images/phone_artist.png">
+<div align="center">
+  <img width="49%" src="docs/images/phone_mymusic.png"> <img  width="49%" src="docs/images/phone_artist.png">
 </div>
 
 <br>
 
 ### Automatically generated albums as well as Custom ones
 
-<div style="display: flex; justify-content: space-around;">
-  <img style="max-width: 45%; height: auto;" src="docs/images/phone_albums.png">
-  <img style="max-width: 45%; height: auto;" src="docs/images/phone_album.png">
+<div align="center">
+  <img width="49%" src="docs/images/phone_albums.png"> <img width="49%" src="docs/images/phone_album.png">
 </div>
 
 <br>
 
 ### Shuffle and view queue
 
-<div style="display: flex; justify-content: space-around;">
-  <img style="max-width: 45%; height: auto;" src="docs/images/phone_queue.png">
+<div align="center">
+  <img width="49%" src="docs/images/phone_queue.png">
 </div>
 
 > This app is the mobile version of [this app](https://github.com/Lutetium-Vanadium/music), which is out of date and is soon to be updated.
