@@ -63,7 +63,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
           if (progress.first < 0) {
             var idx = progress.second;
 
-            var length = idx == 0 ? ytDetails.length : ytDetailsArr[idx].length;
+            var length = idx < 0 ? ytDetails.length : ytDetailsArr[idx].length;
 
             if (idx >= 0) {
               youtubeId = ytDetailsArr[idx].id;
@@ -96,10 +96,10 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         }
 
         print("Downloaded");
-        await db.insertSong(song);
+        await updateAlbum(albumId, songData.artist, db, syncDb);
 
         await Future.wait([
-          updateAlbum(albumId, songData.artist, db, syncDb),
+          db.insertSong(song),
           syncDb.insertSong(song, youtubeId),
         ]);
 

@@ -31,32 +31,6 @@ Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
   }
 }
 
-/// getSongInfo()
-///
-/// @param {string} query The search term
-///
-/// Gets the info for only one particular song
-Future<NapsterSongData> getSongInfo(String query) async {
-  try {
-    await apiKeys.isReady;
-    var response =
-        await http.get(generateUri("https://api.napster.com/v2.2/search", {
-      "apikey": apiKeys.napster,
-      "type": "track",
-      "per_type_limit": "1",
-      "query": query,
-    }));
-    if (response.statusCode != 200) throw response.headers["status"];
-
-    var track = jsonDecode(response.body)["search"]["data"]["tracks"][0];
-
-    return formatTrackData(track);
-  } catch (error) {
-    print(error);
-    return null;
-  }
-}
-
 /// search()
 ///
 /// @param {string} query The search query

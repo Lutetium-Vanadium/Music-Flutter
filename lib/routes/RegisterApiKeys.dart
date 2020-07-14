@@ -67,7 +67,8 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
         Section(
           title: "Napster",
           description: napsterDescription,
-          link: "https://developer.napster.com/api/v2.2#getting-started",
+          link:
+              "https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#napster",
           children: [
             TextField(
               controller: _napsterController,
@@ -97,7 +98,8 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
         Section(
           title: "Firestore (optional)",
           description: firestoreDescription,
-          link: "https://firebase.google.com/docs/firestore/",
+          link:
+              "https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#firebase-optional",
           children: <Widget>[
             TextField(
               controller: _projectIdController,

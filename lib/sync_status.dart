@@ -3,7 +3,7 @@ import "package:equatable/equatable.dart";
 abstract class SyncStatus extends Equatable {
   const SyncStatus();
 
-  final int progress = 1;
+  final int progress = 0;
 }
 
 class SyncInitial extends SyncStatus {
@@ -12,7 +12,7 @@ class SyncInitial extends SyncStatus {
 }
 
 class SyncSongsInitial extends SyncStatus {
-  final int progress = 2;
+  final int progress = 1;
 
   @override
   List<Object> get props => [];
@@ -21,30 +21,42 @@ class SyncSongsInitial extends SyncStatus {
 class SyncSongsName extends SyncStatus {
   final String name;
   final bool delete;
-  final int progress = 2;
+  final int progress = 1;
+  final int failed;
 
-  SyncSongsName(this.name, this.delete);
+  SyncSongsName(this.name, this.delete, this.failed);
 
   @override
-  List<Object> get props => [name, delete];
+  List<Object> get props => [name, delete, failed];
 }
 
 class SyncSongsProgress extends SyncStatus {
   final int bytesDownloaded;
   final int totalBytes;
   final String title;
-  final int progress = 2;
+  final int progress = 1;
+  final int failed;
 
-  SyncSongsProgress(this.bytesDownloaded, this.totalBytes, this.title);
+  SyncSongsProgress(
+      this.bytesDownloaded, this.totalBytes, this.title, this.failed);
 
   double get percentage => bytesDownloaded / totalBytes;
 
   @override
-  List<Object> get props => [bytesDownloaded, totalBytes, title];
+  List<Object> get props => [bytesDownloaded, totalBytes, title, failed];
+}
+
+class SyncSongsFailed extends SyncStatus {
+  final int failed;
+
+  SyncSongsFailed(this.failed);
+
+  @override
+  List<Object> get props => [failed];
 }
 
 class SyncAlbumsInitial extends SyncStatus {
-  final int progress = 3;
+  final int progress = 2;
 
   @override
   List<Object> get props => [];
@@ -52,7 +64,7 @@ class SyncAlbumsInitial extends SyncStatus {
 
 class SyncAlbumsName extends SyncStatus {
   final String name;
-  final int progress = 3;
+  final int progress = 2;
 
   SyncAlbumsName(this.name);
 
@@ -61,7 +73,7 @@ class SyncAlbumsName extends SyncStatus {
 }
 
 class SyncCustomAlbumsInitial extends SyncStatus {
-  final int progress = 4;
+  final int progress = 3;
 
   @override
   List<Object> get props => [];
@@ -69,7 +81,7 @@ class SyncCustomAlbumsInitial extends SyncStatus {
 
 class SyncCustomAlbumsName extends SyncStatus {
   final String name;
-  final int progress = 4;
+  final int progress = 3;
 
   SyncCustomAlbumsName(this.name);
 
@@ -78,14 +90,14 @@ class SyncCustomAlbumsName extends SyncStatus {
 }
 
 class SyncCleaningUp extends SyncStatus {
-  final int progress = 5;
+  final int progress = 4;
 
   @override
   List<Object> get props => [];
 }
 
 class SyncComplete extends SyncStatus {
-  final int progress = 5;
+  final int progress = 4;
 
   @override
   List<Object> get props => [];

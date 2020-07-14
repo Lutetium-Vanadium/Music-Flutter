@@ -360,7 +360,6 @@ class HeaderImage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(1.25 * rem)),
                       color: Theme.of(context).buttonColor,
                       onPressed: () {
-                        print("PRESSED");
                         var random = Random();
                         BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
                           songs: songs,

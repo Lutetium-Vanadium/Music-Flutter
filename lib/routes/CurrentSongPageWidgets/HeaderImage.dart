@@ -33,11 +33,13 @@ class _HeaderImageState extends State<HeaderImage> {
           onVerticalDragUpdate: (dragUpdateDetails) {
             _dragUpdateDetails = dragUpdateDetails;
           },
-          onVerticalDragCancel: () => print("Cancel"),
+          onVerticalDragCancel: () {
+            _dragStartDetails = null;
+            _dragUpdateDetails = null;
+          },
           onVerticalDragEnd: (dragEndDetails) {
             var delta = _dragUpdateDetails.localPosition.dy -
                 _dragStartDetails.localPosition.dy;
-            print(dragEndDetails.velocity);
             if (delta > threshold ||
                 dragEndDetails.velocity.pixelsPerSecond.dy > threshold) {
               Navigator.of(context).pop();

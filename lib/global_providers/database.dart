@@ -71,9 +71,6 @@ class DatabaseFunctions {
       "song_info.db",
       version: 1,
       onCreate: (db, version) async {
-        print(Tables.Songs);
-        print(Tables.Albums);
-        print(Tables.CustomAlbums);
         await db.execute("""CREATE TABLE ${Tables.Songs} (
           filePath TEXT,
           title TEXT,
@@ -116,6 +113,14 @@ class DatabaseFunctions {
       AlbumData.fromMapArray(
         await db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),
       ),
+    );
+  }
+
+  Future<List<SongData>> getTopSongs() async {
+    await isReady;
+
+    return SongData.fromMapArray(
+      await db.query(Tables.Songs, orderBy: "NOT liked, numListens DESC"),
     );
   }
 

@@ -5,6 +5,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_core/firebase_core.dart";
 import "package:path_provider/path_provider.dart";
 
+import "package:Music/connected.dart";
 import "package:Music/helpers/downloader.dart";
 import "package:Music/helpers/getYoutubeDetails.dart";
 import "package:Music/models/models.dart";
@@ -21,6 +22,8 @@ class FirestoreSync {
   Directory _root;
 
   bool syncing = false;
+
+  int _numFailed = 0;
 
   FirestoreSync(this.db) {
     connect();
@@ -152,8 +155,6 @@ class FirestoreSync {
 
       if (lId == oId) {
         if (local[i].needsUpdate(online[j])) {
-          print(local[i]);
-          print(online[j]);
           toUpdate.add(j);
         }
         i++;
@@ -180,13 +181,15 @@ class FirestoreSync {
     return [toAdd, toDelete, toUpdate];
   }
 
-  Future<void> _addSong(Map<String, dynamic> firestoreSong) async {
+  Future<bool> _addSong(Map<String, dynamic> firestoreSong) async {
     String title = firestoreSong["title"];
     String youtubeId = firestoreSong["youtubeId"];
     try {
       int length = firestoreSong["length"];
 
       List<YoutubeDetails> backup = [];
+
+      await hasInternetConnection();
 
       if (youtubeId.length == 0) {
         var ytDetailsArr =
@@ -204,21 +207,24 @@ class FirestoreSync {
         if (progress.first < 0) {
           var idx = progress.second;
 
-          if (idx > 0) {
+          if (idx >= 0) {
             length = backup[idx].length;
           }
         } else {
-          _controller
-              .add(SyncSongsProgress(progress.first, progress.second, title));
+          _controller.add(SyncSongsProgress(
+              progress.first, progress.second, title, _numFailed));
         }
       }
 
       var song = SongData.fromFirestore(firestoreSong, length, _root.path);
 
       await db.insertSong(song);
+      return true;
     } catch (e) {
-      print(e);
       print("Failed $title; id: $youtubeId");
+      print(e);
+      _numFailed++;
+      return false;
     }
   }
 
@@ -246,12 +252,16 @@ class FirestoreSync {
 
     var diff = _diff(dbSongs, firestoreSongs);
 
+    List<int> failed = [];
+
     for (var idx in diff[0]) {
-      _controller.add(SyncSongsName(firestoreSongs[idx]["title"], false));
-      await _addSong(firestoreSongs[idx]);
+      _controller
+          .add(SyncSongsName(firestoreSongs[idx]["title"], false, _numFailed));
+      var success = await _addSong(firestoreSongs[idx]);
+      if (!success) failed.add(idx);
     }
     for (var idx in diff[1]) {
-      _controller.add(SyncSongsName(dbSongs[idx].title, true));
+      _controller.add(SyncSongsName(dbSongs[idx].title, true, _numFailed));
       await _deleteSong(dbSongs[idx].title);
     }
     for (var idx in diff[2]) {
@@ -263,13 +273,21 @@ class FirestoreSync {
         whereArgs: [song["title"]],
       );
     }
+
+    _controller.add(SyncSongsFailed(_numFailed));
+
+    for (var idx in failed) {
+      _numFailed--;
+      _controller
+          .add(SyncSongsName(firestoreSongs[idx]["title"], false, _numFailed));
+      await _addSong(firestoreSongs[idx]);
+    }
   }
 
   void _songHandler(QuerySnapshot snapshot) async {
     if (!snapshot.metadata.hasPendingWrites &&
         snapshot.documents.length != snapshot.documentChanges.length) {
       snapshot.documentChanges.forEach((change) async {
-        print(change.document.data);
         switch (change.type) {
           case DocumentChangeType.added:
             await _addSong(change.document.data);
@@ -331,7 +349,6 @@ class FirestoreSync {
     if (!snapshot.metadata.hasPendingWrites &&
         snapshot.documents.length != snapshot.documentChanges.length) {
       snapshot.documentChanges.forEach((change) async {
-        print(change.document.data);
         switch (change.type) {
           case DocumentChangeType.added:
             await _addAlbum(change.document.data);
@@ -382,7 +399,6 @@ class FirestoreSync {
     if (!snapshot.metadata.hasPendingWrites &&
         snapshot.documents.length != snapshot.documentChanges.length) {
       snapshot.documentChanges.forEach((change) async {
-        print(change.document.data);
         switch (change.type) {
           case DocumentChangeType.added:
             await db.insertCustomAlbum(

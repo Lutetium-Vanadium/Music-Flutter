@@ -53,14 +53,11 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
       ))[0]
           .songs);
 
-      print(songNames);
-
       var songs = await db.getSongs(where: "title IN ($songNames)");
 
       if (!mounted) return;
 
       setState(() {
-        print(songs);
         _songs = songs;
       });
     } catch (_) {}

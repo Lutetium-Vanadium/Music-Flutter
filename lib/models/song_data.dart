@@ -79,7 +79,7 @@ class SongData extends SongMetadata implements DbCollection {
     return SongData(
       albumId: map["albumId"],
       artist: map["artist"],
-      filePath: "$root}/songs/${map["title"]}.mp3",
+      filePath: "$root/songs/${map["title"]}.mp3",
       length: length,
       numListens: map["numListens"],
       thumbnail: "$root/album_images/${map["albumId"]}.jpg",

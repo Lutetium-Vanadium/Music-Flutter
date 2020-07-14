@@ -46,20 +46,24 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                 child: StreamBuilder<SyncStatus>(
                   stream: syncDB.status,
                   builder: (context, snapshot) {
-                    var progress = 1;
+                    var progress = 0;
+                    int numFailed;
                     Widget widget = Text("Starting Sync...");
                     if (snapshot.hasData) {
                       var event = snapshot.data;
-                      progress = snapshot.data.progress;
+                      progress = event.progress;
 
                       if (event is SyncSongsInitial) {
                         widget = Text("Checking Songs...");
                       } else if (event is SyncSongsName) {
+                        numFailed = event.failed;
                         if (event.delete) {
                           widget = Text("Deleting ${event.name}");
+                        } else {
+                          widget = Text("Starting download for ${event.name}");
                         }
-                        widget = Text("Starting download for ${event.name}");
                       } else if (event is SyncSongsProgress) {
+                        numFailed = event.failed;
                         widget = Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -94,7 +98,7 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                             backgroundColor: Theme.of(context).primaryColor,
                             valueColor: AlwaysStoppedAnimation(
                                 Theme.of(context).accentColor),
-                            value: progress / 5,
+                            value: progress / 4,
                           ),
                         ),
                         SizedBox(height: 40),
@@ -102,6 +106,7 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                           height: 40,
                           child: widget,
                         ),
+                        if (numFailed != null) Text("$numFailed songs failed."),
                       ],
                     );
                   },

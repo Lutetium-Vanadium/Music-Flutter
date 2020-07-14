@@ -25,10 +25,11 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
       }
     }
 
+    print("Got manifest for $filename");
+
     // -1 to show that its not a percent, but the index of song chosen
     yield Pair(-1, i - 1);
 
-    print("Starting: $downloadId");
     Uri uri;
 
     if (manifest.audioOnly.length > 0) {
@@ -49,15 +50,13 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
       return;
     }
 
-    print("Got manifest for $filename");
     var root = await getApplicationDocumentsDirectory();
 
     var file = File("${root.path}/songs/$filename");
 
-    if (await file.exists())
-      return;
-    else
-      file = await file.create(recursive: true);
+    print("Starting: $downloadId");
+
+    if (!(await file.exists())) file = await file.create(recursive: true);
 
     var client = HttpClient();
     var request = await client.getUrl(uri);
@@ -109,10 +108,10 @@ Future<void> downloadImage(String id) async {
   var response = await request.close();
   var writer = file.openWrite();
 
-  response.listen((data) {
+  await for (var data in response) {
     writer.add(data);
-  }, onDone: () {
-    writer.close();
-    print("Done $id");
-  });
+  }
+
+  await writer.close();
+  print("Done $id");
 }

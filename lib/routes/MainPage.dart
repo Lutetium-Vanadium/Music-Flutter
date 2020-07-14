@@ -38,6 +38,9 @@ class _MainPageState extends State<MainPage> {
     if (await apiKeys.needsApiKeys) {
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pushNamed("/register-apikeys");
+    } else {
+      await syncKeys.isReady;
+      Navigator.of(context).pushNamed("/sync-status");
     }
   }
 

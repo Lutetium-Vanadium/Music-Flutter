@@ -196,18 +196,23 @@ class _HomeState extends State<Home> {
                             title: song.title,
                             subtitle: generateSubtitle(
                                 type: "Song", artist: song.artist),
-                            onClick: () {
+                            onClick: () async {
+                              var songs = await DatabaseProvider.getDB(context)
+                                  .getTopSongs();
                               BlocProvider.of<QueueBloc>(context)
                                   .add(EnqueueSongs(
-                                songs: displace(_topSongs, index),
+                                songs: displace(songs, index),
                               ));
                             },
                             focusedMenuItems: [
                               FocusedMenuItem(
-                                onPressed: () {
+                                onPressed: () async {
+                                  var songs =
+                                      await DatabaseProvider.getDB(context)
+                                          .getTopSongs();
                                   BlocProvider.of<QueueBloc>(context)
                                       .add(EnqueueSongs(
-                                    songs: displace(_topSongs, index),
+                                    songs: displace(songs, index),
                                   ));
                                 },
                                 title: Text("Play"),

@@ -64,6 +64,12 @@ android {
             signingConfig signingConfigs.release
         }
     }
+    // Flutter seems to have a problem with changing the name of the apk
+    // applicationVariants.all { variant ->
+    //     variant.outputs.all {
+    //         outputFileName = "Music_${variant.buildType.name[0]}${defaultConfig.versionName}.apk"
+    //     }
+    // }
 }
 
 flutter {
