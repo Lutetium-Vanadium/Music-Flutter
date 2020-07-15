@@ -77,6 +77,9 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                             ),
                           ],
                         );
+                      } else if (event is SyncSongsFailed) {
+                        widget = Text(
+                            "Retrying ${event.failed} song${event.failed == 1 ? "" : "s"}.");
                       } else if (event is SyncAlbumsInitial) {
                         widget = Text("Checking Albums...");
                       } else if (event is SyncAlbumsName) {

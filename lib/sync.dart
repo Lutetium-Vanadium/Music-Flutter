@@ -140,9 +140,6 @@ class FirestoreSync {
 
   List<List<int>> _diff<T extends DbCollection>(
       List<T> local, List<Map<String, dynamic>> online) {
-    local.sort((a, b) => (a.getId < b.getId ? -1 : 1));
-    online.sort((a, b) => (_getId(a) < _getId(b) ? -1 : 1));
-
     List<int> toAdd = [];
     List<int> toDelete = [];
     List<int> toUpdate = [];
@@ -250,6 +247,9 @@ class FirestoreSync {
     var dbSongs = await db.getSongs();
     var firestoreSongs = snapshot.documents.map((d) => d.data).toList();
 
+    dbSongs.sort((a, b) => (a.getId < b.getId ? -1 : 1));
+    firestoreSongs.sort((a, b) => (_getId(a) < _getId(b) ? -1 : 1));
+
     var diff = _diff(dbSongs, firestoreSongs);
 
     List<int> failed = [];
@@ -327,6 +327,9 @@ class FirestoreSync {
     var dbAlbums = await db.getAlbums();
     var firestoreAlbums = snapshot.documents.map((d) => d.data).toList();
 
+    dbAlbums.sort((a, b) => (a.getId < b.getId ? -1 : 1));
+    firestoreAlbums.sort((a, b) => (_getId(a) < _getId(b) ? -1 : 1));
+
     var diff = _diff(dbAlbums, firestoreAlbums);
 
     await Future.wait(diff[0].map((idx) {
@@ -377,6 +380,9 @@ class FirestoreSync {
 
     var dbAlbums = await db.getCustomAlbums();
     var firestoreAlbums = snapshot.documents.map((d) => d.data).toList();
+
+    dbAlbums.sort((a, b) => (a.getId < b.getId ? -1 : 1));
+    firestoreAlbums.sort((a, b) => (_getId(a) < _getId(b) ? -1 : 1));
 
     var diff = _diff(dbAlbums, firestoreAlbums);
 

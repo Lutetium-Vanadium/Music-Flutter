@@ -47,7 +47,20 @@ If you have any issues or suggestions, feel free to [open a pull request](https:
 
 If you wish to customize or learn more about the project, go [here](docs/codestructure.md).
 
-## Downloading
+## Download and Installation
+
+For android, you can directly download a built version of the latest release [here](https://github.com/Lutetium-Vanadium/Music-Flutter/releases). First generate the API Keys and then download the APK from the latest release.
+
+If you are on iOS or want to download and build the project yourself, follow the steps given below.
+
+### Api keys
+
+The app requires [A Napster API Key](https://developer.napster.com/api/v2.2#getting-started), to function. You can also optionally add [Firebase](https://firebase.google.com/) for syncing.
+
+Steps to create the API Keys can be viewed [here](docs/apikeys.md).
+
+Once you have those created, you can move onto running the app.
+You will need to enter the api keys directly in the app.
 
 ### Build Dependecies
 
@@ -58,15 +71,6 @@ flutter pub get
 ```
 
 This will install dependecies.
-
-### Api keys
-
-The app requires [A Napster API Key](https://developer.napster.com/api/v2.2#getting-started), to function. You can also optionally add [Firebase](https://firebase.google.com/) for syncing.
-
-Steps to create the API Keys can be viewed [here](docs/apikeys.md).
-
-Once you have those created, you can move onto running the app.
-You will need to enter the api keys directly in the app.
 
 ### Testing
 
@@ -145,6 +149,12 @@ Once finished building, the APK will be available at `build/app/outputs/apk/rele
 ```sh
 flutter install
 ```
+
+You may be shown this popup when installing the app:
+
+<img src="docs/images/play_protect.png" height="200">
+
+You can safely click 'Install Anyway'.
 
 #### For iOS
 
