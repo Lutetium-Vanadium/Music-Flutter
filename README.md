@@ -9,7 +9,7 @@
 Download and play songs from your phone. <br>
 Optionally you can sync with firebase, allowing easy use of multiple devices.
 
-Go [here](#downloading) for installation.
+Go [here](#download-and-installation) for installation.
 
 ### Easily play and download songs
 
