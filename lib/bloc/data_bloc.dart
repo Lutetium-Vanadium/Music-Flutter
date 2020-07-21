@@ -90,12 +90,12 @@ class DataBloc extends Bloc<DataEvent, DataState> {
             yield ProgressNotification(
               bytesDownloaded: progress.first,
               totalBytes: progress.second,
-              title: song.title,
+              id: song.title + song.albumId,
             );
           }
         }
 
-        print("Downloaded");
+        print("Downloaded ${song.title}");
         await updateAlbum(albumId, songData.artist, db, syncDb);
 
         await Future.wait([

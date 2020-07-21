@@ -154,7 +154,9 @@ class _SearchPageState extends State<SearchPage> {
                   return BlocBuilder<DataBloc, DataState>(
                     builder: (context, state) {
                       if (state is ProgressNotification &&
-                          state.title == _results[index].title) {
+                          state.id ==
+                              (_results[index].title +
+                                  _results[index].albumId)) {
                         return SizedBox(
                           height: 25,
                           width: 25,
