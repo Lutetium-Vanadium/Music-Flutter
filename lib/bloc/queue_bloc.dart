@@ -96,8 +96,8 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     if (event is EnqueueSongs) {
       _allSongs = event.songs;
       _index = event.index;
+      _isShuffled = event.shuffle;
       if (event.shuffle) {
-        _isShuffled = true;
         _songs = _shuffle([...event.songs], cur: event.index);
       } else {
         _songs = event.songs;
