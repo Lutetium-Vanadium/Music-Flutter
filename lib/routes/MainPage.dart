@@ -137,6 +137,7 @@ class _MainPageState extends State<MainPage> {
             backgroundColor: Theme.of(context).backgroundColor,
             selectedItemColor:
                 Theme.of(context).accentTextTheme.bodyText1.color,
+            unselectedItemColor: Colors.grey[200],
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),

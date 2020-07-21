@@ -16,7 +16,7 @@ Future<List<YoutubeDetails>> getYoutubeDetails(
 
     var res = await yt.search
         .getVideosAsync(query)
-        .takeWhile((_) => i++ < 4)
+        .takeWhile((_) => i++ < 5)
         .toList();
 
     yt.close();

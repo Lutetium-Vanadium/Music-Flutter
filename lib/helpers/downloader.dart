@@ -19,6 +19,7 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
       try {
         manifest = await yt.videos.streamsClient.getManifest(downloadId);
       } catch (e) {
+        print(e);
         print(downloadId + " errored");
         if (i == backup.length) throw "Couldn't get manifest";
         downloadId = backup[i++];

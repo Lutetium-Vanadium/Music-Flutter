@@ -46,6 +46,7 @@ class _PlayPauseState extends State<PlayPause>
         }
 
         return IconButton(
+          visualDensity: VisualDensity.compact,
           icon: AnimatedIcon(
             icon: AnimatedIcons.pause_play,
             progress: _controller,

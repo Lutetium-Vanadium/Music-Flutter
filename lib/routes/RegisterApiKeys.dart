@@ -210,6 +210,8 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
   }
 
   Future<void> _verifyApiKeys() async {
+    FocusScope.of(context).unfocus();
+
     setState(() {
       _state = VerifyState.Verifying;
     });

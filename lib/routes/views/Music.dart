@@ -106,9 +106,10 @@ class _MusicState extends State<Music> {
                       onPressed: () {
                         var random = Random();
                         BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                            songs: _songs,
-                            index: random.nextInt(_songs.length),
-                            shuffle: true));
+                          songs: _songs,
+                          index: random.nextInt(_songs.length),
+                          shuffle: true,
+                        ));
                       },
                       child: Text("Play Random"),
                     ),

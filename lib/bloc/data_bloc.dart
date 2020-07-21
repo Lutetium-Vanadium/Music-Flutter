@@ -49,6 +49,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         var filename = songData.title + ".mp3";
         var albumId = songData.albumId;
 
+        await downloadImage(albumId);
+
         print("Downloading ${songData.title}");
         var root = await getApplicationDocumentsDirectory();
 
