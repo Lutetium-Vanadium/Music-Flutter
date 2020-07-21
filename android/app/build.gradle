@@ -64,6 +64,21 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    flavorDimensions "app"
+
+    productFlavors {
+        dev {
+            dimension "app"
+            resValue "string", "app_name", "Music (dev)"
+            versionNameSuffix "-dev"
+            applicationId "com.LutetiumVanadium.Music.dev"
+        }
+        prod {
+            dimension "app"
+            resValue "string", "app_name", "Music"
+        }
+    }
     // Flutter seems to have a problem with changing the name of the apk
     // applicationVariants.all { variant ->
     //     variant.outputs.all {
