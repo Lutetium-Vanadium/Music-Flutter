@@ -45,10 +45,14 @@ class CustomAlbumData extends Equatable implements DbCollection {
   }
 
   static CustomAlbumData fromFirebase(Map<String, dynamic> map) {
+    // Inlining it seem to throw an error for some reason...
+    var songs =
+        (map["songs"] as List<dynamic>).map((e) => e.toString()).toList();
+
     return CustomAlbumData(
       id: map["id"],
       name: map["name"],
-      songs: map["songs"].map((e) => e.toString()).toList(),
+      songs: songs,
     );
   }
 
