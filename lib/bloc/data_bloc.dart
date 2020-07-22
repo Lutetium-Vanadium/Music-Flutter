@@ -100,10 +100,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         print("Downloaded ${song.title}");
         await updateAlbum(albumId, songData.artist, db, syncDb);
 
-        await Future.wait([
-          db.insertSong(song),
-          syncDb.insertSong(song, youtubeId),
-        ]);
+        await db.insertSong(song);
+        syncDb.insertSong(song, youtubeId);
 
         notificationHandler.showNotification(
           title: song.title,
@@ -126,15 +124,16 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       Future.wait([
         songFile.delete(),
         db.deleteSong(event.song.title),
-        syncDb.delete(SyncTables.Songs, event.song.title),
         db.update(
           Tables.Albums,
           data,
           where: "id LIKE ?",
           whereArgs: [event.song.albumId],
         ),
-        syncDb.update(SyncTables.Albums, event.song.albumId, data),
       ]);
+
+      syncDb.delete(SyncTables.Songs, event.song.title);
+      syncDb.update(SyncTables.Albums, event.song.albumId, data);
 
       await db.deleteEmptyAlbums();
     } else if (event is AddCustomAlbum) {
@@ -144,24 +143,20 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         songs: event.songs,
       );
 
-      await Future.wait([
-        db.insertCustomAlbum(album),
-        syncDb.insertCustomAlbum(album),
-      ]);
+      await db.insertCustomAlbum(album);
+      syncDb.insertCustomAlbum(album);
 
       print("ADDED ${event.name}");
     } else if (event is EditCustomAlbum) {
       var data = {"songs": stringifyArr(event.songs)};
 
-      await Future.wait([
-        db.update(
-          Tables.CustomAlbums,
-          data,
-          where: "id LIKE ?",
-          whereArgs: [event.id],
-        ),
-        syncDb.update(SyncTables.CustomAlbums, event.id, data),
-      ]);
+      await db.update(
+        Tables.CustomAlbums,
+        data,
+        where: "id LIKE ?",
+        whereArgs: [event.id],
+      );
+      syncDb.update(SyncTables.CustomAlbums, event.id, data);
 
       print("UPDATED ${event.id}");
     } else if (event is AddSongToCustomAlbum) {
@@ -174,20 +169,16 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
       album.songs.add(event.song.title);
 
-      await Future.wait([
-        db.update(
-          Tables.CustomAlbums,
-          album.toMap(),
-          where: "id LIKE ?",
-          whereArgs: [event.id],
-        ),
-        syncDb.update(SyncTables.CustomAlbums, event.id, album.toFirebase()),
-      ]);
+      await db.update(
+        Tables.CustomAlbums,
+        album.toMap(),
+        where: "id LIKE ?",
+        whereArgs: [event.id],
+      );
+      syncDb.update(SyncTables.CustomAlbums, event.id, album.toFirebase());
     } else if (event is DeleteCustomAlbum) {
-      await Future.wait([
-        db.deleteCustomAlbum(event.id),
-        syncDb.delete(SyncTables.CustomAlbums, event.id),
-      ]);
+      await db.deleteCustomAlbum(event.id);
+      syncDb.delete(SyncTables.CustomAlbums, event.id);
 
       print("DELETED ${event.id}");
     }

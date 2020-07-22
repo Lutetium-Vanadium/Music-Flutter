@@ -84,7 +84,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     );
 
     await db.incrementNumListens(song);
-    await syncDb.incrementNumListens(song);
+    syncDb.incrementNumListens(song);
   }
 
   SongData get _current => _songs.length > 0 ? _songs[_index] : null;
@@ -117,15 +117,13 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         _songs[songsIndex] = SongData.override(event.song, liked: liked);
       }
 
-      await Future.wait([
-        db.update(
-          Tables.Songs,
-          {"liked": liked},
-          where: "title LIKE ?",
-          whereArgs: [event.song.title],
-        ),
-        syncDb.update(SyncTables.Songs, event.song.title, {"liked": liked}),
-      ]);
+      await db.update(
+        Tables.Songs,
+        {"liked": liked},
+        where: "title LIKE ?",
+        whereArgs: [event.song.title],
+      );
+      syncDb.update(SyncTables.Songs, event.song.title, {"liked": liked});
 
       updateData = true;
     }

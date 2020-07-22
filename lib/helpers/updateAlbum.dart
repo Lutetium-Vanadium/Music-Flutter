@@ -46,8 +46,6 @@ Future<void> updateAlbum(
     artist: artist,
   );
 
-  await Future.wait([
-    db.insertAlbum(album),
-    syncDb.insertAlbum(album),
-  ]);
+  await db.insertAlbum(album);
+  syncDb.insertAlbum(album);
 }

@@ -376,7 +376,7 @@ class FirestoreSync {
 
   Future _initCustomAlbums() async {
     var snapshot =
-        await firestore.collection(Tables.CustomAlbums).getDocuments();
+        await firestore.collection(SyncTables.CustomAlbums).getDocuments();
 
     var dbAlbums = await db.getCustomAlbums();
     var firestoreAlbums = snapshot.documents.map((d) => d.data).toList();
@@ -387,9 +387,11 @@ class FirestoreSync {
     var diff = _diff(dbAlbums, firestoreAlbums);
 
     await Future.wait(diff[0].map((idx) {
-      _controller.add(SyncCustomAlbumsName(firestoreAlbums[idx]["name"]));
-      return db.insertCustomAlbum(
-          CustomAlbumData.fromFirebase(firestoreAlbums[idx]));
+      var name = firestoreAlbums[idx]["name"];
+      _controller.add(SyncCustomAlbumsName(name));
+      var album = CustomAlbumData.fromFirebase(firestoreAlbums[idx]);
+
+      return db.insertCustomAlbum(album);
     }));
     await Future.wait(
         diff[1].map((idx) => db.deleteCustomAlbum(dbAlbums[idx].id)));

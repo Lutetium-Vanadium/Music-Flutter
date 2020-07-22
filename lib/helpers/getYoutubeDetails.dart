@@ -10,7 +10,7 @@ import "package:Music/models/models.dart";
 Future<List<YoutubeDetails>> getYoutubeDetails(
     String title, String artist) async {
   try {
-    var query = "$title $artist official music video";
+    var query = "$title by $artist official music video";
     var yt = YoutubeExplode();
     var i = 0;
 
