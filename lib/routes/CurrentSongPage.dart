@@ -1,16 +1,16 @@
-import "dart:io";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:palette_generator/palette_generator.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:palette_generator/palette_generator.dart';
 
-import "package:Music/global_providers/audio_player.dart";
-import "package:Music/helpers/displace.dart";
-import "package:Music/helpers/formatLength.dart";
-import "package:Music/bloc/queue_bloc.dart";
+import 'package:Music/global_providers/audio_player.dart';
+import 'package:Music/helpers/displace.dart';
+import 'package:Music/helpers/formatLength.dart';
+import 'package:Music/bloc/queue_bloc.dart';
 
-import "./widgets/SongList.dart";
-import "./CurrentSongPageWidgets/HeaderImage.dart";
-import "./CurrentSongPageWidgets/ControlBar.dart";
+import './widgets/SongList.dart';
+import './CurrentSongPageWidgets/HeaderImage.dart';
+import './CurrentSongPageWidgets/ControlBar.dart';
 
 class CurrentSongPage extends StatefulWidget {
   @override
@@ -121,7 +121,7 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                 SizedBox(
                   width: 8 * width10,
                   child: Text(
-                    "Queue",
+                    'Queue',
                     style: Theme.of(context).textTheme.headline5,
                   ),
                 ),

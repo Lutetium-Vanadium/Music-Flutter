@@ -1,22 +1,22 @@
-import "dart:io";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:flutter_test/flutter_test.dart";
-import "package:focused_menu/focused_menu.dart";
-import "package:mockito/mockito.dart";
-import "package:rxdart/rxdart.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:mockito/mockito.dart';
+import 'package:rxdart/rxdart.dart';
 
-import "package:Music/sync.dart";
-import "package:Music/models/models.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/global_providers/database.dart";
-import "package:Music/global_providers/audio_player.dart";
-import "package:Music/routes/widgets/PlayPause.dart";
-import "package:Music/routes/widgets/SongList.dart";
-import "package:Music/routes/widgets/SongPage.dart";
-import "package:Music/routes/widgets/SongView.dart";
-import "package:Music/routes/widgets/Mozaic.dart";
-import "package:Music/routes/widgets/CoverImage.dart";
+import 'package:Music/sync.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/global_providers/audio_player.dart';
+import 'package:Music/routes/widgets/PlayPause.dart';
+import 'package:Music/routes/widgets/SongList.dart';
+import 'package:Music/routes/widgets/SongPage.dart';
+import 'package:Music/routes/widgets/SongView.dart';
+import 'package:Music/routes/widgets/Mozaic.dart';
+import 'package:Music/routes/widgets/CoverImage.dart';
 
 class MockAudioPlayer extends Mock implements AudioPlayer {}
 
@@ -25,18 +25,18 @@ class MockDatabaseFunctions extends Mock implements DatabaseFunctions {}
 class MockFirestoreSync extends Mock implements FirestoreSync {}
 
 void main() {
-  group("Mozaic", () {
-    testWidgets("Has four images", (tester) async {
+  group('Mozaic', () {
+    testWidgets('Has four images', (tester) async {
       await tester.pumpWidget(MaterialApp(
-        home: Mozaic(["i1", "i2", "i3", "i4"], 200),
+        home: Mozaic(['i1', 'i2', 'i3', 'i4'], 200),
       ));
 
       expect(find.byType(Image), findsNWidgets(4));
     });
 
-    testWidgets("Image has 1/2 width and height", (tester) async {
+    testWidgets('Image has 1/2 width and height', (tester) async {
       await tester.pumpWidget(MaterialApp(
-        home: Mozaic(["i1", "i2", "i3", "i4"], 200),
+        home: Mozaic(['i1', 'i2', 'i3', 'i4'], 200),
       ));
 
       var imgSize = find.byType(Image).evaluate().first.size;
@@ -45,81 +45,81 @@ void main() {
       expect(imgSize.height, 100);
     });
   });
-  group("Cover Image", () {
-    testWidgets("No focused menu", (tester) async {
+  group('Cover Image', () {
+    testWidgets('No focused menu', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: CoverImage(
-          title: "T",
-          subtitle: "S",
+          title: 'T',
+          subtitle: 'S',
           onClick: () {},
-          images: ["1", "2", "3", "4"],
+          images: ['1', '2', '3', '4'],
         ),
       ));
 
       expect(find.byType(FocusedMenuHolder), findsNothing);
     });
-    testWidgets("With focused menu", (tester) async {
+    testWidgets('With focused menu', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: CoverImage(
-          title: "T",
-          subtitle: "S",
+          title: 'T',
+          subtitle: 'S',
           onClick: () {},
           focusedMenuItems: [],
-          images: ["1", "2", "3", "4"],
+          images: ['1', '2', '3', '4'],
         ),
       ));
 
       expect(find.byType(FocusedMenuHolder), findsOneWidget);
     });
 
-    testWidgets("Uses Image", (tester) async {
+    testWidgets('Uses Image', (tester) async {
       await tester.pumpWidget(MaterialApp(
           home: CoverImage(
-        title: "T",
-        subtitle: "S",
+        title: 'T',
+        subtitle: 'S',
         onClick: () {},
-        image: "I",
+        image: 'I',
       )));
 
       expect(find.byType(Image), findsOneWidget);
       expect(find.byType(Mozaic), findsNothing);
     });
 
-    testWidgets("Uses Mozaic", (tester) async {
+    testWidgets('Uses Mozaic', (tester) async {
       await tester.pumpWidget(MaterialApp(
           home: CoverImage(
-        title: "T",
-        subtitle: "S",
+        title: 'T',
+        subtitle: 'S',
         onClick: () {},
-        images: ["1", "2", "3", "4"],
+        images: ['1', '2', '3', '4'],
       )));
 
       expect(find.byType(Image), findsNWidgets(4));
       expect(find.byType(Mozaic), findsOneWidget);
     });
   });
-  group("Song View", () {
+  group('Song View', () {
     var mockSong1 = SongData(
-      albumId: "id",
-      artist: "A",
-      filePath: "f",
+      albumId: 'id',
+      artist: 'A',
+      filePath: 'f',
       length: 0,
       liked: false,
       numListens: 0,
-      thumbnail: "t",
-      title: "t",
+      thumbnail: 't',
+      title: 't',
     );
     var mockSong2 = NapsterSongData(
-      albumId: "id",
-      artist: "A",
+      albumId: 'id',
+      artist: 'A',
       length: 0,
-      thumbnail: "t",
-      title: "t",
+      thumbnail: 't',
+      title: 't',
     );
 
-    var image = Image.file(File("F"));
+    var image = Image.file(File('F'));
 
-    testWidgets("Has focused menu", (tester) async {
+    testWidgets('Has focused menu', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: SongView(
           image: image,
@@ -130,7 +130,7 @@ void main() {
 
       expect(find.byType(FocusedMenuHolder), findsOneWidget);
     });
-    testWidgets("Shows icon", (tester) async {
+    testWidgets('Shows icon', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: SongView(
           image: image,
@@ -142,7 +142,7 @@ void main() {
 
       expect(find.byType(Icon), findsOneWidget);
     });
-    testWidgets("Works with napster song data", (tester) async {
+    testWidgets('Works with napster song data', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: SongView(
           image: image,
@@ -153,7 +153,7 @@ void main() {
 
       expect(find.byType(Icon), findsOneWidget);
     });
-    testWidgets("Renders correct data", (tester) async {
+    testWidgets('Renders correct data', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: SongView(
           image: image,
@@ -162,27 +162,27 @@ void main() {
         ),
       ));
 
-      expect(find.text("t"), findsOneWidget);
-      expect(find.text("A"), findsOneWidget);
-      expect(find.text("0:00"), findsOneWidget);
+      expect(find.text('t'), findsOneWidget);
+      expect(find.text('A'), findsOneWidget);
+      expect(find.text('0:00'), findsOneWidget);
     });
   });
-  group("Song List", () {
+  group('Song List', () {
     var mockSongs = List.generate(
       5,
       (index) => SongData(
-        albumId: "id",
-        artist: "A",
-        filePath: "f",
+        albumId: 'id',
+        artist: 'A',
+        filePath: 'f',
         length: index,
         liked: false,
         numListens: index,
-        thumbnail: "t",
-        title: "t",
+        thumbnail: 't',
+        title: 't',
       ),
     );
 
-    testWidgets("Has correct number of children", (tester) async {
+    testWidgets('Has correct number of children', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: SongList(
           songs: mockSongs,
@@ -191,7 +191,7 @@ void main() {
 
       expect(find.byType(SongView, skipOffstage: false), findsNWidgets(5));
     });
-    testWidgets("No focused menu", (tester) async {
+    testWidgets('No focused menu', (tester) async {
       await tester.pumpWidget(MaterialApp(
         home: SongList(
           songs: mockSongs,
@@ -201,7 +201,7 @@ void main() {
 
       expect(find.byType(FocusedMenuHolder), findsNothing);
     });
-    testWidgets("Has correct number of icons", (tester) async {
+    testWidgets('Has correct number of icons', (tester) async {
       var special = Icon(Icons.ac_unit);
       var regular = Icon(Icons.access_alarm);
 
@@ -217,31 +217,31 @@ void main() {
     });
   });
 
-  group("Song Page", () {
+  group('Song Page', () {
     MockDatabaseFunctions db;
     MockFirestoreSync fs;
     MockAudioPlayer ap;
     QueueBloc bloc;
 
     final mockAlbum = AlbumData(
-      artist: "a",
-      id: "id",
-      imagePath: "i",
-      name: "n",
+      artist: 'a',
+      id: 'id',
+      imagePath: 'i',
+      name: 'n',
       numSongs: 2,
     );
 
     final mockSongs = List.generate(
       5,
       (index) => SongData(
-        albumId: "id",
-        artist: "A",
-        filePath: "f",
+        albumId: 'id',
+        artist: 'A',
+        filePath: 'f',
         length: index,
         liked: false,
         numListens: index,
-        thumbnail: "t",
-        title: "t",
+        thumbnail: 't',
+        title: 't',
       ),
     );
 
@@ -252,8 +252,8 @@ void main() {
       bloc = QueueBloc(database: db, audioPlayer: ap, syncDatabase: fs);
 
       when(db.getAlbums(
-        where: anyNamed("where"),
-        whereArgs: anyNamed("whereArgs"),
+        where: anyNamed('where'),
+        whereArgs: anyNamed('whereArgs'),
       )).thenAnswer((_) => Future.value([mockAlbum]));
     });
 
@@ -261,7 +261,7 @@ void main() {
       bloc?.close();
     });
 
-    testWidgets("Correct Layout", (tester) async {
+    testWidgets('Correct Layout', (tester) async {
       var controller = AnimationController(vsync: tester);
 
       await tester.pumpWidget(BlocProvider(
@@ -269,20 +269,20 @@ void main() {
         child: MaterialApp(
           home: SongPage(
             controller: controller,
-            hero: Hero(child: Placeholder(), tag: "placeholder"),
+            hero: Hero(child: Placeholder(), tag: 'placeholder'),
             songs: mockSongs,
-            title: "T",
-            subtitle: "s",
+            title: 'T',
+            subtitle: 's',
           ),
         ),
       ));
 
       expect(find.byType(IconButton), findsNWidgets(2));
-      expect(find.text("T"), findsNWidgets(2));
-      expect(find.text("s"), findsOneWidget);
+      expect(find.text('T'), findsNWidgets(2));
+      expect(find.text('s'), findsOneWidget);
       expect(find.byType(FlatButton), findsNWidgets(2));
     });
-    testWidgets("Has 2 extra icon buttons with CustomAlbum", (tester) async {
+    testWidgets('Has 2 extra icon buttons with CustomAlbum', (tester) async {
       var controller = AnimationController(vsync: tester);
 
       await tester.pumpWidget(BlocProvider(
@@ -291,10 +291,10 @@ void main() {
         child: MaterialApp(
           home: SongPage(
             controller: controller,
-            hero: Hero(child: Placeholder(), tag: "placeholder"),
+            hero: Hero(child: Placeholder(), tag: 'placeholder'),
             songs: mockSongs,
-            title: "T",
-            subtitle: "s",
+            title: 'T',
+            subtitle: 's',
             customAlbum: CustomAlbumData(),
           ),
         ),
@@ -304,14 +304,14 @@ void main() {
     });
   });
 
-  group("Play Pause", () {
+  group('Play Pause', () {
     MockAudioPlayer ap;
 
     setUp(() {
       ap = MockAudioPlayer();
     });
 
-    testWidgets("Plays and Pauses", (tester) async {
+    testWidgets('Plays and Pauses', (tester) async {
       var isPlaying = BehaviorSubject<bool>.seeded(false);
 
       when(ap.isPlaying).thenAnswer((_) => isPlaying.stream);

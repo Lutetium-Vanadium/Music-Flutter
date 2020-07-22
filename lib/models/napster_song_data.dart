@@ -1,4 +1,4 @@
-import "./song_metadata.dart";
+import './song_metadata.dart';
 
 class NapsterSongData extends SongMetadata {
   final String artist;
@@ -16,7 +16,7 @@ class NapsterSongData extends SongMetadata {
   });
 
   toString() {
-    return "{\n\tartist: $artist,\n\ttitle: $title,\n\talbumId: $albumId,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}";
+    return '{\n\tartist: $artist,\n\ttitle: $title,\n\talbumId: $albumId,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}';
   }
 
   @override

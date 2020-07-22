@@ -1,17 +1,17 @@
-import "dart:math";
-import "dart:ui";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'dart:math';
+import 'dart:ui';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/displace.dart";
-import "package:Music/constants.dart";
-import "package:Music/models/models.dart";
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/helpers/displace.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/models/models.dart';
 
-import "./CurrentSongBanner.dart";
-import "./AnimatedSongList.dart";
-import "./showConfirm.dart";
+import './CurrentSongBanner.dart';
+import './AnimatedSongList.dart';
+import './showConfirm.dart';
 
 class SongPage extends StatefulWidget {
   final AnimationController controller;
@@ -180,7 +180,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
         Opacity(
           opacity: _textOpacity,
           child: IconButton(
-            tooltip: "Play All",
+            tooltip: 'Play All',
             icon: Icon(Icons.play_arrow),
             onPressed: _textOpacity < 0.6
                 ? null
@@ -195,18 +195,18 @@ class _CustomAppBarState extends State<CustomAppBar> {
                 IconButton(
                   icon: Icon(Icons.edit),
                   onPressed: () {
-                    Navigator.of(context).pushNamed("/select-songs",
+                    Navigator.of(context).pushNamed('/select-songs',
                         arguments: widget.customAlbum);
                   },
-                  tooltip: "Edit Album",
+                  tooltip: 'Edit Album',
                 ),
                 IconButton(
                   icon: Icon(Icons.delete),
                   onPressed: () async {
                     if (await showConfirm(
                       context,
-                      "Delete ${widget.customAlbum.name}",
-                      "Are you sure you want to delete ${widget.customAlbum.name}?",
+                      'Delete ${widget.customAlbum.name}',
+                      'Are you sure you want to delete ${widget.customAlbum.name}?',
                     )) {
                       Navigator.of(context).pop();
                       BlocProvider.of<DataBloc>(context)
@@ -214,7 +214,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
                     }
                   },
                   color: Colors.red,
-                  tooltip: "Delete Album",
+                  tooltip: 'Delete Album',
                 ),
               ]
             : [])
@@ -353,7 +353,7 @@ class HeaderImage extends StatelessWidget {
                         BlocProvider.of<QueueBloc>(context)
                             .add(EnqueueSongs(songs: songs));
                       },
-                      child: Text("Play All"),
+                      child: Text('Play All'),
                     ),
                     FlatButton(
                       shape: RoundedRectangleBorder(
@@ -367,7 +367,7 @@ class HeaderImage extends StatelessWidget {
                           shuffle: true,
                         ));
                       },
-                      child: Text("Play Random"),
+                      child: Text('Play Random'),
                     ),
                   ],
                 ),

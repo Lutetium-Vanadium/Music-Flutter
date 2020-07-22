@@ -1,42 +1,42 @@
-import "dart:ui";
-import "package:flutter/cupertino.dart";
+import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 
-import "./models/models.dart";
-import "./OverlayPageRoute.dart";
-import "./routes/MainPage.dart";
-import "./routes/SearchPage.dart";
-import "./routes/ArtistPage.dart";
-import "./routes/AlbumPage.dart";
-import "./routes/CustomAlbumPage.dart";
-import "./routes/LikedPage.dart";
-import "./routes/CurrentSongPage.dart";
-import "./routes/SelectSongsOverlay.dart";
-import "./routes/AddToAlbumOverlay.dart";
-import "./routes/RegisterApiKeys.dart";
-import "./routes/SyncStatus.dart";
+import './models/models.dart';
+import './OverlayPageRoute.dart';
+import './routes/MainPage.dart';
+import './routes/SearchPage.dart';
+import './routes/ArtistPage.dart';
+import './routes/AlbumPage.dart';
+import './routes/CustomAlbumPage.dart';
+import './routes/LikedPage.dart';
+import './routes/CurrentSongPage.dart';
+import './routes/SelectSongsOverlay.dart';
+import './routes/AddToAlbumOverlay.dart';
+import './routes/RegisterApiKeys.dart';
+import './routes/SyncStatus.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case "/":
+      case '/':
         return CupertinoPageRoute(
           builder: (_) => MainPage(),
         );
         break;
-      case "/search":
+      case '/search':
         assert(settings.arguments is String);
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => SearchPage(settings.arguments),
         );
         break;
-      case "/artist":
+      case '/artist':
         assert(settings.arguments is ArtistData);
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => ArtistPage(settings.arguments),
         );
-      case "/album":
+      case '/album':
         assert(settings.arguments is AlbumData ||
             settings.arguments is CustomAlbumData);
         return CupertinoPageRoute(
@@ -45,12 +45,12 @@ class Router {
               ? AlbumPage(settings.arguments)
               : CustomAlbumPage(settings.arguments),
         );
-      case "/liked":
+      case '/liked':
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => LikedPage(),
         );
-      case "/player":
+      case '/player':
         return PageRouteBuilder(
           maintainState: false,
           transitionDuration: Duration(milliseconds: 400),
@@ -72,23 +72,23 @@ class Router {
           pageBuilder: (context, animation, secondAnimation) =>
               CurrentSongPage(),
         );
-      case "/register-apikeys":
+      case '/register-apikeys':
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => RegisterApiKeys(),
         );
-      case "/sync-status":
+      case '/sync-status':
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => SyncStatusPage(),
         );
-      case "/select-songs":
+      case '/select-songs':
         assert(settings.arguments == null ||
             settings.arguments is CustomAlbumData);
         return OverlayPageRoute(
           child: SelectSongsOverlay(album: settings.arguments),
         );
-      case "/add-to-album":
+      case '/add-to-album':
         assert(settings.arguments is SongData);
         return OverlayPageRoute(
           child: AddToAlbumOverlay(settings.arguments),

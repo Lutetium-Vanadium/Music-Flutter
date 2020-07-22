@@ -1,4 +1,4 @@
-part of "data_bloc.dart";
+part of 'data_bloc.dart';
 
 @immutable
 abstract class DataEvent extends Equatable {}

@@ -1,8 +1,8 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-import "package:Music/global_providers/sync_provider.dart";
-import "package:Music/sync_status.dart";
-import "package:Music/sync.dart";
+import 'package:Music/global_providers/sync_provider.dart';
+import 'package:Music/sync_status.dart';
+import 'package:Music/sync.dart';
 
 class SyncStatusPage extends StatefulWidget {
   @override
@@ -34,10 +34,10 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              Text("Syncing with Firebase",
+              Text('Syncing with Firebase',
                   style: Theme.of(context).textTheme.headline4),
               Text(
-                "This may take some time",
+                'This may take some time',
                 style: Theme.of(context).textTheme.bodyText1,
               ),
               SizedBox(height: 40),
@@ -48,26 +48,26 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                   builder: (context, snapshot) {
                     var progress = 0;
                     int numFailed;
-                    Widget widget = Text("Starting Sync...");
+                    Widget widget = Text('Starting Sync...');
                     if (snapshot.hasData) {
                       var event = snapshot.data;
                       progress = event.progress;
 
                       if (event is SyncSongsInitial) {
-                        widget = Text("Checking Songs...");
+                        widget = Text('Checking Songs...');
                       } else if (event is SyncSongsName) {
                         numFailed = event.failed;
                         if (event.delete) {
-                          widget = Text("Deleting ${event.name}");
+                          widget = Text('Deleting ${event.name}');
                         } else {
-                          widget = Text("Starting download for ${event.name}");
+                          widget = Text('Starting download for ${event.name}');
                         }
                       } else if (event is SyncSongsProgress) {
                         numFailed = event.failed;
                         widget = Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            Text("Downloading ${event.title}"),
+                            Text('Downloading ${event.title}'),
                             SizedBox(height: 10),
                             LinearProgressIndicator(
                               backgroundColor: Theme.of(context).primaryColor,
@@ -79,17 +79,17 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                         );
                       } else if (event is SyncSongsFailed) {
                         widget = Text(
-                            "Retrying ${event.failed} song${event.failed == 1 ? "" : "s"}.");
+                            'Retrying ${event.failed} song${event.failed == 1 ? '' : 's'}.');
                       } else if (event is SyncAlbumsInitial) {
-                        widget = Text("Checking Albums...");
+                        widget = Text('Checking Albums...');
                       } else if (event is SyncAlbumsName) {
-                        widget = Text("Adding ${event.name}");
+                        widget = Text('Adding ${event.name}');
                       } else if (event is SyncCustomAlbumsInitial) {
-                        widget = Text("Checking Custom Albums...");
+                        widget = Text('Checking Custom Albums...');
                       } else if (event is SyncCustomAlbumsName) {
-                        widget = Text("Adding ${event.name}");
+                        widget = Text('Adding ${event.name}');
                       } else if (event is SyncCleaningUp) {
-                        widget = Text("Cleaning Up...");
+                        widget = Text('Cleaning Up...');
                       }
                     }
                     return Column(
@@ -109,7 +109,7 @@ class _SyncStatusPageState extends State<SyncStatusPage> {
                           height: 40,
                           child: widget,
                         ),
-                        if (numFailed != null) Text("$numFailed songs failed."),
+                        if (numFailed != null) Text('$numFailed songs failed.'),
                       ],
                     );
                   },

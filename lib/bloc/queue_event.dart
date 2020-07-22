@@ -1,4 +1,4 @@
-part of "queue_bloc.dart";
+part of 'queue_bloc.dart';
 
 @immutable
 abstract class QueueEvent extends Equatable {

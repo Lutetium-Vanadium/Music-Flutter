@@ -1,4 +1,4 @@
-import "dart:io";
+import 'dart:io';
 
 const duration = Duration(milliseconds: 500);
 
@@ -7,7 +7,7 @@ Future<void> hasInternetConnection() async {
 
   while (!connected) {
     try {
-      final result = await InternetAddress.lookup("youtube.com");
+      final result = await InternetAddress.lookup('youtube.com');
       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
         break;
       }

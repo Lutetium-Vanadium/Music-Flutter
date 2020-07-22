@@ -1,8 +1,8 @@
-import "dart:async";
-import "package:flutter/material.dart";
-import "package:sqflite/sqflite.dart";
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
-import "package:Music/models/models.dart";
+import 'package:Music/models/models.dart';
 
 class DatabaseProvider extends StatelessWidget {
   final Widget child;
@@ -23,12 +23,12 @@ class DatabaseProvider extends StatelessWidget {
     if (result != null) return result.database;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
-          "DatabaseProvider.getDB() called with a context that does not contain a DatabaseProvider."),
+          'DatabaseProvider.getDB() called with a context that does not contain a DatabaseProvider.'),
       ErrorDescription(
-          "No DatabaseProvider ancestor could be found starting from the context that was passed to DatabaseProvider.getDB(). "
-          "This usually happens when the context provided is from the same StatefulWidget as that "
-          "whose build function actually creates the DatabaseProvider widget being sought."),
-      context.describeElement("The context used was")
+          'No DatabaseProvider ancestor could be found starting from the context that was passed to DatabaseProvider.getDB(). '
+          'This usually happens when the context provided is from the same StatefulWidget as that '
+          'whose build function actually creates the DatabaseProvider widget being sought.'),
+      context.describeElement('The context used was')
     ]);
   }
 }
@@ -62,16 +62,16 @@ class DatabaseFunctions {
     await isReady;
 
     return (await _db.rawQuery(
-      "SELECT COUNT(*) AS cnt FROM ${Tables.Songs} WHERE liked;",
-    ))[0]["cnt"];
+      'SELECT COUNT(*) AS cnt FROM ${Tables.Songs} WHERE liked;',
+    ))[0]['cnt'];
   }
 
   DatabaseFunctions() {
     openDatabase(
-      "song_info.db",
+      'song_info.db',
       version: 1,
       onCreate: (db, version) async {
-        await db.execute("""CREATE TABLE ${Tables.Songs} (
+        await db.execute('''CREATE TABLE ${Tables.Songs} (
           filePath TEXT,
           title TEXT,
           thumbnail TEXT,
@@ -80,21 +80,21 @@ class DatabaseFunctions {
           numListens INT,
           liked BOOLEAN,
           albumId TEXT
-        )""");
-        await db.execute("""CREATE TABLE ${Tables.Albums} (
+        )''');
+        await db.execute('''CREATE TABLE ${Tables.Albums} (
           id TEXT,
           imagePath TEXT,
           name TEXT,
           numSongs INT,
           artist TEXT
-        )""");
-        await db.execute("""CREATE TABLE ${Tables.CustomAlbums} (
+        )''');
+        await db.execute('''CREATE TABLE ${Tables.CustomAlbums} (
           id TEXT,
           name TEXT,
           songs TEXT
-        )""");
+        )''');
 
-        print("Created db");
+        print('Created db');
       },
     ).then((db) {
       _db = db;
@@ -108,10 +108,10 @@ class DatabaseFunctions {
     return Pair(
       SongData.fromMapArray(
         await db.query(Tables.Songs,
-            orderBy: "not liked, numListens DESC", limit: 5),
+            orderBy: 'not liked, numListens DESC', limit: 5),
       ),
       AlbumData.fromMapArray(
-        await db.query(Tables.Albums, orderBy: "numSongs DESC", limit: 5),
+        await db.query(Tables.Albums, orderBy: 'numSongs DESC', limit: 5),
       ),
     );
   }
@@ -120,7 +120,7 @@ class DatabaseFunctions {
     await isReady;
 
     return SongData.fromMapArray(
-      await db.query(Tables.Songs, orderBy: "NOT liked, numListens DESC"),
+      await db.query(Tables.Songs, orderBy: 'NOT liked, numListens DESC'),
     );
   }
 
@@ -132,7 +132,7 @@ class DatabaseFunctions {
 
     return SongData.fromMapArray(await db.query(
       Tables.Songs,
-      orderBy: "LOWER(title), title",
+      orderBy: 'LOWER(title), title',
       where: where,
       whereArgs: whereArgs,
     ));
@@ -146,7 +146,7 @@ class DatabaseFunctions {
 
     return AlbumData.fromMapArray(await db.query(
       Tables.Albums,
-      orderBy: "LOWER(name), name",
+      orderBy: 'LOWER(name), name',
       where: where,
       whereArgs: whereArgs,
     ));
@@ -160,7 +160,7 @@ class DatabaseFunctions {
 
     return CustomAlbumData.fromMapArray(await db.query(
       Tables.CustomAlbums,
-      orderBy: "LOWER(name), name",
+      orderBy: 'LOWER(name), name',
       where: where,
       whereArgs: whereArgs,
     ));
@@ -170,26 +170,26 @@ class DatabaseFunctions {
     await isReady;
 
     return (await db.rawQuery(
-      "SELECT COUNT(*) AS cnt FROM ${Tables.Songs} WHERE albumId LIKE ?;",
+      'SELECT COUNT(*) AS cnt FROM ${Tables.Songs} WHERE albumId LIKE ?;',
       [albumId],
-    ))[0]["cnt"];
+    ))[0]['cnt'];
   }
 
   Future<List<ArtistData>> getArtists() async {
     await isReady;
 
     var preSongs = PreArtist.fromMapArray(await db.rawQuery(
-        "SELECT artist as name, COUNT(*) as numSongs FROM songdata GROUP BY artist;"));
+        'SELECT artist as name, COUNT(*) as numSongs FROM songdata GROUP BY artist;'));
 
     List<ArtistData> artists = [];
 
     for (var preSong in preSongs) {
       var images = await db.query(
         Tables.Albums,
-        where: "artist LIKE ?",
+        where: 'artist LIKE ?',
         whereArgs: [preSong.name],
-        columns: ["imagePath"],
-        orderBy: "numSongs DESC",
+        columns: ['imagePath'],
+        orderBy: 'numSongs DESC',
         limit: 4,
       );
 
@@ -231,7 +231,7 @@ class DatabaseFunctions {
 
     return db.delete(
       Tables.Songs,
-      where: "title LIKE ?",
+      where: 'title LIKE ?',
       whereArgs: [title],
     );
   }
@@ -239,13 +239,13 @@ class DatabaseFunctions {
   Future<int> deleteAlbum(String id) async {
     await isReady;
 
-    return db.delete(Tables.Albums, where: "id LIKE ?", whereArgs: [id]);
+    return db.delete(Tables.Albums, where: 'id LIKE ?', whereArgs: [id]);
   }
 
   Future<int> deleteEmptyAlbums() async {
     await isReady;
 
-    return db.delete(Tables.Albums, where: "numSongs < 1");
+    return db.delete(Tables.Albums, where: 'numSongs < 1');
   }
 
   Future<int> deleteCustomAlbum(String id) async {
@@ -253,7 +253,7 @@ class DatabaseFunctions {
 
     return db.delete(
       Tables.CustomAlbums,
-      where: "id LIKE ?",
+      where: 'id LIKE ?',
       whereArgs: [id],
     );
   }
@@ -273,7 +273,7 @@ class DatabaseFunctions {
     await isReady;
 
     return db.rawUpdate(
-      "UPDATE ${Tables.Songs} SET numListens = numListens + 1 WHERE title LIKE ?",
+      'UPDATE ${Tables.Songs} SET numListens = numListens + 1 WHERE title LIKE ?',
       [song.title],
     );
   }
@@ -283,40 +283,40 @@ class DatabaseFunctions {
 
     var ids = await db.query(
       Tables.CustomAlbums,
-      orderBy: "id DESC",
+      orderBy: 'id DESC',
     );
 
     int number = 0;
     if (ids.length > 0) {
-      number = int.parse(ids.first["id"].substring(4)) + 1;
+      number = int.parse(ids.first['id'].substring(4)) + 1;
     }
-    return "cst.$number";
+    return 'cst.$number';
   }
 
   Future<void> cleanup() async {
     await isReady;
 
     var data = await db.rawQuery(
-        "SELECT COUNT(*) as cnt, albumId as id FROM ${Tables.Songs} GROUP BY albumId;");
+        'SELECT COUNT(*) as cnt, albumId as id FROM ${Tables.Songs} GROUP BY albumId;');
     var batch = db.batch();
 
     // Update numSongs to be correct
     data.forEach((element) {
-      batch.update(Tables.Albums, {"numSongs": element["cnt"]},
-          where: "id LIKE ?", whereArgs: [element["id"]]);
+      batch.update(Tables.Albums, {'numSongs': element['cnt']},
+          where: 'id LIKE ?', whereArgs: [element['id']]);
     });
 
-    var albumIds = stringifyArr(data.map((e) => e["id"]).toList());
+    var albumIds = stringifyArr(data.map((e) => e['id']).toList());
 
     // Delete albums which do not appear in songdata
-    batch.delete(Tables.Albums, where: "id NOT IN ($albumIds)");
+    batch.delete(Tables.Albums, where: 'id NOT IN ($albumIds)');
 
     await batch.commit();
   }
 }
 
 abstract class Tables {
-  static const Songs = "songdata";
-  static const Albums = "albumdata";
-  static const CustomAlbums = "customalbums";
+  static const Songs = 'songdata';
+  static const Albums = 'albumdata';
+  static const CustomAlbums = 'customalbums';
 }

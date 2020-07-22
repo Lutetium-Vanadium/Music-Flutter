@@ -1,8 +1,8 @@
-import "dart:io";
-import "dart:ui";
-import "package:flutter/material.dart";
+import 'dart:io';
+import 'dart:ui';
+import 'package:flutter/material.dart';
 
-import "package:Music/models/song_data.dart";
+import 'package:Music/models/song_data.dart';
 
 class HeaderImage extends StatefulWidget {
   final SongData song;
@@ -83,7 +83,7 @@ class _HeaderImageState extends State<HeaderImage> {
                     ClipRRect(
                       borderRadius: BorderRadius.circular(15),
                       child: Hero(
-                        tag: "${widget.song.albumId}-player",
+                        tag: '${widget.song.albumId}-player',
                         child: Image.file(
                           File(widget.song.thumbnail),
                           height: width10 * 6,

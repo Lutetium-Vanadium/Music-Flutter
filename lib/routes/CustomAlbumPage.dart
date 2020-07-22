@@ -1,13 +1,13 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/constants.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/models/models.dart";
-import "./widgets/SongPage.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
+import 'package:Music/models/models.dart';
+import './widgets/SongPage.dart';
 
 class CustomAlbumPage extends StatefulWidget {
   final CustomAlbumData album;
@@ -48,12 +48,12 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
       var db = DatabaseProvider.getDB(context);
 
       String songNames = stringifyArr((await db.getCustomAlbums(
-        where: "id LIKE ?",
+        where: 'id LIKE ?',
         whereArgs: [widget.album.id],
       ))[0]
           .songs);
 
-      var songs = await db.getSongs(where: "title IN ($songNames)");
+      var songs = await db.getSongs(where: 'title IN ($songNames)');
 
       if (!mounted) return;
 
@@ -86,11 +86,11 @@ class _CustomAlbumPageState extends State<CustomAlbumPage>
       child: SongPage(
         controller: _controller,
         title: widget.album.name,
-        subtitle: generateSubtitle(type: "Album", numSongs: _songs.length),
+        subtitle: generateSubtitle(type: 'Album', numSongs: _songs.length),
         hero: Hero(
           tag: widget.album.id,
           child: Image.asset(
-            "$imgs/music_symbol.png",
+            '$imgs/music_symbol.png',
             width: screenWidth,
             height: screenWidth,
             fit: BoxFit.cover,

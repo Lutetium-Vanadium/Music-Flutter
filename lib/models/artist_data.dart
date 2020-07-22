@@ -1,4 +1,4 @@
-import "package:equatable/equatable.dart";
+import 'package:equatable/equatable.dart';
 
 class ArtistData extends Equatable {
   final String name;
@@ -8,7 +8,7 @@ class ArtistData extends Equatable {
   ArtistData({this.name, this.images, this.numSongs});
 
   toString() {
-    return "{\n\tname: $name,\n\tnumSongs: $numSongs,\n\timages: $images\n}";
+    return '{\n\tname: $name,\n\tnumSongs: $numSongs,\n\timages: $images\n}';
   }
 
   @override
@@ -25,7 +25,7 @@ class ArtistData extends Equatable {
       numSongs: preArtist.numSongs,
       images: List.generate(
         images.length < 4 ? 1 : 4,
-        (i) => images[i]["imagePath"],
+        (i) => images[i]['imagePath'],
       ),
     );
   }
@@ -38,7 +38,7 @@ class PreArtist extends Equatable {
   PreArtist({this.name, this.numSongs});
 
   toString() {
-    return "{\n\tname: $name,\n\tnumSongs: $numSongs\n}";
+    return '{\n\tname: $name,\n\tnumSongs: $numSongs\n}';
   }
 
   @override
@@ -46,8 +46,8 @@ class PreArtist extends Equatable {
 
   static PreArtist fromMap(Map<String, dynamic> map) {
     return PreArtist(
-      name: map["name"],
-      numSongs: map["numSongs"],
+      name: map['name'],
+      numSongs: map['numSongs'],
     );
   }
 

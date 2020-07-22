@@ -1,4 +1,4 @@
-import "package:equatable/equatable.dart";
+import 'package:equatable/equatable.dart';
 
 class YoutubeDetails extends Equatable {
   final String id;
@@ -7,7 +7,7 @@ class YoutubeDetails extends Equatable {
   YoutubeDetails({this.id, this.length});
 
   toString() {
-    return "{\n\tid: $id,\n\tlength: $length\n}";
+    return '{\n\tid: $id,\n\tlength: $length\n}';
   }
 
   @override

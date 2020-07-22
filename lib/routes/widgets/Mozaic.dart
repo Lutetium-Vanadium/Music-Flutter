@@ -1,6 +1,6 @@
-import "dart:io";
+import 'dart:io';
 
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
 class Mozaic extends StatelessWidget {
   final List<String> images;

@@ -1,6 +1,6 @@
-import "package:equatable/equatable.dart";
+import 'package:equatable/equatable.dart';
 
-import "./get_id.dart";
+import './get_id.dart';
 
 class AlbumData extends Equatable implements DbCollection {
   final String id;
@@ -12,7 +12,7 @@ class AlbumData extends Equatable implements DbCollection {
   AlbumData({this.artist, this.name, this.id, this.imagePath, this.numSongs});
 
   toString() {
-    return "{\n\tid: $id,\n\tname: $name,\n\tartist: $artist,\n\timagePath: $imagePath,\n\tnumSongs: $numSongs\n}";
+    return '{\n\tid: $id,\n\tname: $name,\n\tartist: $artist,\n\timagePath: $imagePath,\n\tnumSongs: $numSongs\n}';
   }
 
   @override
@@ -20,40 +20,40 @@ class AlbumData extends Equatable implements DbCollection {
 
   Map<String, dynamic> toFirebase() {
     return {
-      "id": this.id,
-      "name": this.name,
-      "numSongs": this.numSongs,
-      "artist": this.artist,
+      'id': this.id,
+      'name': this.name,
+      'numSongs': this.numSongs,
+      'artist': this.artist,
     };
   }
 
   Map<String, dynamic> toMap() {
     return {
-      "id": this.id,
-      "imagePath": this.imagePath,
-      "name": this.name,
-      "numSongs": this.numSongs,
-      "artist": this.artist,
+      'id': this.id,
+      'imagePath': this.imagePath,
+      'name': this.name,
+      'numSongs': this.numSongs,
+      'artist': this.artist,
     };
   }
 
   static AlbumData fromFirebase(Map<String, dynamic> map, String root) {
     return AlbumData(
-      id: map["id"],
-      artist: map["artist"],
-      name: map["name"],
-      numSongs: map["numSongs"],
-      imagePath: "$root/album_images/${map["id"]}.jpg",
+      id: map['id'],
+      artist: map['artist'],
+      name: map['name'],
+      numSongs: map['numSongs'],
+      imagePath: '$root/album_images/${map['id']}.jpg',
     );
   }
 
   static AlbumData fromMap(Map<String, dynamic> map) {
     return AlbumData(
-      id: map["id"],
-      artist: map["artist"],
-      name: map["name"],
-      numSongs: map["numSongs"],
-      imagePath: map["imagePath"],
+      id: map['id'],
+      artist: map['artist'],
+      name: map['name'],
+      numSongs: map['numSongs'],
+      imagePath: map['imagePath'],
     );
   }
 
@@ -66,10 +66,10 @@ class AlbumData extends Equatable implements DbCollection {
 
   @override
   bool needsUpdate(other) =>
-      other["id"] != id ||
-      other["artist"] != artist ||
-      other["name"] != name ||
-      other["numSongs"] != numSongs;
+      other['id'] != id ||
+      other['artist'] != artist ||
+      other['name'] != name ||
+      other['numSongs'] != numSongs;
 }
 
 extension AlbumDataMapping on List<AlbumData> {

@@ -1,7 +1,7 @@
-import "dart:async" show Completer;
-import "dart:convert" show json;
-import "dart:io";
-import "package:path_provider/path_provider.dart";
+import 'dart:async' show Completer;
+import 'dart:convert' show json;
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 
 class ApiKeys {
   String napster;
@@ -21,10 +21,10 @@ class ApiKeys {
     this.napster = napster;
 
     var root = await getApplicationDocumentsDirectory();
-    var file = File("${root.path}/apiKeys.json");
+    var file = File('${root.path}/apiKeys.json');
 
     await file.writeAsString(json.encode({
-      "NAPSTER_API_KEY": napster,
+      'NAPSTER_API_KEY': napster,
     }));
 
     _ready.complete();
@@ -32,11 +32,11 @@ class ApiKeys {
 
   Future<void> _load() async {
     var root = await getApplicationDocumentsDirectory();
-    var file = File("${root.path}/apiKeys.json");
+    var file = File('${root.path}/apiKeys.json');
     if (await file.exists()) {
       var jsonMap = json.decode(await file.readAsString());
 
-      napster = jsonMap["NAPSTER_API_KEY"];
+      napster = jsonMap['NAPSTER_API_KEY'];
 
       if (napster != null) {
         _ready.complete();
@@ -67,26 +67,26 @@ class SyncKeys {
     this.apiKey = apiKey;
 
     var root = await getApplicationDocumentsDirectory();
-    var file = File("${root.path}/syncKeys.json");
+    var file = File('${root.path}/syncKeys.json');
 
     _ready.complete();
 
     await file.writeAsString(json.encode({
-      "APP_ID": appId,
-      "PROJECT_ID": projectId,
-      "API_KEY": apiKey,
+      'APP_ID': appId,
+      'PROJECT_ID': projectId,
+      'API_KEY': apiKey,
     }));
   }
 
   Future<void> _load() async {
     var root = await getApplicationDocumentsDirectory();
-    var file = File("${root.path}/syncKeys.json");
+    var file = File('${root.path}/syncKeys.json');
     if (await file.exists()) {
       var jsonMap = json.decode(await file.readAsString());
 
-      appId = jsonMap["APP_ID"];
-      projectId = jsonMap["PROJECT_ID"];
-      apiKey = jsonMap["API_KEY"];
+      appId = jsonMap['APP_ID'];
+      projectId = jsonMap['PROJECT_ID'];
+      apiKey = jsonMap['API_KEY'];
 
       if (hasKeys) {
         _ready.complete();

@@ -1,13 +1,13 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-import "../constants.dart";
-import "../keys.dart";
-import "./widgets/Input.dart";
-import "./widgets/CurrentSongBanner.dart";
-import "./views/Albums.dart";
-import "./views/Artists.dart";
-import "./views/Home.dart";
-import "./views/Music.dart";
+import '../constants.dart';
+import '../keys.dart';
+import './widgets/Input.dart';
+import './widgets/CurrentSongBanner.dart';
+import './views/Albums.dart';
+import './views/Artists.dart';
+import './views/Home.dart';
+import './views/Music.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -37,10 +37,10 @@ class _MainPageState extends State<MainPage> {
   Future<void> _checkForApiKeys() async {
     if (await apiKeys.needsApiKeys) {
       await Future.delayed(Duration(milliseconds: 300));
-      Navigator.of(context).pushNamed("/register-apikeys");
+      Navigator.of(context).pushNamed('/register-apikeys');
     } else {
       await syncKeys.isReady;
-      Navigator.of(context).pushNamed("/sync-status");
+      Navigator.of(context).pushNamed('/sync-status');
     }
   }
 
@@ -68,18 +68,18 @@ class _MainPageState extends State<MainPage> {
         backgroundColor: Theme.of(context).backgroundColor,
         textTheme: Theme.of(context).textTheme,
         title: Hero(
-          tag: "navbar-title",
+          tag: 'navbar-title',
           child: GestureDetector(
             onTap: goHome,
             child: Row(
               children: <Widget>[
                 Image(
-                  image: AssetImage("$imgs/icon.png"),
+                  image: AssetImage('$imgs/icon.png'),
                   fit: BoxFit.scaleDown,
                   height: 2.5 * rem,
                 ),
                 Text(
-                  "Music",
+                  'Music',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ],
@@ -96,15 +96,15 @@ class _MainPageState extends State<MainPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Input(
-                  placeholder: "Download",
+                  placeholder: 'Download',
                   controller: _textController,
                   onChange: (query) {
                     if (query.length > 0) {
                       Navigator.of(context)
-                          .pushNamed("/search", arguments: query)
+                          .pushNamed('/search', arguments: query)
                           .then((_) {
                         FocusScope.of(context).unfocus();
-                        _textController.text = "";
+                        _textController.text = '';
                       });
                     }
                   },
@@ -141,19 +141,19 @@ class _MainPageState extends State<MainPage> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                title: Text("Home"),
+                title: Text('Home'),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.music_note),
-                title: Text("My Music"),
+                title: Text('My Music'),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.library_music),
-                title: Text("Albums"),
+                title: Text('Albums'),
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.people),
-                title: Text("Artists"),
+                title: Text('Artists'),
               ),
             ],
           ),

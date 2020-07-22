@@ -1,4 +1,4 @@
-import "./song_data.dart";
+import './song_data.dart';
 
 class SelectedSongData extends SongData {
   final bool selected;

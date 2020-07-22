@@ -1,4 +1,4 @@
-import "package:equatable/equatable.dart";
+import 'package:equatable/equatable.dart';
 
 class NapsterAlbumData extends Equatable {
   final String id;
@@ -7,7 +7,7 @@ class NapsterAlbumData extends Equatable {
   NapsterAlbumData({this.id, this.name});
 
   toString() {
-    return "{\n\tid: $id,\n\tname: $name\n}";
+    return '{\n\tid: $id,\n\tname: $name\n}';
   }
 
   @override

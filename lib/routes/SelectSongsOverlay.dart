@@ -1,10 +1,10 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/models/models.dart";
-import "package:Music/routes/widgets/SongList.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/routes/widgets/SongList.dart';
 
 class SelectSongsOverlay extends StatefulWidget {
   final CustomAlbumData album;
@@ -113,7 +113,7 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
                     style: Theme.of(context).textTheme.bodyText1,
                     maxLines: 1,
                     decoration: InputDecoration(
-                      hintText: "Album Name",
+                      hintText: 'Album Name',
                       hintStyle: TextStyle(color: Theme.of(context).hintColor),
                     ),
                     textAlign: TextAlign.center,
@@ -155,7 +155,7 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
 
                       Navigator.of(context).pop();
                     },
-              child: Text(create ? "Create" : "Edit"),
+              child: Text(create ? 'Create' : 'Edit'),
               color: Theme.of(context).accentColor,
               disabledColor: Colors.grey[850],
               shape: RoundedRectangleBorder(

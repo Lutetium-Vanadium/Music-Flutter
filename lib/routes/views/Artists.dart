@@ -1,14 +1,14 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:focused_menu/modals.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focused_menu/modals.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/constants.dart";
-import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/models/models.dart";
-import "package:Music/routes/widgets/CoverImage.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/routes/widgets/CoverImage.dart';
 
 class Artists extends StatefulWidget {
   @override
@@ -63,7 +63,7 @@ class _ArtistsState extends State<Artists> {
               padding:
                   EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
               child:
-                  Text("Artists", style: Theme.of(context).textTheme.headline3),
+                  Text('Artists', style: Theme.of(context).textTheme.headline3),
             ),
           ),
           _artists == null
@@ -79,7 +79,7 @@ class _ArtistsState extends State<Artists> {
                         ),
                         TextSpan(
                           text:
-                              "Artists are automatically added when you download a song. Download songs by searching through the above Search Box.\n",
+                              'Artists are automatically added when you download a song. Download songs by searching through the above Search Box.\n',
                           style: Theme.of(context).textTheme.bodyText2,
                         ),
                       ]),
@@ -105,12 +105,12 @@ class _ArtistsState extends State<Artists> {
                           images: mozaic ? artist.images : null,
                           title: artist.name,
                           subtitle: generateSubtitle(
-                              type: "Artist", numSongs: artist.numSongs),
+                              type: 'Artist', numSongs: artist.numSongs),
                           isBig: true,
                           tag: artist.name,
                           onClick: () {
                             Navigator.of(context)
-                                .pushNamed("/artist", arguments: artist);
+                                .pushNamed('/artist', arguments: artist);
                           },
                           focusedMenuItems: [
                             FocusedMenuItem(
@@ -118,13 +118,13 @@ class _ArtistsState extends State<Artists> {
                                 var songs =
                                     await DatabaseProvider.getDB(context)
                                         .getSongs(
-                                            where: "artist LIKE ?",
+                                            where: 'artist LIKE ?',
                                             whereArgs: [artist.name]);
 
                                 BlocProvider.of<QueueBloc>(context)
                                     .add(EnqueueSongs(songs: songs));
                               },
-                              title: Text("Play"),
+                              title: Text('Play'),
                               trailingIcon: Icon(Icons.playlist_play),
                               backgroundColor: Colors.transparent,
                             ),

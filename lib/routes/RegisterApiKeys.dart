@@ -1,15 +1,15 @@
-import "package:flutter/material.dart";
-import "package:url_launcher/url_launcher.dart" as url;
-import "package:http/http.dart" as http;
+import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart' as url;
+import 'package:http/http.dart' as http;
 
-import "package:Music/keys.dart";
+import 'package:Music/keys.dart';
 
 const napsterDescription =
-    "This is used to get data, such as title, artist and the album picture, about every Song and Album.";
+    'This is used to get data, such as title, artist and the album picture, about every Song and Album.';
 const firestoreDescription =
-    "This can be used to sync all locally stored metadata about songs up to firebase.";
+    'This can be used to sync all locally stored metadata about songs up to firebase.';
 const firestoreDisclaimer =
-    "Make sure the above keys are properly inputed as there is no way to verify. If they are, the app will automatically sync to firestore.";
+    'Make sure the above keys are properly inputed as there is no way to verify. If they are, the app will automatically sync to firestore.';
 
 class RegisterApiKeys extends StatefulWidget {
   @override
@@ -60,15 +60,15 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: width10 / 2),
       children: [
         Text(
-          "Register Api Keys",
+          'Register Api Keys',
           style: Theme.of(context).textTheme.headline3,
         ),
         SizedBox(height: 10),
         Section(
-          title: "Napster",
+          title: 'Napster',
           description: napsterDescription,
           link:
-              "https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#napster",
+              'https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#napster',
           children: [
             TextField(
               controller: _napsterController,
@@ -76,8 +76,8 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
               maxLines: 1,
               decoration: InputDecoration(
                 alignLabelWithHint: true,
-                labelText: "napster api key",
-                errorText: _napsterErrored ? "Invalid API Key" : null,
+                labelText: 'napster api key',
+                errorText: _napsterErrored ? 'Invalid API Key' : null,
               ),
               onChanged: (_) {
                 if (_state == VerifyState.Verified) {
@@ -96,10 +96,10 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
           ],
         ),
         Section(
-          title: "Firestore (optional)",
+          title: 'Firestore (optional)',
           description: firestoreDescription,
           link:
-              "https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#firebase-optional",
+              'https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#firebase-optional',
           children: <Widget>[
             TextField(
               controller: _projectIdController,
@@ -107,7 +107,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
               maxLines: 1,
               decoration: InputDecoration(
                 alignLabelWithHint: true,
-                labelText: "firestore project id",
+                labelText: 'firestore project id',
               ),
             ),
             TextField(
@@ -116,7 +116,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
               maxLines: 1,
               decoration: InputDecoration(
                 alignLabelWithHint: true,
-                labelText: "firestore app id",
+                labelText: 'firestore app id',
               ),
             ),
             TextField(
@@ -125,7 +125,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
               maxLines: 1,
               decoration: InputDecoration(
                 alignLabelWithHint: true,
-                labelText: "firestore api key",
+                labelText: 'firestore api key',
               ),
             ),
             SizedBox(height: 15),
@@ -145,7 +145,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
 
     switch (_state) {
       case VerifyState.ToVerify:
-        child = Text("Verify Napster");
+        child = Text('Verify Napster');
         break;
       case VerifyState.Verifying:
         child = SizedBox(
@@ -163,7 +163,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
           children: <Widget>[
             Icon(Icons.check),
             SizedBox(width: 5),
-            Text("Done"),
+            Text('Done'),
             SizedBox(width: 5),
           ],
         );
@@ -198,7 +198,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
                   projectId: projectId,
                 );
 
-                Navigator.of(context).pushReplacementNamed("/sync-status");
+                Navigator.of(context).pushReplacementNamed('/sync-status');
               } else
                 Navigator.of(context).pop();
             }
@@ -218,7 +218,7 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
     var success = true;
 
     var res = await http.get(
-        "https://api.napster.com/v2/?apikey=${_napsterController.text.trim()}");
+        'https://api.napster.com/v2/?apikey=${_napsterController.text.trim()}');
     if (res.statusCode != 200) {
       if (!mounted) return;
       setState(() {
@@ -274,7 +274,7 @@ class Section extends StatelessWidget {
             );
           },
           child: Text(
-            "Learn More",
+            'Learn More',
             style: Theme.of(context).accentTextTheme.bodyText2,
           ),
         ),

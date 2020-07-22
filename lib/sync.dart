@@ -1,18 +1,18 @@
-import "dart:async";
-import "dart:io";
-import "package:flutter/foundation.dart";
-import "package:cloud_firestore/cloud_firestore.dart";
-import "package:firebase_core/firebase_core.dart";
-import "package:path_provider/path_provider.dart";
+import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:path_provider/path_provider.dart';
 
-import "package:Music/connected.dart";
-import "package:Music/helpers/downloader.dart";
-import "package:Music/helpers/getYoutubeDetails.dart";
-import "package:Music/models/models.dart";
+import 'package:Music/connected.dart';
+import 'package:Music/helpers/downloader.dart';
+import 'package:Music/helpers/getYoutubeDetails.dart';
+import 'package:Music/models/models.dart';
 
-import "./global_providers/database.dart";
-import "./keys.dart";
-import "./sync_status.dart";
+import './global_providers/database.dart';
+import './keys.dart';
+import './sync_status.dart';
 
 class FirestoreSync {
   Firestore firestore;
@@ -46,19 +46,19 @@ class FirestoreSync {
 
     syncing = true;
     app = await FirebaseApp.configure(
-      name: "sync",
+      name: 'sync',
       options: FirebaseOptions(
         googleAppID: syncKeys.appId,
-        gcmSenderID: syncKeys.appId.split(":")[1],
+        gcmSenderID: syncKeys.appId.split(':')[1],
         apiKey: syncKeys.apiKey,
         projectID: syncKeys.projectId,
-        databaseURL: "https://${syncKeys.projectId}.firebaseio.com",
+        databaseURL: 'https://${syncKeys.projectId}.firebaseio.com',
       ),
     );
 
     firestore = Firestore(app: app);
 
-    print("Connected to Firestore");
+    print('Connected to Firestore');
 
     firestore.collection(SyncTables.Songs).snapshots().listen(_songHandler);
     firestore.collection(SyncTables.Albums).snapshots().listen(_albumHandler);
@@ -68,17 +68,17 @@ class FirestoreSync {
         .listen(_customAlbumHandler);
 
     _controller.add(SyncSongsInitial());
-    print("Starting songs");
+    print('Starting songs');
     await _initSongs();
-    print("Finished songs");
+    print('Finished songs');
     _controller.add(SyncAlbumsInitial());
-    print("Starting albums");
+    print('Starting albums');
     await _initAlbums();
-    print("Finished albums");
+    print('Finished albums');
     _controller.add(SyncCustomAlbumsInitial());
-    print("Starting customalbums");
+    print('Starting customalbums');
     await _initCustomAlbums();
-    print("Finished customalbums");
+    print('Finished customalbums');
 
     _controller.add(SyncCleaningUp());
     db.cleanup();
@@ -98,7 +98,7 @@ class FirestoreSync {
     if (syncing) return firestore.collection(table).document(id).setData(data);
   }
 
-  Future<void> insertSong(SongData song, [String youtubeId = ""]) async {
+  Future<void> insertSong(SongData song, [String youtubeId = '']) async {
     if (syncing)
       return insert(SyncTables.Songs, song.title, song.toFirebase(youtubeId));
   }
@@ -120,7 +120,7 @@ class FirestoreSync {
     if (syncing) {
       var docs = await firestore
           .collection(SyncTables.Albums)
-          .where("numSongs", isLessThan: 1)
+          .where('numSongs', isLessThan: 1)
           .getDocuments();
       await Future.wait(docs.documents.map((d) => d.reference.delete()));
     }
@@ -132,11 +132,11 @@ class FirestoreSync {
         .collection(SyncTables.Songs)
         .document(song.title)
         .updateData({
-      "numListens": FieldValue.increment(1),
+      'numListens': FieldValue.increment(1),
     });
   }
 
-  String _getId(Map<String, dynamic> map) => map["id"] ?? map["title"];
+  String _getId(Map<String, dynamic> map) => map['id'] ?? map['title'];
 
   List<List<int>> _diff<T extends DbCollection>(
       List<T> local, List<Map<String, dynamic>> online) {
@@ -173,16 +173,16 @@ class FirestoreSync {
       toAdd.add(j);
     }
 
-    print("${toAdd.length}, ${toDelete.length}, ${toUpdate.length}");
+    print('${toAdd.length}, ${toDelete.length}, ${toUpdate.length}');
 
     return [toAdd, toDelete, toUpdate];
   }
 
   Future<bool> _addSong(Map<String, dynamic> firestoreSong) async {
-    String title = firestoreSong["title"];
-    String youtubeId = firestoreSong["youtubeId"];
+    String title = firestoreSong['title'];
+    String youtubeId = firestoreSong['youtubeId'];
     try {
-      int length = firestoreSong["length"];
+      int length = firestoreSong['length'];
 
       List<YoutubeDetails> backup = [];
 
@@ -190,14 +190,14 @@ class FirestoreSync {
 
       if (youtubeId.length == 0) {
         var ytDetailsArr =
-            await getYoutubeDetails(title, firestoreSong["artist"]);
+            await getYoutubeDetails(title, firestoreSong['artist']);
         var ytDetails = ytDetailsArr.removeAt(0);
         length = ytDetails.length;
         youtubeId = ytDetails.id;
         backup = ytDetailsArr;
       }
 
-      var progressStream = downloadSong(youtubeId, "$title.mp3",
+      var progressStream = downloadSong(youtubeId, '$title.mp3',
           backup: backup.map((vid) => vid.id).toList());
 
       await for (var progress in progressStream) {
@@ -218,7 +218,7 @@ class FirestoreSync {
       await db.insertSong(song);
       return true;
     } catch (e) {
-      print("Failed $title; id: $youtubeId");
+      print('Failed $title; id: $youtubeId');
       print(e);
       _numFailed++;
       return false;
@@ -226,7 +226,7 @@ class FirestoreSync {
   }
 
   Future<void> _deleteSong(String title) async {
-    var file = File("${_root.path}/songs/$title.mp3");
+    var file = File('${_root.path}/songs/$title.mp3');
     await Future.wait([
       db.deleteSong(title),
       file.exists().then((exists) => exists ? file.delete() : Future.value()),
@@ -234,11 +234,11 @@ class FirestoreSync {
   }
 
   Map<String, dynamic> _cleanSong(Map<String, dynamic> map) => ({
-        "title": map["title"],
-        "albumId": map["albumId"],
-        "artist": map["artist"],
-        "liked": map["liked"] ? 1 : 0, // sqflite doesnt accept boolean values
-        "numListens": map["numListens"],
+        'title': map['title'],
+        'albumId': map['albumId'],
+        'artist': map['artist'],
+        'liked': map['liked'] ? 1 : 0, // sqflite doesnt accept boolean values
+        'numListens': map['numListens'],
       });
 
   Future _initSongs() async {
@@ -256,7 +256,7 @@ class FirestoreSync {
 
     for (var idx in diff[0]) {
       _controller
-          .add(SyncSongsName(firestoreSongs[idx]["title"], false, _numFailed));
+          .add(SyncSongsName(firestoreSongs[idx]['title'], false, _numFailed));
       var success = await _addSong(firestoreSongs[idx]);
       if (!success) failed.add(idx);
     }
@@ -269,8 +269,8 @@ class FirestoreSync {
       await db.update(
         Tables.Songs,
         _cleanSong(song),
-        where: "title LIKE ?",
-        whereArgs: [song["title"]],
+        where: 'title LIKE ?',
+        whereArgs: [song['title']],
       );
     }
 
@@ -279,7 +279,7 @@ class FirestoreSync {
     for (var idx in failed) {
       _numFailed--;
       _controller
-          .add(SyncSongsName(firestoreSongs[idx]["title"], false, _numFailed));
+          .add(SyncSongsName(firestoreSongs[idx]['title'], false, _numFailed));
       await _addSong(firestoreSongs[idx]);
     }
   }
@@ -296,7 +296,7 @@ class FirestoreSync {
             await db.update(
               Tables.Songs,
               _cleanSong(change.document.data),
-              where: "title LIKE ?",
+              where: 'title LIKE ?',
               whereArgs: [change.document.documentID],
             );
             break;
@@ -313,7 +313,7 @@ class FirestoreSync {
   Future<void> _addAlbum(Map<String, dynamic> firestoreAlbum) async {
     var album = AlbumData.fromFirebase(firestoreAlbum, _root.path);
 
-    print("Adding album ${album.name}");
+    print('Adding album ${album.name}');
 
     await Future.wait([
       downloadImage(album.id),
@@ -333,7 +333,7 @@ class FirestoreSync {
     var diff = _diff(dbAlbums, firestoreAlbums);
 
     await Future.wait(diff[0].map((idx) {
-      _controller.add(SyncAlbumsName(firestoreAlbums[idx]["name"]));
+      _controller.add(SyncAlbumsName(firestoreAlbums[idx]['name']));
       return _addAlbum(firestoreAlbums[idx]);
     }));
     await Future.wait(diff[1].map((idx) => db.deleteAlbum(dbAlbums[idx].id)));
@@ -342,8 +342,8 @@ class FirestoreSync {
       return db.update(
         Tables.Albums,
         album,
-        where: "id LIKE ?",
-        whereArgs: [album["id"]],
+        where: 'id LIKE ?',
+        whereArgs: [album['id']],
       );
     }));
   }
@@ -360,7 +360,7 @@ class FirestoreSync {
             await db.update(
               Tables.Albums,
               change.document.data,
-              where: "id LIKE ?",
+              where: 'id LIKE ?',
               whereArgs: [change.document.documentID],
             );
             break;
@@ -387,7 +387,7 @@ class FirestoreSync {
     var diff = _diff(dbAlbums, firestoreAlbums);
 
     await Future.wait(diff[0].map((idx) {
-      var name = firestoreAlbums[idx]["name"];
+      var name = firestoreAlbums[idx]['name'];
       _controller.add(SyncCustomAlbumsName(name));
       var album = CustomAlbumData.fromFirebase(firestoreAlbums[idx]);
 
@@ -397,9 +397,9 @@ class FirestoreSync {
         diff[1].map((idx) => db.deleteCustomAlbum(dbAlbums[idx].id)));
     await Future.wait(diff[2].map((idx) {
       var album = firestoreAlbums[idx];
-      album["songs"] = stringifyArr(album["songs"]);
+      album['songs'] = stringifyArr(album['songs']);
       return db.update(Tables.CustomAlbums, album,
-          where: "id LIKE ?", whereArgs: [album["id"]]);
+          where: 'id LIKE ?', whereArgs: [album['id']]);
     }));
   }
 
@@ -416,7 +416,7 @@ class FirestoreSync {
             await db.update(
               Tables.CustomAlbums,
               change.document.data,
-              where: "id LIKE ?",
+              where: 'id LIKE ?',
               whereArgs: [change.document.documentID],
             );
             break;
@@ -445,7 +445,7 @@ extension on String {
 }
 
 abstract class SyncTables {
-  static const Songs = "songs";
-  static const Albums = "albums";
-  static const CustomAlbums = "customalbums";
+  static const Songs = 'songs';
+  static const Albums = 'albums';
+  static const CustomAlbums = 'customalbums';
 }

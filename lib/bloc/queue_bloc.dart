@@ -1,17 +1,17 @@
-import "dart:async";
-import "dart:math";
-import "package:bloc/bloc.dart";
-import "package:equatable/equatable.dart";
-import "package:meta/meta.dart";
-import "package:assets_audio_player/assets_audio_player.dart";
+import 'dart:async';
+import 'dart:math';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
-import "package:Music/sync.dart";
-import "package:Music/global_providers/audio_player.dart";
-import "package:Music/global_providers/database.dart";
-import "package:Music/models/models.dart";
+import 'package:Music/sync.dart';
+import 'package:Music/global_providers/audio_player.dart';
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/models/models.dart';
 
-part "queue_event.dart";
-part "queue_state.dart";
+part 'queue_event.dart';
+part 'queue_state.dart';
 
 class QueueBloc extends Bloc<QueueEvent, QueueState> {
   final AudioPlayer audioPlayer;
@@ -67,7 +67,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
   Future<void> _playSong(SongData song) async {
     var albumName = (await db.getAlbums(
-      where: "id LIKE ?",
+      where: 'id LIKE ?',
       whereArgs: [song.albumId],
     ))
         .first
@@ -119,11 +119,11 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
       await db.update(
         Tables.Songs,
-        {"liked": liked},
-        where: "title LIKE ?",
+        {'liked': liked},
+        where: 'title LIKE ?',
         whereArgs: [event.song.title],
       );
-      syncDb.update(SyncTables.Songs, event.song.title, {"liked": liked});
+      syncDb.update(SyncTables.Songs, event.song.title, {'liked': liked});
 
       updateData = true;
     }

@@ -1,13 +1,13 @@
-import "dart:io";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/models/models.dart";
-import "./widgets/SongPage.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
+import 'package:Music/models/models.dart';
+import './widgets/SongPage.dart';
 
 class AlbumPage extends StatefulWidget {
   final AlbumData album;
@@ -45,7 +45,7 @@ class _AlbumPageState extends State<AlbumPage>
 
   Future<void> getSongs() async {
     var songs = await DatabaseProvider.getDB(context).getSongs(
-      where: "albumId LIKE ?",
+      where: 'albumId LIKE ?',
       whereArgs: [widget.album.id],
     );
 
@@ -80,7 +80,7 @@ class _AlbumPageState extends State<AlbumPage>
         controller: _controller,
         title: widget.album.name,
         subtitle: generateSubtitle(
-          type: "Album",
+          type: 'Album',
           artist: widget.album.artist,
         ),
         hero: Hero(

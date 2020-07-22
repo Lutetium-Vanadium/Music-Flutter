@@ -1,4 +1,4 @@
-import "package:equatable/equatable.dart";
+import 'package:equatable/equatable.dart';
 
 abstract class SongMetadata extends Equatable {
   final String artist;
@@ -14,6 +14,6 @@ abstract class SongMetadata extends Equatable {
   });
 
   toString() {
-    return "{\n\tartist: $artist,\n\ttitle: $title,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}";
+    return '{\n\tartist: $artist,\n\ttitle: $title,\n\tlength: $length,\n\tthumbnail: $thumbnail\n}';
   }
 }

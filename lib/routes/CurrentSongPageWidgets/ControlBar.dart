@@ -1,10 +1,10 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/routes/widgets/PlayPause.dart";
-import "package:Music/models/models.dart";
-import "package:Music/CustomIcons.dart";
-import "package:Music/bloc/queue_bloc.dart";
+import 'package:Music/routes/widgets/PlayPause.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/CustomIcons.dart';
+import 'package:Music/bloc/queue_bloc.dart';
 
 class ControlBar extends StatelessWidget {
   final SongData song;
@@ -28,7 +28,7 @@ class ControlBar extends StatelessWidget {
       visualDensity: prePostVisualDensity,
       icon: Icon(Icons.playlist_add),
       onPressed: () =>
-          Navigator.of(context).pushNamed("/add-to-album", arguments: song),
+          Navigator.of(context).pushNamed('/add-to-album', arguments: song),
     );
 
     var postIcon = IconButton(

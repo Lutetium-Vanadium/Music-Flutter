@@ -1,16 +1,16 @@
-import "package:flutter/material.dart";
-import "package:flutter/services.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "./bloc/data_bloc.dart";
-import "./bloc/queue_bloc.dart";
-import "./routing.dart";
-import "./themedata.dart";
-import "./notifications.dart";
-import "./sync.dart";
-import "./global_providers/database.dart";
-import "./global_providers/sync_provider.dart";
-import "./global_providers/audio_player.dart";
+import './bloc/data_bloc.dart';
+import './bloc/queue_bloc.dart';
+import './routing.dart';
+import './themedata.dart';
+import './notifications.dart';
+import './sync.dart';
+import './global_providers/database.dart';
+import './global_providers/sync_provider.dart';
+import './global_providers/audio_player.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +19,7 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]).then((_) {
-    print("READY");
+    print('READY');
     runApp(App(DatabaseFunctions()));
   });
 }
@@ -66,10 +66,10 @@ class App extends StatelessWidget {
                 return true;
               },
               child: MaterialApp(
-                title: "Music",
+                title: 'Music',
                 theme: themeData,
                 darkTheme: themeData,
-                initialRoute: "/",
+                initialRoute: '/',
                 onGenerateRoute: Router.generateRoute,
                 themeMode: ThemeMode.dark,
               ),
