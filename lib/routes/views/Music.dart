@@ -1,14 +1,14 @@
-import "dart:math";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/constants.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/displace.dart";
-import "package:Music/models/models.dart";
-import "../widgets/SongList.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/helpers/displace.dart';
+import 'package:Music/models/models.dart';
+import '../widgets/SongList.dart';
 
 class Music extends StatefulWidget {
   @override
@@ -64,19 +64,19 @@ class _MusicState extends State<Music> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "My Music",
+                    'My Music',
                     style: Theme.of(context).textTheme.headline3,
                   ),
                   SizedBox(height: 20),
                   RichText(
                     text: TextSpan(children: [
                       TextSpan(
-                        text: "No songs are downloaded.\n\n",
+                        text: 'No songs are downloaded.\n\n',
                         style: Theme.of(context).textTheme.headline6,
                       ),
                       TextSpan(
                         text:
-                            "Download songs by searching through the above Search Box.\n",
+                            'Download songs by searching through the above Search Box.\n',
                         style: Theme.of(context).textTheme.bodyText2,
                       ),
                     ]),
@@ -97,7 +97,7 @@ class _MusicState extends State<Music> {
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("My Music",
+                    Text('My Music',
                         style: Theme.of(context).textTheme.headline3),
                     FlatButton(
                       shape: RoundedRectangleBorder(
@@ -106,11 +106,12 @@ class _MusicState extends State<Music> {
                       onPressed: () {
                         var random = Random();
                         BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(
-                            songs: _songs,
-                            index: random.nextInt(_songs.length),
-                            shuffle: true));
+                          songs: _songs,
+                          index: random.nextInt(_songs.length),
+                          shuffle: true,
+                        ));
                       },
-                      child: Text("Play Random"),
+                      child: Text('Play Random'),
                     ),
                   ],
                 ),

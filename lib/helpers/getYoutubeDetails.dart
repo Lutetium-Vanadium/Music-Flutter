@@ -1,6 +1,6 @@
-import "package:youtube_explode_dart/youtube_explode_dart.dart";
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import "package:Music/models/models.dart";
+import 'package:Music/models/models.dart';
 
 /// getYoutubeId()
 ///
@@ -10,13 +10,13 @@ import "package:Music/models/models.dart";
 Future<List<YoutubeDetails>> getYoutubeDetails(
     String title, String artist) async {
   try {
-    var query = "$title $artist official music video";
+    var query = '$title by $artist official music video';
     var yt = YoutubeExplode();
     var i = 0;
 
     var res = await yt.search
         .getVideosAsync(query)
-        .takeWhile((_) => i++ < 4)
+        .takeWhile((_) => i++ < 5)
         .toList();
 
     yt.close();

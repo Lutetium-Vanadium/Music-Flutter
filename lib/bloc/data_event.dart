@@ -1,4 +1,4 @@
-part of "data_bloc.dart";
+part of 'data_bloc.dart';
 
 @immutable
 abstract class DataEvent extends Equatable {}
@@ -11,15 +11,6 @@ class ForceUpdate extends DataEvent {
 class DownloadSong extends DataEvent {
   final NapsterSongData song;
   DownloadSong(this.song);
-
-  @override
-  List<Object> get props => [song];
-}
-
-class DeleteSong extends DataEvent {
-  final SongData song;
-
-  DeleteSong(this.song);
 
   @override
   List<Object> get props => [song];

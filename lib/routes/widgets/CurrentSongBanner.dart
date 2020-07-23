@@ -1,10 +1,10 @@
-import "dart:io";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/bloc/queue_bloc.dart";
+import 'package:Music/bloc/queue_bloc.dart';
 
-import "./PlayPause.dart";
+import './PlayPause.dart';
 
 class CurrentSongBanner extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
 
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
-        onTap: () => Navigator.of(context).pushNamed("/player"),
+        onTap: () => Navigator.of(context).pushNamed('/player'),
         onVerticalDragStart: (dragStartDetails) {
           setState(() {
             _dragStartDetails = dragStartDetails;
@@ -47,7 +47,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
 
           if (-delta > threshold ||
               -dragEndDetails.velocity.pixelsPerSecond.dy > threshold) {
-            Navigator.of(context).pushNamed("/player");
+            Navigator.of(context).pushNamed('/player');
           } else if (delta > 40 ||
               dragEndDetails.velocity.pixelsPerSecond.dy > 40) {
             BlocProvider.of<QueueBloc>(context).add(DequeueSongs());
@@ -77,7 +77,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
                         child: Hero(
-                          tag: "${song.albumId}-player",
+                          tag: '${song.albumId}-player',
                           child: Image.file(
                             File(song.thumbnail),
                             fit: BoxFit.scaleDown,

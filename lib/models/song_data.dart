@@ -1,5 +1,5 @@
-import "./song_metadata.dart";
-import "./get_id.dart";
+import './song_metadata.dart';
+import './get_id.dart';
 
 class SongData extends SongMetadata implements DbCollection {
   final String title;
@@ -23,7 +23,7 @@ class SongData extends SongMetadata implements DbCollection {
   });
 
   toString() {
-    return "{\n\ttitle: $title,\n\tartist: $artist,\n\talbumId: $albumId,\n\tfilePath: $filePath,\n\tnumListens: $numListens,\n\tliked: $liked,\n\tthumbnail: $thumbnail,\n\tlength: $length\n}";
+    return '{\n\ttitle: $title,\n\tartist: $artist,\n\talbumId: $albumId,\n\tfilePath: $filePath,\n\tnumListens: $numListens,\n\tliked: $liked,\n\tthumbnail: $thumbnail,\n\tlength: $length\n}';
   }
 
   @override
@@ -49,55 +49,55 @@ class SongData extends SongMetadata implements DbCollection {
         this.thumbnail = thumbnail ?? song.thumbnail,
         this.length = length ?? song.length;
 
-  Map<String, dynamic> toFirebase([String youtubeId = ""]) {
+  Map<String, dynamic> toFirebase([String youtubeId = '']) {
     return {
-      "title": this.title,
-      "albumId": this.albumId,
-      "artist": this.artist,
-      "length": this.length,
-      "liked": this.liked,
-      "numListens": this.numListens,
-      "youtubeId": youtubeId,
+      'title': this.title,
+      'albumId': this.albumId,
+      'artist': this.artist,
+      'length': this.length,
+      'liked': this.liked,
+      'numListens': this.numListens,
+      'youtubeId': youtubeId,
     };
   }
 
   Map<String, dynamic> toMap() {
     return {
-      "filePath": this.filePath,
-      "title": this.title,
-      "thumbnail": this.thumbnail,
-      "albumId": this.albumId,
-      "artist": this.artist,
-      "length": this.length,
-      "liked": this.liked ? 1 : 0,
-      "numListens": this.numListens,
+      'filePath': this.filePath,
+      'title': this.title,
+      'thumbnail': this.thumbnail,
+      'albumId': this.albumId,
+      'artist': this.artist,
+      'length': this.length,
+      'liked': this.liked ? 1 : 0,
+      'numListens': this.numListens,
     };
   }
 
   static SongData fromFirestore(Map<String, dynamic> map,
-      [int length = -1, String root = ""]) {
+      [int length = -1, String root = '']) {
     return SongData(
-      albumId: map["albumId"],
-      artist: map["artist"],
-      filePath: "$root/songs/${map["title"]}.mp3",
+      albumId: map['albumId'],
+      artist: map['artist'],
+      filePath: '$root/songs/${map['title']}.mp3',
       length: length,
-      numListens: map["numListens"],
-      thumbnail: "$root/album_images/${map["albumId"]}.jpg",
-      title: map["title"],
-      liked: map["liked"],
+      numListens: map['numListens'],
+      thumbnail: '$root/album_images/${map['albumId']}.jpg',
+      title: map['title'],
+      liked: map['liked'],
     );
   }
 
   static SongData fromMap(Map<String, dynamic> map) {
     return SongData(
-      albumId: map["albumId"],
-      artist: map["artist"],
-      filePath: map["filePath"],
-      length: map["length"],
-      liked: map["liked"] == 1,
-      numListens: map["numListens"],
-      thumbnail: map["thumbnail"],
-      title: map["title"],
+      albumId: map['albumId'],
+      artist: map['artist'],
+      filePath: map['filePath'],
+      length: map['length'],
+      liked: map['liked'] == 1,
+      numListens: map['numListens'],
+      thumbnail: map['thumbnail'],
+      title: map['title'],
     );
   }
 
@@ -113,11 +113,11 @@ class SongData extends SongMetadata implements DbCollection {
 
   @override
   bool needsUpdate(other) =>
-      other["title"] != title ||
-      other["artist"] != artist ||
-      other["liked"] != liked ||
-      other["albumId"] != albumId ||
-      other["numListens"] != numListens;
+      other['title'] != title ||
+      other['artist'] != artist ||
+      other['liked'] != liked ||
+      other['albumId'] != albumId ||
+      other['numListens'] != numListens;
 }
 
 extension SongDataMapping on List<SongData> {

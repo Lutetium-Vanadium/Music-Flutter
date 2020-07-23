@@ -1,10 +1,10 @@
-import "package:flutter/material.dart";
-import "package:flutter/services.dart";
-import "package:assets_audio_player/assets_audio_player.dart";
-import "package:rxdart/rxdart.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:rxdart/rxdart.dart';
 
-import "package:Music/constants.dart";
-import "package:Music/models/song_data.dart";
+import 'package:Music/constants.dart';
+import 'package:Music/models/song_data.dart';
 
 class AudioPlayerProvider extends StatelessWidget {
   final Widget child;
@@ -38,12 +38,12 @@ class AudioPlayerProvider extends StatelessWidget {
     if (result != null) return result.player;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
-          "AudioPlayerProvider.getPlayer() called with a context that does not contain a AudioPlayerProvider."),
+          'AudioPlayerProvider.getPlayer() called with a context that does not contain a AudioPlayerProvider.'),
       ErrorDescription(
-          "No AudioPlayerProvider ancestor could be found starting from the context that was passed to AudioPlayerProvider.getPlayer(). "
-          "This usually happens when the context provided is from the same StatefulWidget as that "
-          "whose build function actually creates the AudioPlayerProvider widget being sought."),
-      context.describeElement("The context used was")
+          'No AudioPlayerProvider ancestor could be found starting from the context that was passed to AudioPlayerProvider.getPlayer(). '
+          'This usually happens when the context provided is from the same StatefulWidget as that '
+          'whose build function actually creates the AudioPlayerProvider widget being sought.'),
+      context.describeElement('The context used was')
     ]);
   }
 }
@@ -111,7 +111,7 @@ class AudioPlayerBuilder<T> extends StatelessWidget {
           },
         );
       default:
-        throw "Unknown Type: $_type";
+        throw 'Unknown Type: $_type';
     }
   }
 }
@@ -151,7 +151,7 @@ class AudioPlayer {
           artist: song.artist,
           title: song.title,
           image: MetasImage.file(song.thumbnail),
-          onImageLoadFail: MetasImage.asset("$imgs/music_symbol.png"),
+          onImageLoadFail: MetasImage.asset('$imgs/music_symbol.png'),
         ),
       ),
       showNotification: true,

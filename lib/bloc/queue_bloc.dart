@@ -1,17 +1,18 @@
-import "dart:async";
-import "dart:math";
-import "package:bloc/bloc.dart";
-import "package:equatable/equatable.dart";
-import "package:meta/meta.dart";
-import "package:assets_audio_player/assets_audio_player.dart";
+import 'dart:async';
+import 'dart:io';
+import 'dart:math';
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
 
-import "package:Music/sync.dart";
-import "package:Music/global_providers/audio_player.dart";
-import "package:Music/global_providers/database.dart";
-import "package:Music/models/models.dart";
+import 'package:Music/sync.dart';
+import 'package:Music/global_providers/audio_player.dart';
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/models/models.dart';
 
-part "queue_event.dart";
-part "queue_state.dart";
+part 'queue_event.dart';
+part 'queue_state.dart';
 
 class QueueBloc extends Bloc<QueueEvent, QueueState> {
   final AudioPlayer audioPlayer;
@@ -67,7 +68,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
   Future<void> _playSong(SongData song) async {
     var albumName = (await db.getAlbums(
-      where: "id LIKE ?",
+      where: 'id LIKE ?',
       whereArgs: [song.albumId],
     ))
         .first
@@ -84,7 +85,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     );
 
     await db.incrementNumListens(song);
-    await syncDb.incrementNumListens(song);
+    syncDb.incrementNumListens(song);
   }
 
   SongData get _current => _songs.length > 0 ? _songs[_index] : null;
@@ -96,11 +97,11 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     if (event is EnqueueSongs) {
       _allSongs = event.songs;
       _index = event.index;
+      _isShuffled = event.shuffle;
       if (event.shuffle) {
-        _isShuffled = true;
         _songs = _shuffle([...event.songs], cur: event.index);
       } else {
-        _songs = event.songs;
+        _songs = [...event.songs];
       }
 
       await _playSong(_current);
@@ -117,15 +118,13 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         _songs[songsIndex] = SongData.override(event.song, liked: liked);
       }
 
-      await Future.wait([
-        db.update(
-          Tables.Songs,
-          {"liked": liked},
-          where: "title LIKE ?",
-          whereArgs: [event.song.title],
-        ),
-        syncDb.update(SyncTables.Songs, event.song.title, {"liked": liked}),
-      ]);
+      await db.update(
+        Tables.Songs,
+        {'liked': liked ? 1 : 0},
+        where: 'title LIKE ?',
+        whereArgs: [event.song.title],
+      );
+      syncDb.update(SyncTables.Songs, event.song.title, {'liked': liked});
 
       updateData = true;
     }
@@ -162,6 +161,44 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         await _playSong(_current);
       } else if (event is LoopSongs) {
         _loop = !_loop;
+      } else if (event is DeleteSong) {
+        var songFile = File(event.song.filePath);
+
+        var data = {'numSongs': await db.getNumSongs(event.song.albumId) - 1};
+
+        Future.wait([
+          songFile.delete(),
+          db.deleteSong(event.song.title),
+          db.update(
+            Tables.Albums,
+            data,
+            where: 'id LIKE ?',
+            whereArgs: [event.song.albumId],
+          ),
+        ]);
+
+        _allSongs.removeWhere((s) => s.title == event.song.title);
+
+        var songsIndex = _songs.indexWhere((s) => s.title == event.song.title);
+        if (songsIndex >= 0) {
+          _songs.removeAt(songsIndex);
+          var sameSong = songsIndex == _index;
+          if (songsIndex == _songs.length) {
+            _index = 0;
+          }
+          if (sameSong) {
+            if (_songs.length > 0) {
+              await _playSong(_current);
+            } else {
+              await audioPlayer.stop();
+            }
+          }
+        }
+
+        syncDb.delete(SyncTables.Songs, event.song.title);
+        syncDb.update(SyncTables.Albums, event.song.albumId, data);
+
+        await db.deleteEmptyAlbums();
       }
     }
 

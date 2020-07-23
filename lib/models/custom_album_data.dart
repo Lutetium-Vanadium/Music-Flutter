@@ -1,7 +1,7 @@
-import "dart:convert";
-import "package:equatable/equatable.dart";
+import 'dart:convert';
+import 'package:equatable/equatable.dart';
 
-import "./get_id.dart";
+import './get_id.dart';
 
 String stringifyArr(List<dynamic> arr) {
   var strArr = jsonEncode(arr);
@@ -9,7 +9,7 @@ String stringifyArr(List<dynamic> arr) {
 }
 
 List<String> parseArr(String arr) {
-  List<dynamic> lst = jsonDecode("[$arr]");
+  List<dynamic> lst = jsonDecode('[$arr]');
 
   return lst.map((el) => el.toString()).toList();
 }
@@ -22,7 +22,7 @@ class CustomAlbumData extends Equatable implements DbCollection {
   CustomAlbumData({this.id, this.name, this.songs});
 
   toString() {
-    return "{\n\tid: $id,\n\tname: $name,\n\tsongs: $songs\n}";
+    return '{\n\tid: $id,\n\tname: $name,\n\tsongs: $songs\n}';
   }
 
   @override
@@ -30,33 +30,37 @@ class CustomAlbumData extends Equatable implements DbCollection {
 
   Map<String, dynamic> toFirebase() {
     return {
-      "id": this.id,
-      "name": this.name,
-      "songs": this.songs,
+      'id': this.id,
+      'name': this.name,
+      'songs': this.songs,
     };
   }
 
   Map<String, dynamic> toMap() {
     return {
-      "id": this.id,
-      "name": this.name,
-      "songs": stringifyArr(this.songs),
+      'id': this.id,
+      'name': this.name,
+      'songs': stringifyArr(this.songs),
     };
   }
 
   static CustomAlbumData fromFirebase(Map<String, dynamic> map) {
+    // Inlining it seem to throw an error for some reason...
+    var songs =
+        (map['songs'] as List<dynamic>).map((e) => e.toString()).toList();
+
     return CustomAlbumData(
-      id: map["id"],
-      name: map["name"],
-      songs: map["songs"].map((e) => e.toString()).toList(),
+      id: map['id'],
+      name: map['name'],
+      songs: songs,
     );
   }
 
   static CustomAlbumData fromMap(Map<String, dynamic> map) {
     return CustomAlbumData(
-      id: map["id"],
-      name: map["name"],
-      songs: parseArr(map["songs"]),
+      id: map['id'],
+      name: map['name'],
+      songs: parseArr(map['songs']),
     );
   }
 
@@ -72,7 +76,7 @@ class CustomAlbumData extends Equatable implements DbCollection {
 
   @override
   bool needsUpdate(other) =>
-      id != other["id"] || name != other["name"] || songs != other["songs"];
+      id != other['id'] || name != other['name'] || songs != other['songs'];
 }
 
 extension CustomAlbumDataMapping on List<CustomAlbumData> {

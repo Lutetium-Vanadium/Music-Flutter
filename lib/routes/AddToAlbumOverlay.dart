@@ -1,11 +1,11 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/models/models.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/constants.dart";
-import "package:Music/CustomSplashFactory.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/CustomSplashFactory.dart';
 
 class AddToAlbumOverlay extends StatefulWidget {
   final SongData song;
@@ -65,7 +65,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
                         color: Colors.white,
                         icon: Icon(Icons.add),
                         onPressed: () =>
-                            Navigator.of(context).pushNamed("/select-songs"),
+                            Navigator.of(context).pushNamed('/select-songs'),
                       ),
                     ),
                   );
@@ -141,7 +141,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
 
                       Navigator.of(context).pop();
                     },
-              child: Text("Add"),
+              child: Text('Add'),
               color: Theme.of(context).accentColor,
               disabledColor: Colors.grey[850],
               shape: RoundedRectangleBorder(
@@ -180,7 +180,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(0.4 * rem),
                 child: Image.asset(
-                  "$imgs/music_symbol.png",
+                  '$imgs/music_symbol.png',
                   width: 4 * rem,
                   height: 4 * rem,
                 ),
@@ -200,7 +200,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
                       overflow: TextOverflow.ellipsis,
                     ),
                     Text(
-                      "${album.songs.length} ${album.songs.length == 1 ? "song" : "songs"}",
+                      '${album.songs.length} ${album.songs.length == 1 ? 'song' : 'songs'}',
                       style: Theme.of(context).textTheme.subtitle2,
                     ),
                   ],

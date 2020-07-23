@@ -1,17 +1,17 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:focused_menu/modals.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focused_menu/modals.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/constants.dart";
-import "package:Music/models/models.dart";
-import "package:Music/helpers/displace.dart";
-import "package:Music/helpers/generateSubtitle.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/helpers/displace.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
 
-import "../widgets/CoverImage.dart";
-import "../widgets/showConfirm.dart";
+import '../widgets/CoverImage.dart';
+import '../widgets/showConfirm.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -34,34 +34,34 @@ class _HomeState extends State<Home> {
 
     // var db = DatabaseProvider.getDB(context);
     // // Print Database Contents
-    // print("===== Songs =====");
+    // print('===== Songs =====');
     // (await db.getSongs()).forEach(print);
-    // print("===== Albums ====");
+    // print('===== Albums ====');
     // (await db.getAlbums()).forEach(print);
-    // print("== CustomAlbums =");
+    // print('== CustomAlbums =');
     // (await db.getCustomAlbums()).forEach(print);
-    // print("==================");
+    // print('==================');
     // // Clear Database Contents
     // db.delete(Tables.Albums);
     // db.delete(Tables.Songs);
     // db.delete(Tables.CustomAlbums);
 
     // // Delete Songs
-    // File("${(await getApplicationDocumentsDirectory()).path}/songs")
+    // File('${(await getApplicationDocumentsDirectory()).path}/songs')
     //     .delete(recursive: true);
 
     // // Delete album covers
-    // File("${(await getApplicationDocumentsDirectory()).path}/album_images")
+    // File('${(await getApplicationDocumentsDirectory()).path}/album_images')
     //     .delete(recursive: true);
 
     // // List all files ignoring flutter stuff
     // var dirs =
     //     (await getApplicationDocumentsDirectory()).listSync(recursive: true);
-    // var base = "/data/user/0/com.LutetiumVanadium.Music/app_flutter";
-    // var toSee = [RegExp("$base/songs/*"), RegExp("$base/album_images/*")];
+    // var base = '/data/user/0/com.LutetiumVanadium.Music/app_flutter';
+    // var toSee = [RegExp('$base/songs/*'), RegExp('$base/album_images/*')];
     // dirs.retainWhere((element) =>
     //     toSee[0].hasMatch(element.path) || toSee[1].hasMatch(element.path));
-    // print("[\n\t${dirs.join(",\n\t")}\n]");
+    // print('[\n\t${dirs.join(',\n\t')}\n]');
     // !SECTION
   }
 
@@ -106,12 +106,12 @@ class _HomeState extends State<Home> {
               child: RichText(
                 text: TextSpan(children: [
                   TextSpan(
-                    text: "No songs are downloaded.\n\n",
+                    text: 'No songs are downloaded.\n\n',
                     style: Theme.of(context).textTheme.headline6,
                   ),
                   TextSpan(
                     text:
-                        "Download songs by searching through the above Search Box.\n",
+                        'Download songs by searching through the above Search Box.\n',
                     style: Theme.of(context).textTheme.bodyText2,
                   ),
                 ]),
@@ -127,7 +127,7 @@ class _HomeState extends State<Home> {
                       padding: EdgeInsets.only(
                           left: width10 / 2, top: 30, bottom: 7),
                       child: Text(
-                        "Top Albums",
+                        'Top Albums',
                         style: Theme.of(context).textTheme.headline3,
                       ),
                     ),
@@ -144,11 +144,11 @@ class _HomeState extends State<Home> {
                             image: album.imagePath,
                             title: album.name,
                             subtitle: generateSubtitle(
-                                type: "Album", artist: album.artist),
+                                type: 'Album', artist: album.artist),
                             tag: album.id,
                             onClick: () {
                               Navigator.of(context)
-                                  .pushNamed("/album", arguments: album);
+                                  .pushNamed('/album', arguments: album);
                             },
                             focusedMenuItems: [
                               FocusedMenuItem(
@@ -156,12 +156,12 @@ class _HomeState extends State<Home> {
                                   var songs =
                                       await DatabaseProvider.getDB(context)
                                           .getSongs(
-                                              where: "albumId LIKE ?",
+                                              where: 'albumId LIKE ?',
                                               whereArgs: [album.id]);
                                   BlocProvider.of<QueueBloc>(context)
                                       .add(EnqueueSongs(songs: songs));
                                 },
-                                title: Text("Play"),
+                                title: Text('Play'),
                                 trailingIcon: Icon(Icons.playlist_play),
                                 backgroundColor: Colors.transparent,
                               ),
@@ -178,7 +178,7 @@ class _HomeState extends State<Home> {
                     Padding(
                       padding: EdgeInsets.only(left: width10 / 2, bottom: 7),
                       child: Text(
-                        "Top Songs",
+                        'Top Songs',
                         style: Theme.of(context).textTheme.headline3,
                       ),
                     ),
@@ -195,7 +195,7 @@ class _HomeState extends State<Home> {
                             image: song.thumbnail,
                             title: song.title,
                             subtitle: generateSubtitle(
-                                type: "Song", artist: song.artist),
+                                type: 'Song', artist: song.artist),
                             onClick: () async {
                               var songs = await DatabaseProvider.getDB(context)
                                   .getTopSongs();
@@ -215,15 +215,15 @@ class _HomeState extends State<Home> {
                                     songs: displace(songs, index),
                                   ));
                                 },
-                                title: Text("Play"),
+                                title: Text('Play'),
                                 trailingIcon: Icon(Icons.play_arrow),
                                 backgroundColor: Colors.transparent,
                               ),
                               FocusedMenuItem(
                                 onPressed: () => Navigator.of(context)
-                                    .pushNamed("/add-to-album",
+                                    .pushNamed('/add-to-album',
                                         arguments: song),
-                                title: Text("Add to Album"),
+                                title: Text('Add to Album'),
                                 trailingIcon: Icon(Icons.playlist_add),
                                 backgroundColor: Colors.transparent,
                               ),
@@ -233,7 +233,7 @@ class _HomeState extends State<Home> {
                                       .add(ToggleLikedSong(song));
                                 },
                                 title:
-                                    song.liked ? Text("Unlike") : Text("Like"),
+                                    song.liked ? Text('Unlike') : Text('Like'),
                                 trailingIcon: song.liked
                                     ? Icon(Icons.favorite)
                                     : Icon(Icons.favorite_border),
@@ -243,14 +243,14 @@ class _HomeState extends State<Home> {
                                 onPressed: () async {
                                   if (await showConfirm(
                                     context,
-                                    "Delete ${song.title}",
-                                    "Are you sure you want to delete ${song.title} by ${song.artist}?",
+                                    'Delete ${song.title}',
+                                    'Are you sure you want to delete ${song.title} by ${song.artist}?',
                                   )) {
-                                    BlocProvider.of<DataBloc>(context)
+                                    BlocProvider.of<QueueBloc>(context)
                                         .add(DeleteSong(song));
                                   }
                                 },
-                                title: Text("Delete",
+                                title: Text('Delete',
                                     style: TextStyle(color: Colors.red)),
                                 trailingIcon:
                                     Icon(Icons.delete, color: Colors.red),

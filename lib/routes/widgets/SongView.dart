@@ -1,16 +1,15 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:focused_menu/focused_menu.dart";
-import "package:focused_menu/modals.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/models/models.dart";
-import "package:Music/CustomSplashFactory.dart";
-import "package:Music/constants.dart";
-import "package:Music/helpers/formatLength.dart";
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/CustomSplashFactory.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/helpers/formatLength.dart';
 
-import "./showConfirm.dart";
+import './showConfirm.dart';
 
 class SongView extends StatelessWidget {
   final SongMetadata song;
@@ -52,14 +51,14 @@ class SongView extends StatelessWidget {
                 menuItems: [
                   FocusedMenuItem(
                     onPressed: onClick,
-                    title: Text("Play"),
+                    title: Text('Play'),
                     trailingIcon: Icon(Icons.play_arrow),
                     backgroundColor: Colors.transparent,
                   ),
                   FocusedMenuItem(
                     onPressed: () => Navigator.of(context)
-                        .pushNamed("/add-to-album", arguments: song),
-                    title: Text("Add to Album"),
+                        .pushNamed('/add-to-album', arguments: song),
+                    title: Text('Add to Album'),
                     trailingIcon: Icon(Icons.playlist_add),
                     backgroundColor: Colors.transparent,
                   ),
@@ -68,7 +67,7 @@ class SongView extends StatelessWidget {
                       BlocProvider.of<QueueBloc>(context)
                           .add(ToggleLikedSong(song));
                     },
-                    title: liked ? Text("Unlike") : Text("Like"),
+                    title: liked ? Text('Unlike') : Text('Like'),
                     trailingIcon: liked
                         ? Icon(Icons.favorite)
                         : Icon(Icons.favorite_border),
@@ -78,14 +77,14 @@ class SongView extends StatelessWidget {
                     onPressed: () async {
                       if (await showConfirm(
                         context,
-                        "Delete ${song.title}",
-                        "Are you sure you want to delete ${song.title} by ${song.artist}?",
+                        'Delete ${song.title}',
+                        'Are you sure you want to delete ${song.title} by ${song.artist}?',
                       )) {
-                        BlocProvider.of<DataBloc>(context)
+                        BlocProvider.of<QueueBloc>(context)
                             .add(DeleteSong(song));
                       }
                     },
-                    title: Text("Delete", style: TextStyle(color: Colors.red)),
+                    title: Text('Delete', style: TextStyle(color: Colors.red)),
                     trailingIcon: Icon(Icons.delete, color: Colors.red),
                     backgroundColor: Colors.transparent,
                   ),

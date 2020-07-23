@@ -1,13 +1,13 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/models/models.dart";
-import "package:Music/constants.dart";
-import "./widgets/SongPage.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/constants.dart';
+import './widgets/SongPage.dart';
 
 class LikedPage extends StatefulWidget {
   @override
@@ -40,7 +40,7 @@ class _LikedPageState extends State<LikedPage>
   }
 
   Future<void> getSongs() async {
-    var songs = await DatabaseProvider.getDB(context).getSongs(where: "liked");
+    var songs = await DatabaseProvider.getDB(context).getSongs(where: 'liked');
 
     if (!mounted) return;
 
@@ -71,12 +71,12 @@ class _LikedPageState extends State<LikedPage>
       ],
       child: SongPage(
         controller: _controller,
-        title: "Liked",
-        subtitle: generateSubtitle(type: "Album", numSongs: _songs.length),
+        title: 'Liked',
+        subtitle: generateSubtitle(type: 'Album', numSongs: _songs.length),
         hero: Hero(
-          tag: "liked-songs",
+          tag: 'liked-songs',
           child: Image.asset(
-            "$imgs/liked.png",
+            '$imgs/liked.png',
             width: screenWidth,
             height: screenWidth,
             fit: BoxFit.cover,

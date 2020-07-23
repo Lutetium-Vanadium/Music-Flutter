@@ -1,9 +1,9 @@
-import "dart:async";
-import "dart:io";
-import "package:path_provider/path_provider.dart";
-import "package:youtube_explode_dart/youtube_explode_dart.dart";
+import 'dart:async';
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import "package:Music/models/models.dart";
+import 'package:Music/models/models.dart';
 
 Stream<Pair<int, int>> downloadSong(String id, String filename,
     {List<String> backup = const []}) async* {
@@ -19,13 +19,14 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
       try {
         manifest = await yt.videos.streamsClient.getManifest(downloadId);
       } catch (e) {
-        print(downloadId + " errored");
+        print(e);
+        print(downloadId + ' errored');
         if (i == backup.length) throw "Couldn't get manifest";
         downloadId = backup[i++];
       }
     }
 
-    print("Got manifest for $filename");
+    print('Got manifest for $filename');
 
     // -1 to show that its not a percent, but the index of song chosen
     yield Pair(-1, i - 1);
@@ -34,12 +35,12 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
 
     if (manifest.audioOnly.length > 0) {
       uri = manifest.audioOnly.firstWhere(
-          (element) => element.audioCodec == "mp4a.40.2", orElse: () {
+          (element) => element.audioCodec == 'mp4a.40.2', orElse: () {
         return manifest.audioOnly.first;
       }).url;
     } else if (manifest.audioOnly.length > 0) {
       uri = manifest.audio.firstWhere(
-          (element) => element.audioCodec == "mp4a.40.2", orElse: () {
+          (element) => element.audioCodec == 'mp4a.40.2', orElse: () {
         return manifest.audioOnly.first;
       }).url;
     } else {
@@ -52,9 +53,9 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
 
     var root = await getApplicationDocumentsDirectory();
 
-    var file = File("${root.path}/songs/$filename");
+    var file = File('${root.path}/songs/$filename');
 
-    print("Starting: $downloadId");
+    print('Starting: $downloadId');
 
     if (!(await file.exists())) file = await file.create(recursive: true);
 
@@ -84,24 +85,24 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
     // Close the YoutubeExplode's http client.
     yt.close();
 
-    print("Finished $filename");
+    print('Finished $filename');
   } catch (err) {
     print(err);
-    throw "filename: $filename, id: $id";
+    throw 'filename: $filename, id: $id';
   }
 }
 
 Future<void> downloadImage(String id) async {
   var root = await getApplicationDocumentsDirectory();
 
-  var file = File("${root.path}/album_images/$id.jpg");
+  var file = File('${root.path}/album_images/$id.jpg');
 
   if (await file.exists())
     return;
   else
     file = await file.create(recursive: true);
   var uri = Uri.parse(
-      "https://api.napster.com/imageserver/v2/albums/$id/images/500x500.jpg");
+      'https://api.napster.com/imageserver/v2/albums/$id/images/500x500.jpg');
 
   var client = HttpClient();
   var request = await client.getUrl(uri);
@@ -113,5 +114,5 @@ Future<void> downloadImage(String id) async {
   }
 
   await writer.close();
-  print("Done $id");
+  print('Done $id');
 }

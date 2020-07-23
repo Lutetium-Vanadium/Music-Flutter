@@ -1,4 +1,4 @@
-part of "queue_bloc.dart";
+part of 'queue_bloc.dart';
 
 @immutable
 abstract class QueueEvent extends Equatable {
@@ -46,6 +46,15 @@ class ToggleLikedSong extends QueueEvent {
   final SongData song;
 
   ToggleLikedSong(this.song) : assert(song != null);
+
+  @override
+  List<Object> get props => [song];
+}
+
+class DeleteSong extends QueueEvent {
+  final SongData song;
+
+  DeleteSong(this.song);
 
   @override
   List<Object> get props => [song];

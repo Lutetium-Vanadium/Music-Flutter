@@ -1,5 +1,5 @@
-import "package:flutter/material.dart";
-import "./constants.dart";
+import 'package:flutter/material.dart';
+import './constants.dart';
 
 TextTheme createTextTheme(Color col) {
   return TextTheme(

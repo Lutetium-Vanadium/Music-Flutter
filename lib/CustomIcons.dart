@@ -1,9 +1,9 @@
-import "package:flutter/widgets.dart";
+import 'package:flutter/widgets.dart';
 
 class CustomIcons {
   CustomIcons._();
 
-  static const _kFontFam = "CustomIcons";
+  static const _kFontFam = 'CustomIcons';
   static const _kFontPkg = null;
 
   static const IconData loop =

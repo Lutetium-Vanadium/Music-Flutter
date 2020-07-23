@@ -1,16 +1,16 @@
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
-import "package:focused_menu/modals.dart";
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:focused_menu/modals.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/models/models.dart";
-import "package:Music/constants.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/constants.dart';
 
-import "../widgets/showConfirm.dart";
-import "../widgets/CoverImage.dart";
+import '../widgets/showConfirm.dart';
+import '../widgets/CoverImage.dart';
 
 class Albums extends StatefulWidget {
   @override
@@ -72,7 +72,7 @@ class _AlbumsState extends State<Albums> {
             child: Padding(
               padding:
                   EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-              child: Text("Custom Albums",
+              child: Text('Custom Albums',
                   style: Theme.of(context).textTheme.headline3),
             ),
           ),
@@ -89,27 +89,27 @@ class _AlbumsState extends State<Albums> {
 
                   if (_index == 0) {
                     return CoverImage(
-                      image: "liked.png",
+                      image: 'liked.png',
                       isAssetImage: true,
-                      title: "Liked",
+                      title: 'Liked',
                       subtitle: generateSubtitle(
-                        type: "Album",
+                        type: 'Album',
                         numSongs: _numLiked,
                       ),
                       isBig: true,
-                      tag: "liked-songs",
+                      tag: 'liked-songs',
                       onClick: () {
-                        Navigator.of(context).pushNamed("/liked");
+                        Navigator.of(context).pushNamed('/liked');
                       },
                       focusedMenuItems: [
                         FocusedMenuItem(
                           onPressed: () async {
                             var songs = await DatabaseProvider.getDB(context)
-                                .getSongs(where: "liked");
+                                .getSongs(where: 'liked');
                             BlocProvider.of<QueueBloc>(context)
                                 .add(EnqueueSongs(songs: songs));
                           },
-                          title: Text("Play"),
+                          title: Text('Play'),
                           trailingIcon: Icon(Icons.playlist_play),
                           backgroundColor: Colors.transparent,
                         ),
@@ -122,7 +122,7 @@ class _AlbumsState extends State<Albums> {
                       alignment: Alignment.topCenter,
                       child: GestureDetector(
                         onTap: () =>
-                            Navigator.of(context).pushNamed("/select-songs"),
+                            Navigator.of(context).pushNamed('/select-songs'),
                         child: Container(
                           width: 4.1 * width10,
                           height: 4.1 * width10,
@@ -139,27 +139,27 @@ class _AlbumsState extends State<Albums> {
                   var album = _customAlbums[index];
 
                   return CoverImage(
-                    image: "music_symbol.png",
+                    image: 'music_symbol.png',
                     isAssetImage: true,
                     title: album.name,
                     subtitle: generateSubtitle(
-                        type: "Album", numSongs: album.songs.length),
+                        type: 'Album', numSongs: album.songs.length),
                     isBig: true,
                     tag: album.id,
                     onClick: () {
                       Navigator.of(context)
-                          .pushNamed("/album", arguments: album);
+                          .pushNamed('/album', arguments: album);
                     },
                     focusedMenuItems: [
                       FocusedMenuItem(
                         onPressed: () async {
-                          String songNames = album.toMap()["songs"];
+                          String songNames = album.toMap()['songs'];
                           var songs = await DatabaseProvider.getDB(context)
-                              .getSongs(where: "title IN ($songNames)");
+                              .getSongs(where: 'title IN ($songNames)');
                           BlocProvider.of<QueueBloc>(context)
                               .add(EnqueueSongs(songs: songs));
                         },
-                        title: Text("Play"),
+                        title: Text('Play'),
                         trailingIcon: Icon(Icons.playlist_play),
                         backgroundColor: Colors.transparent,
                       ),
@@ -167,15 +167,15 @@ class _AlbumsState extends State<Albums> {
                         onPressed: () async {
                           if (await showConfirm(
                             context,
-                            "Delete ${album.name}",
-                            "Are you sure you want to delete ${album.name}?",
+                            'Delete ${album.name}',
+                            'Are you sure you want to delete ${album.name}?',
                           )) {
                             BlocProvider.of<DataBloc>(context)
                                 .add(DeleteCustomAlbum(album.id));
                           }
                         },
                         title:
-                            Text("Delete", style: TextStyle(color: Colors.red)),
+                            Text('Delete', style: TextStyle(color: Colors.red)),
                         trailingIcon: Icon(Icons.delete, color: Colors.red),
                         backgroundColor: Colors.transparent,
                       ),
@@ -193,7 +193,7 @@ class _AlbumsState extends State<Albums> {
                     child: Padding(
                       padding: EdgeInsets.only(
                           left: width10 / 4 * 2, top: 30, bottom: 7),
-                      child: Text("Albums",
+                      child: Text('Albums',
                           style: Theme.of(context).textTheme.headline3),
                     ),
                   ),
@@ -213,12 +213,12 @@ class _AlbumsState extends State<Albums> {
                             image: album.imagePath,
                             title: album.name,
                             subtitle: generateSubtitle(
-                                type: "Album", numSongs: album.numSongs),
+                                type: 'Album', numSongs: album.numSongs),
                             isBig: true,
                             tag: album.id,
                             onClick: () {
                               Navigator.of(context)
-                                  .pushNamed("/album", arguments: album);
+                                  .pushNamed('/album', arguments: album);
                             },
                             focusedMenuItems: [
                               FocusedMenuItem(
@@ -226,13 +226,13 @@ class _AlbumsState extends State<Albums> {
                                   var songs =
                                       await DatabaseProvider.getDB(context)
                                           .getSongs(
-                                              where: "albumId LIKE ?",
+                                              where: 'albumId LIKE ?',
                                               whereArgs: [album.id]);
 
                                   BlocProvider.of<QueueBloc>(context)
                                       .add(EnqueueSongs(songs: songs));
                                 },
-                                title: Text("Play"),
+                                title: Text('Play'),
                                 trailingIcon: Icon(Icons.playlist_play),
                                 backgroundColor: Colors.transparent,
                               ),

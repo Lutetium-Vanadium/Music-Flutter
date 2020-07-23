@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-import "package:Music/global_providers/audio_player.dart";
+import 'package:Music/global_providers/audio_player.dart';
 
 class PlayPause extends StatefulWidget {
   @override
@@ -46,6 +46,7 @@ class _PlayPauseState extends State<PlayPause>
         }
 
         return IconButton(
+          visualDensity: VisualDensity.compact,
           icon: AnimatedIcon(
             icon: AnimatedIcons.pause_play,
             progress: _controller,

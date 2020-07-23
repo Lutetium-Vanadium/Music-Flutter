@@ -1,10 +1,10 @@
-import "dart:io";
-import "package:flutter/material.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
 
-import "package:Music/constants.dart";
-import "package:Music/models/models.dart";
+import 'package:Music/constants.dart';
+import 'package:Music/models/models.dart';
 
-import "./SongView.dart";
+import './SongView.dart';
 
 class SongList extends StatelessWidget {
   final List<SongMetadata> songs;
@@ -50,7 +50,7 @@ class SongList extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: showEmptyText
             ? Text(
-                isNetwork ? "No Results." : "Empty.",
+                isNetwork ? 'No Results.' : 'Empty.',
                 style: Theme.of(context).textTheme.headline4,
               )
             : Container(),
@@ -94,7 +94,7 @@ class SongList extends StatelessWidget {
 
                     return AnimatedCrossFade(
                       firstChild: Image.asset(
-                        "$imgs/music_symbol.png",
+                        '$imgs/music_symbol.png',
                         fit: BoxFit.scaleDown,
                         width: 4 * rem,
                         height: 4 * rem,

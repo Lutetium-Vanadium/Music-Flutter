@@ -1,4 +1,4 @@
-import "package:equatable/equatable.dart";
+import 'package:equatable/equatable.dart';
 
 abstract class SyncStatus extends Equatable {
   const SyncStatus();

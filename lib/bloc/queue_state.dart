@@ -1,4 +1,4 @@
-part of "queue_bloc.dart";
+part of 'queue_bloc.dart';
 
 /// Not to happy with updateData flag on QueueState as it isnt related, but right now I dont know how to communicate between blocs
 @immutable

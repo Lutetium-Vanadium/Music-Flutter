@@ -1,11 +1,11 @@
-import "dart:io";
-import "package:flutter/material.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
 
-import "package:Music/constants.dart";
-import "package:focused_menu/focused_menu.dart";
-import "package:focused_menu/modals.dart";
+import 'package:Music/constants.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 
-import "Mozaic.dart";
+import 'Mozaic.dart';
 
 class CoverImage extends StatelessWidget {
   final String image;
@@ -22,7 +22,7 @@ class CoverImage extends StatelessWidget {
     @required this.title,
     this.image,
     this.images,
-    this.subtitle = "",
+    this.subtitle = '',
     this.isBig = false,
     this.tag,
     this.onClick,
@@ -47,7 +47,7 @@ class CoverImage extends StatelessWidget {
         ? Mozaic(images, imgWidth)
         : isAssetImage
             ? Image.asset(
-                "$imgs/$image",
+                '$imgs/$image',
                 height: imgWidth,
                 width: imgWidth,
               )

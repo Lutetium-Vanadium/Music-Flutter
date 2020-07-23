@@ -1,15 +1,15 @@
-import "dart:io";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/bloc/queue_bloc.dart";
-import "package:Music/helpers/generateSubtitle.dart";
-import "package:Music/models/models.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/bloc/queue_bloc.dart';
+import 'package:Music/helpers/generateSubtitle.dart';
+import 'package:Music/models/models.dart';
 
-import "./widgets/SongPage.dart";
-import "./widgets/Mozaic.dart";
+import './widgets/SongPage.dart';
+import './widgets/Mozaic.dart';
 
 class ArtistPage extends StatefulWidget {
   final ArtistData artist;
@@ -47,7 +47,7 @@ class _ArtistPageState extends State<ArtistPage>
 
   Future<void> getSongs() async {
     var songs = await DatabaseProvider.getDB(context).getSongs(
-      where: "artist LIKE ?",
+      where: 'artist LIKE ?',
       whereArgs: [widget.artist.name],
     );
 
@@ -83,7 +83,7 @@ class _ArtistPageState extends State<ArtistPage>
         controller: _controller,
         title: widget.artist.name,
         subtitle: generateSubtitle(
-          type: "Artist",
+          type: 'Artist',
           numSongs: widget.artist.numSongs,
         ),
         hero: Hero(

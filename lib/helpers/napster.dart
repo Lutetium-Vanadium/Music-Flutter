@@ -1,12 +1,12 @@
-import "dart:convert";
-import "package:http/http.dart" as http;
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
-import "package:Music/models/models.dart";
+import 'package:Music/models/models.dart';
 
-import "./generateUri.dart";
-import "../keys.dart";
+import './generateUri.dart';
+import '../keys.dart';
 
-const SEARCH_LIMIT = "15";
+const SEARCH_LIMIT = '15';
 
 /// getAlbumInfo()
 ///
@@ -18,13 +18,13 @@ Future<NapsterAlbumData> getAlbumInfo(String albumId) async {
     await apiKeys.isReady;
 
     var response = await http
-        .get(generateUri("https://api.napster.com/v2.2/albums/$albumId", {
-      "apikey": apiKeys.napster,
+        .get(generateUri('https://api.napster.com/v2.2/albums/$albumId', {
+      'apikey': apiKeys.napster,
     }));
 
-    if (response.statusCode != 200) throw response.headers["status"];
+    if (response.statusCode != 200) throw response.headers['status'];
 
-    return formatAlbumData(jsonDecode(response.body)["albums"][0]);
+    return formatAlbumData(jsonDecode(response.body)['albums'][0]);
   } catch (error) {
     print(error);
     return null;
@@ -40,18 +40,18 @@ Future<List<NapsterSongData>> search(String query) async {
   try {
     await apiKeys.isReady;
     var response =
-        await http.get(generateUri("https://api.napster.com/v2.2/search", {
-      "apikey": apiKeys.napster,
-      "type": "track",
-      "per_type_limit": SEARCH_LIMIT,
-      "query": query,
+        await http.get(generateUri('https://api.napster.com/v2.2/search', {
+      'apikey': apiKeys.napster,
+      'type': 'track',
+      'per_type_limit': SEARCH_LIMIT,
+      'query': query,
     }));
 
-    if (response.statusCode != 200) throw response.headers["status"];
+    if (response.statusCode != 200) throw response.headers['status'];
 
     var songs = <NapsterSongData>[];
 
-    jsonDecode(response.body)["search"]["data"]["tracks"].forEach((track) {
+    jsonDecode(response.body)['search']['data']['tracks'].forEach((track) {
       songs.add(formatTrackData(track));
     });
 
@@ -68,8 +68,8 @@ Future<List<NapsterSongData>> search(String query) async {
 ///
 /// Returns the id and name for the album object
 NapsterAlbumData formatAlbumData(Map<String, dynamic> data) => NapsterAlbumData(
-      id: data["id"],
-      name: data["name"],
+      id: data['id'],
+      name: data['name'],
     );
 
 /// formatTrackData()
@@ -78,10 +78,10 @@ NapsterAlbumData formatAlbumData(Map<String, dynamic> data) => NapsterAlbumData(
 ///
 /// Returns the song details required from the track data
 NapsterSongData formatTrackData(Map<String, dynamic> track) => NapsterSongData(
-      artist: track["artistName"],
-      title: track["name"],
-      length: track["playbackSeconds"],
+      artist: track['artistName'],
+      title: track['name'],
+      length: track['playbackSeconds'],
       thumbnail:
-          "https://api.napster.com/imageserver/v2/albums/${track["albumId"]}/images/200x200.jpg",
-      albumId: track["albumId"],
+          'https://api.napster.com/imageserver/v2/albums/${track['albumId']}/images/200x200.jpg',
+      albumId: track['albumId'],
     );

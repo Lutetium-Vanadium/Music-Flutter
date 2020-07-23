@@ -1,15 +1,15 @@
-import "package:flutter/cupertino.dart";
-import "package:flutter/material.dart";
-import "package:flutter_bloc/flutter_bloc.dart";
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-import "package:Music/global_providers/database.dart";
-import "package:Music/bloc/data_bloc.dart";
-import "package:Music/models/models.dart";
-import "package:Music/constants.dart";
-import "package:Music/helpers/napster.dart" as napster;
-import "./widgets/Input.dart";
-import "./widgets/SongList.dart";
-import "./widgets/CurrentSongBanner.dart";
+import 'package:Music/global_providers/database.dart';
+import 'package:Music/bloc/data_bloc.dart';
+import 'package:Music/models/models.dart';
+import 'package:Music/constants.dart';
+import 'package:Music/helpers/napster.dart' as napster;
+import './widgets/Input.dart';
+import './widgets/SongList.dart';
+import './widgets/CurrentSongBanner.dart';
 
 class SearchPage extends StatefulWidget {
   final String intitalQuery;
@@ -78,18 +78,18 @@ class _SearchPageState extends State<SearchPage> {
           child: Icon(CupertinoIcons.back),
         ),
         title: Hero(
-          tag: "navbar-title",
+          tag: 'navbar-title',
           child: GestureDetector(
             onTap: Navigator.of(context).pop,
             child: Row(
               children: <Widget>[
                 Image(
-                  image: AssetImage("$imgs/icon.png"),
+                  image: AssetImage('$imgs/icon.png'),
                   fit: BoxFit.scaleDown,
                   height: 2.5 * rem,
                 ),
                 Text(
-                  "Music",
+                  'Music',
                   style: Theme.of(context).textTheme.headline6,
                 ),
               ],
@@ -104,7 +104,7 @@ class _SearchPageState extends State<SearchPage> {
             child: Row(
               children: <Widget>[
                 Input(
-                  placeholder: "Download",
+                  placeholder: 'Download',
                   controller: _textController,
                   autofocus: true,
                   onChange: search,
@@ -133,7 +133,7 @@ class _SearchPageState extends State<SearchPage> {
                   children: [
                     Icon(Icons.error, color: Colors.red),
                     Text(
-                      " Error",
+                      ' Error',
                       style: Theme.of(context).textTheme.headline5,
                     ),
                   ],
@@ -147,14 +147,16 @@ class _SearchPageState extends State<SearchPage> {
                   BlocProvider.of<DataBloc>(context)
                       .add(DownloadSong(songData));
                   scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text("Preparing to download ${songData.title}."),
+                    content: Text('Preparing to download ${songData.title}.'),
                   ));
                 },
                 getIcon: (index) {
                   return BlocBuilder<DataBloc, DataState>(
                     builder: (context, state) {
                       if (state is ProgressNotification &&
-                          state.title == _results[index].title) {
+                          state.id ==
+                              (_results[index].title +
+                                  _results[index].albumId)) {
                         return SizedBox(
                           height: 25,
                           width: 25,
@@ -168,7 +170,7 @@ class _SearchPageState extends State<SearchPage> {
                         );
                       } else {
                         return Image.asset(
-                          "$imgs/download.png",
+                          '$imgs/download.png',
                           height: 1.3 * rem,
                         );
                       }

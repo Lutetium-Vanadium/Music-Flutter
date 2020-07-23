@@ -1,6 +1,6 @@
-import "package:flutter/material.dart";
+import 'package:flutter/material.dart';
 
-import "package:Music/sync.dart";
+import 'package:Music/sync.dart';
 
 class SyncProvider extends StatefulWidget {
   final FirestoreSync syncDatabase;
@@ -20,12 +20,12 @@ class SyncProvider extends StatefulWidget {
     if (result != null) return result.syncDatabase;
     throw FlutterError.fromParts(<DiagnosticsNode>[
       ErrorSummary(
-          "SyncProvider.getSyncDB() called with a context that does not contain a SyncProvider."),
+          'SyncProvider.getSyncDB() called with a context that does not contain a SyncProvider.'),
       ErrorDescription(
-          "No SyncProvider ancestor could be found starting from the context that was passed to SyncProvider.getDb(). "
-          "This usually happens when the context provided is from the same StatefulWidget as that "
-          "whose build function actually creates the SyncProvider widget being sought."),
-      context.describeElement("The context used was")
+          'No SyncProvider ancestor could be found starting from the context that was passed to SyncProvider.getDb(). '
+          'This usually happens when the context provided is from the same StatefulWidget as that '
+          'whose build function actually creates the SyncProvider widget being sought.'),
+      context.describeElement('The context used was')
     ]);
   }
 }

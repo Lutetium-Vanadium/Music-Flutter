@@ -1,5 +1,5 @@
-import "dart:ui";
-import "package:flutter/material.dart";
+import 'dart:ui';
+import 'package:flutter/material.dart';
 
 Future<bool> showConfirm(
     BuildContext context, String title, String text) async {
@@ -87,7 +87,7 @@ class ConfirmBox extends StatelessWidget {
                   horizontal: VisualDensity.minimumDensity,
                   vertical: VisualDensity.compact.vertical,
                 ),
-                child: Text("No"),
+                child: Text('No'),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
               FlatButton(
@@ -95,7 +95,7 @@ class ConfirmBox extends StatelessWidget {
                   horizontal: VisualDensity.minimumDensity,
                   vertical: VisualDensity.compact.vertical,
                 ),
-                child: Text("Yes"),
+                child: Text('Yes'),
                 onPressed: () => Navigator.of(context).pop(true),
               ),
             ],
