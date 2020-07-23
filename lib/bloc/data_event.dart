@@ -16,15 +16,6 @@ class DownloadSong extends DataEvent {
   List<Object> get props => [song];
 }
 
-class DeleteSong extends DataEvent {
-  final SongData song;
-
-  DeleteSong(this.song);
-
-  @override
-  List<Object> get props => [song];
-}
-
 class AddCustomAlbum extends DataEvent {
   final String name;
   final List<String> songs;

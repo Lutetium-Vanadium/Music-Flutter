@@ -81,7 +81,7 @@ class SongView extends StatelessWidget {
                         'Delete ${song.title}',
                         'Are you sure you want to delete ${song.title} by ${song.artist}?',
                       )) {
-                        BlocProvider.of<DataBloc>(context)
+                        BlocProvider.of<QueueBloc>(context)
                             .add(DeleteSong(song));
                       }
                     },

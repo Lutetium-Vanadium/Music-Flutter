@@ -50,3 +50,12 @@ class ToggleLikedSong extends QueueEvent {
   @override
   List<Object> get props => [song];
 }
+
+class DeleteSong extends QueueEvent {
+  final SongData song;
+
+  DeleteSong(this.song);
+
+  @override
+  List<Object> get props => [song];
+}

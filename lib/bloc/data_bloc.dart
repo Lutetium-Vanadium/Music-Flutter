@@ -116,26 +116,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         );
         print(e);
       }
-    } else if (event is DeleteSong) {
-      var songFile = File(event.song.filePath);
-
-      var data = {'numSongs': await db.getNumSongs(event.song.albumId)};
-
-      Future.wait([
-        songFile.delete(),
-        db.deleteSong(event.song.title),
-        db.update(
-          Tables.Albums,
-          data,
-          where: 'id LIKE ?',
-          whereArgs: [event.song.albumId],
-        ),
-      ]);
-
-      syncDb.delete(SyncTables.Songs, event.song.title);
-      syncDb.update(SyncTables.Albums, event.song.albumId, data);
-
-      await db.deleteEmptyAlbums();
     } else if (event is AddCustomAlbum) {
       var album = CustomAlbumData(
         id: await db.nextCustomAlbumId(),

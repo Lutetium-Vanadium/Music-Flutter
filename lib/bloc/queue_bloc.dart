@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -160,6 +161,34 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         await _playSong(_current);
       } else if (event is LoopSongs) {
         _loop = !_loop;
+      } else if (event is DeleteSong) {
+        var songFile = File(event.song.filePath);
+
+        var data = {'numSongs': await db.getNumSongs(event.song.albumId) - 1};
+
+        Future.wait([
+          songFile.delete(),
+          db.deleteSong(event.song.title),
+          db.update(
+            Tables.Albums,
+            data,
+            where: 'id LIKE ?',
+            whereArgs: [event.song.albumId],
+          ),
+        ]);
+
+        _allSongs.removeWhere((s) => s.title == event.song.title);
+
+        var songsIndex = _songs.indexWhere((s) => s.title == event.song.title);
+        if (songsIndex >= 0) {
+          if (songsIndex == _index) _index++;
+          _songs.removeAt(songsIndex);
+        }
+
+        syncDb.delete(SyncTables.Songs, event.song.title);
+        syncDb.update(SyncTables.Albums, event.song.albumId, data);
+
+        await db.deleteEmptyAlbums();
       }
     }
 
