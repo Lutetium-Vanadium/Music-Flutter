@@ -101,7 +101,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
       if (event.shuffle) {
         _songs = _shuffle([...event.songs], cur: event.index);
       } else {
-        _songs = event.songs;
+        _songs = [...event.songs];
       }
 
       await _playSong(_current);
@@ -120,7 +120,7 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
       await db.update(
         Tables.Songs,
-        {'liked': liked},
+        {'liked': liked ? 1 : 0},
         where: 'title LIKE ?',
         whereArgs: [event.song.title],
       );
@@ -181,8 +181,18 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
         var songsIndex = _songs.indexWhere((s) => s.title == event.song.title);
         if (songsIndex >= 0) {
-          if (songsIndex == _index) _index++;
           _songs.removeAt(songsIndex);
+          var sameSong = songsIndex == _index;
+          if (songsIndex == _songs.length) {
+            _index = 0;
+          }
+          if (sameSong) {
+            if (_songs.length > 0) {
+              await _playSong(_current);
+            } else {
+              await audioPlayer.stop();
+            }
+          }
         }
 
         syncDb.delete(SyncTables.Songs, event.song.title);
