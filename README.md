@@ -85,7 +85,7 @@ flutter test
 If you wish to test the app to see if it works, connect a device or run an emulator. To start the `profile` mode app (runs faster than `debug` mode, but doesn't have the developer functionalities), run:
 
 ```sh
-flutter run --profile
+flutter run --profile --flavor dev
 ```
 
 ### Building
@@ -131,7 +131,7 @@ Building APK:
 - 'fat' APK
 
   ```sh
-  flutter build apk
+  flutter build apk --flavor prod
   ```
 
   This will build a 'fat' APK, which contains code compiled for all architectures, which means it can run on all android devices.
@@ -139,12 +139,12 @@ Building APK:
 - Split APKs
 
   ```sh
-  flutter build apk --split-per-abi
+  flutter build apk --split-per-abi --flavor prod
   ```
 
   This will split it into different APKs, based on the architecture which results in smaller app sizes, but it only works on phones with the specific architecture.
 
-Once finished building, the APK will be available at `build/app/outputs/apk/release/app-release.apk`. To install, either transfer the apk to your phone and install, or connect your device via USB Tethering and run:
+Once finished building, the APK will be available at `build/app/outputs/flutter-apk/app-prod-release.apk`. To install, either transfer the apk to your phone and install, or connect your device via USB Tethering and run:
 
 ```sh
 flutter install
@@ -164,4 +164,4 @@ See flutter's [ios](https://flutter.dev/docs/deployment/ios) release documentaio
 
 ### IOS
 
-The app was built with an android testing device and so it may not function fully as intended in ios. In general the UI will look and work the same, but platform specific things like notifications may not. For example, android allows for notifications to show while the app is open, but for ios does not.
+The app was built with an android testing device and so it may not function fully as intended in ios. In general the UI will look and work the same, but platform specific things like notifications may not. For example, android allows for notifications to show while the app is open, but ios does not.

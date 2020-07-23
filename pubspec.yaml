@@ -1,12 +1,12 @@
 name: Music
 description: A new Flutter project.
 
-publish_to: "none"
+publish_to: 'none'
 
-version: 0.0.1+3
+version: 0.0.1+4
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: '>=2.7.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -29,7 +29,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   mockito: ^4.1.1
-  flutter_launcher_icons: "^0.7.3"
+  flutter_launcher_icons: '^0.7.3'
 
 flutter:
   assets:
@@ -42,7 +42,7 @@ flutter:
   uses-material-design: true
 
 flutter_icons:
-  android: "launcher_icon"
+  android: 'launcher_icon'
   ios: true
-  image_path: "assets/icons/icon.png"
-  adaptive_icon_background: "#1a1947"
+  image_path: 'assets/icons/icon.png'
+  adaptive_icon_background: '#1a1947'
