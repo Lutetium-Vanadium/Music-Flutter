@@ -56,6 +56,8 @@
 
   Has all the tests written for the app.
 
+> There is a `ios/Runner/GoogleService-Info.plist` file, this contains a mock `plist` file, for connecting with firebase since the `cloud_firestore` plugin for ios requires that exists, or else wont build. This is not a very good solution.
+
 ## routes
 
 All the relavent pages and pverlays for these are givin within the `lib/routes` directory.

@@ -164,4 +164,8 @@ See flutter's [ios](https://flutter.dev/docs/deployment/ios) release documentaio
 
 ### IOS
 
-The app was built with an android testing device and so it may not function fully as intended in ios. In general the UI will look and work the same, but platform specific things like notifications may not. For example, android allows for notifications to show while the app is open, but ios does not.
+The app was built with an android testing device and so it may not function fully as intended in ios. In general the UI will look and work the same, but platform specific things like notifications may not. For example, android allows for progress notifications while ios does not.
+
+### Firestore
+
+There is a `ios/Runner/GoogleService-Info.plist` file, this contains a mock `plist` file, for connecting with firebase since the `cloud_firestore` plugin for ios requires that exists, or else wont build. This is not a very good solution.

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationHandler {
@@ -33,6 +35,7 @@ class NotificationHandler {
 
   Future<void> showProgressNotification(int progress, int maxProgress,
       {String title = 'Progress', String body = '', String path}) async {
+    if (Platform.isIOS) return;
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
       'progress channel',
       'progress channel',
