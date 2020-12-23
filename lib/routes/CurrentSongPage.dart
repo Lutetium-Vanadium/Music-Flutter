@@ -126,14 +126,16 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                   ),
                 ),
                 Expanded(
-                  child: SongList(
-                    songs: displaceWithoutIndex(state.songs, state.index),
-                    onClick: (song, index) {
-                      // index is relative
-                      BlocProvider.of<QueueBloc>(context).add(JumpToSong(
-                        (state.index + index + 1) % state.songs.length,
-                      ));
-                    },
+                  child: SafeArea(
+                    child: SongList(
+                      songs: displaceWithoutIndex(state.songs, state.index),
+                      onClick: (song, index) {
+                        // index is relative
+                        BlocProvider.of<QueueBloc>(context).add(JumpToSong(
+                          (state.index + index + 1) % state.songs.length,
+                        ));
+                      },
+                    ),
                   ),
                 ),
               ],
