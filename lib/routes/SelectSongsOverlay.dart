@@ -117,6 +117,13 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
                       hintStyle: TextStyle(color: Theme.of(context).hintColor),
                     ),
                     textAlign: TextAlign.center,
+                    onChanged: (_) {
+                      if (cantSubmit && _numSelected > 0) {
+                        // cantSubmit was true because the name was empty. Refresh the widget to
+                        // show that you can submit
+                        setState(() {});
+                      }
+                    },
                   )
                 : Text(
                     widget.album.name,
