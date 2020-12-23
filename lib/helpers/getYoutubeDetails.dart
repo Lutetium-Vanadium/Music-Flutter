@@ -1,6 +1,6 @@
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
-import 'package:Music/models/models.dart';
+import 'package:music/models/models.dart';
 
 /// getYoutubeId()
 ///

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'package:Music/models/models.dart';
+import 'package:music/models/models.dart';
 
 class DatabaseProvider extends StatelessWidget {
   final Widget child;

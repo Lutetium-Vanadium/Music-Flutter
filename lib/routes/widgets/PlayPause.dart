@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:Music/global_providers/audio_player.dart';
+import 'package:music/global_providers/audio_player.dart';
 
 class PlayPause extends StatefulWidget {
   @override

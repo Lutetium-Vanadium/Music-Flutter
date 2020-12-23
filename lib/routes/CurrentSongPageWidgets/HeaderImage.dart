@@ -2,7 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 
-import 'package:Music/models/song_data.dart';
+import 'package:music/models/song_data.dart';
 
 class HeaderImage extends StatefulWidget {
   final SongData song;

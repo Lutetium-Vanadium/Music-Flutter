@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/bloc/data_bloc.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/constants.dart';
-import 'package:Music/helpers/napster.dart' as napster;
+import 'package:music/global_providers/database.dart';
+import 'package:music/bloc/data_bloc.dart';
+import 'package:music/models/models.dart';
+import 'package:music/constants.dart';
+import 'package:music/helpers/napster.dart' as napster;
 import './widgets/Input.dart';
 import './widgets/SongList.dart';
 import './widgets/CurrentSongBanner.dart';
@@ -26,7 +26,6 @@ class _SearchPageState extends State<SearchPage> {
   bool _isSearching = false;
   bool _errored = false;
   TextEditingController _textController;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   var _titles = Set<String>();
 
   Future<void> search(String query) async {
@@ -69,7 +68,6 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: false,
@@ -149,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
                 onClick: (songData, index) {
                   BlocProvider.of<DataBloc>(context)
                       .add(DownloadSong(songData));
-                  scaffoldKey.currentState.showSnackBar(SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                     content: Text('Preparing to download ${songData.title}.'),
                   ));
                 },

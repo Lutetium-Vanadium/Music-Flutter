@@ -1,10 +1,10 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:Music/models/pair.dart';
-import 'package:Music/helpers/displace.dart' as displace;
-import 'package:Music/helpers/formatLength.dart' as formatLength;
-import 'package:Music/helpers/generateSubtitle.dart' as subtitle;
-import 'package:Music/helpers/generateUri.dart' as uri;
+import 'package:music/models/pair.dart';
+import 'package:music/helpers/displace.dart' as displace;
+import 'package:music/helpers/formatLength.dart' as formatLength;
+import 'package:music/helpers/generateSubtitle.dart' as subtitle;
+import 'package:music/helpers/generateUri.dart' as uri;
 
 void main() {
   group('Displace Tests', () {

@@ -141,19 +141,19 @@ class _MainPageState extends State<MainPage> {
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
-                title: Text('Home'),
+                label: 'Home',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.music_note),
-                title: Text('My Music'),
+                label: 'My Music',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.library_music),
-                title: Text('Albums'),
+                label: 'Albums',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.people),
-                title: Text('Artists'),
+                label: 'Artists',
               ),
             ],
           ),

@@ -54,6 +54,10 @@ TextTheme createTextTheme(Color col) {
 
 var textTheme = createTextTheme(Colors.white);
 
+var textSelectionTheme = TextSelectionThemeData(
+  cursorColor: Colors.grey[100],
+);
+
 var themeData = ThemeData(
   primaryColor: Color.fromRGBO(50, 50, 50, 1),
   accentColor: Color.fromRGBO(23, 99, 212, 1),
@@ -68,7 +72,6 @@ var themeData = ThemeData(
   ),
   buttonColor: Color.fromRGBO(18, 91, 193, 1),
   bottomAppBarColor: Color.fromRGBO(27, 27, 27, 1),
-  cursorColor: Colors.grey[100],
   hintColor: Colors.grey[400],
   canvasColor: Color.fromRGBO(27, 27, 27, 1),
   accentTextTheme: createTextTheme(Color.fromRGBO(71, 135, 231, 1)),

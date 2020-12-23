@@ -65,13 +65,16 @@ class App extends StatelessWidget {
                 FocusScope.of(notification.context).unfocus();
                 return true;
               },
-              child: MaterialApp(
-                title: 'Music',
-                theme: themeData,
-                darkTheme: themeData,
-                initialRoute: '/',
-                onGenerateRoute: Router.generateRoute,
-                themeMode: ThemeMode.dark,
+              child: TextSelectionTheme(
+                data: textSelectionTheme,
+                child: MaterialApp(
+                  title: 'Music',
+                  theme: themeData,
+                  darkTheme: themeData,
+                  initialRoute: '/',
+                  onGenerateRoute: MusicRouter.generateRoute,
+                  themeMode: ThemeMode.dark,
+                ),
               ),
             ),
           ),

@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:Music/sync.dart';
-import 'package:Music/notifications.dart';
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/helpers/downloader.dart';
-import 'package:Music/helpers/getYoutubeDetails.dart';
-import 'package:Music/helpers/updateAlbum.dart';
+import 'package:music/sync.dart';
+import 'package:music/notifications.dart';
+import 'package:music/global_providers/database.dart';
+import 'package:music/models/models.dart';
+import 'package:music/helpers/downloader.dart';
+import 'package:music/helpers/getYoutubeDetails.dart';
+import 'package:music/helpers/updateAlbum.dart';
 
 part 'data_event.dart';
 part 'data_state.dart';

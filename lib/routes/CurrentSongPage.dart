@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:palette_generator/palette_generator.dart';
 
-import 'package:Music/global_providers/audio_player.dart';
-import 'package:Music/helpers/displace.dart';
-import 'package:Music/helpers/formatLength.dart';
-import 'package:Music/bloc/queue_bloc.dart';
+import 'package:music/global_providers/audio_player.dart';
+import 'package:music/helpers/displace.dart';
+import 'package:music/helpers/formatLength.dart';
+import 'package:music/bloc/queue_bloc.dart';
 
 import './widgets/SongList.dart';
 import './CurrentSongPageWidgets/HeaderImage.dart';

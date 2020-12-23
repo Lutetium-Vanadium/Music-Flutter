@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:Music/models/models.dart';
+import 'package:music/models/models.dart';
 
 void main() {
   group('Song Data', () {
