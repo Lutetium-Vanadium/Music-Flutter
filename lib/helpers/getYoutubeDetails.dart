@@ -14,10 +14,8 @@ Future<List<YoutubeDetails>> getYoutubeDetails(
     var yt = YoutubeExplode();
     var i = 0;
 
-    var res = await yt.search
-        .getVideosAsync(query)
-        .takeWhile((_) => i++ < 5)
-        .toList();
+    var res =
+        await yt.search.getVideos(query).takeWhile((_) => i++ < 5).toList();
 
     yt.close();
     return res
