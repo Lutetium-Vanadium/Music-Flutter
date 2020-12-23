@@ -161,7 +161,11 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
     return InkWell(
       onTap: () {
         setState(() {
-          _selected = index;
+          if (_selected == index) {
+            _selected = null;
+          } else {
+            _selected = index;
+          }
         });
       },
       splashFactory: CustomSplashFactory(),
