@@ -25,32 +25,26 @@ class OverlayPageRoute<T> extends PageRoute<T> {
         CurvedAnimation(curve: Curves.easeOutCubic, parent: animation));
 
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: Color.fromRGBO(0, 0, 0, 0.7),
       body: GestureDetector(
         onTap: Navigator.of(context).pop,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(
-            sigmaX: 4,
-            sigmaY: 4,
-          ),
-          child: Container(
-            width: size.width,
-            height: size.height,
-            color: Theme.of(context).backgroundColor.withOpacity(0.2),
-            child: GestureDetector(
-              onTap: () {},
-              child: SlideTransition(
-                position: tween,
-                child: FractionallySizedBox(
-                  alignment: Alignment.bottomCenter,
-                  widthFactor: 1,
-                  heightFactor: 0.55,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.vertical(top: radius),
-                    child: Container(
-                      color: Theme.of(context).colorScheme.secondaryVariant,
-                      child: child,
-                    ),
+        child: Container(
+          width: size.width,
+          height: size.height,
+          color: Theme.of(context).backgroundColor.withOpacity(0.2),
+          child: GestureDetector(
+            onTap: () {},
+            child: SlideTransition(
+              position: tween,
+              child: FractionallySizedBox(
+                alignment: Alignment.bottomCenter,
+                widthFactor: 1,
+                heightFactor: 0.55,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.vertical(top: radius),
+                  child: Container(
+                    color: Theme.of(context).colorScheme.secondaryVariant,
+                    child: child,
                   ),
                 ),
               ),
