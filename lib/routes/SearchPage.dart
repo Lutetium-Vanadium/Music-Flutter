@@ -23,19 +23,22 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<NapsterSongData> _results;
+  bool _isSearching = false;
   bool _errored = false;
   TextEditingController _textController;
   final scaffoldKey = GlobalKey<ScaffoldState>();
   var _titles = Set<String>();
 
   Future<void> search(String query) async {
-    if (query.length % 2 == 1) {
+    if (!_isSearching) {
+      _isSearching = true;
       var res = await widget.search(query);
       res?.removeWhere((song) => _titles.contains(song.title));
       if (!mounted) return;
       setState(() {
         _errored = res == null;
         _results = res;
+        _isSearching = false;
       });
     }
   }
