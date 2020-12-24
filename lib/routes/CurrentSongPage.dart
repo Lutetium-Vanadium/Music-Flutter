@@ -1,7 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:palette_generator/palette_generator.dart';
 
 import 'package:music/global_providers/audio_player.dart';
 import 'package:music/helpers/displace.dart';
@@ -18,38 +16,6 @@ class CurrentSongPage extends StatefulWidget {
 }
 
 class _CurrentSongPageState extends State<CurrentSongPage> {
-  String _albumId;
-  Color _colour = Colors.transparent;
-
-  Future<Color> generateColour(String path) async {
-    var paletteGenerator =
-        await PaletteGenerator.fromImageProvider(FileImage(File(path)));
-
-    if (paletteGenerator.dominantColor != null) {
-      return paletteGenerator.dominantColor.color;
-    }
-    if (paletteGenerator.lightMutedColor != null) {
-      return paletteGenerator.lightMutedColor.color;
-    }
-    if (paletteGenerator.lightVibrantColor != null) {
-      return paletteGenerator.lightVibrantColor.color;
-    }
-    if (paletteGenerator.mutedColor != null) {
-      return paletteGenerator.mutedColor.color;
-    }
-    if (paletteGenerator.vibrantColor != null) {
-      return paletteGenerator.vibrantColor.color;
-    }
-    if (paletteGenerator.darkMutedColor != null) {
-      return paletteGenerator.darkMutedColor.color;
-    }
-    if (paletteGenerator.darkVibrantColor != null) {
-      return paletteGenerator.darkVibrantColor.color;
-    }
-
-    return Color(0xFF323232);
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<QueueBloc, QueueState>(
@@ -60,26 +26,12 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
           var song = state.song;
           var width10 = MediaQuery.of(context).size.width / 10;
 
-          if (_albumId != song.albumId) {
-            generateColour(song.thumbnail).then(
-              (colour) {
-                if (mounted) {
-                  setState(() {
-                    _colour = colour;
-                    _albumId = song.albumId;
-                  });
-                }
-              },
-            );
-          }
-
           return Material(
             color: Theme.of(context).backgroundColor,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 HeaderImage(
-                  colour: _colour,
                   song: song,
                 ),
                 SizedBox(

@@ -54,15 +54,12 @@ TextTheme createTextTheme(Color col) {
 
 var textTheme = createTextTheme(Colors.white);
 
-var textSelectionTheme = TextSelectionThemeData(
-  cursorColor: Colors.grey[100],
-);
-
 var themeData = ThemeData(
   primaryColor: Color.fromRGBO(50, 50, 50, 1),
   accentColor: Color.fromRGBO(23, 99, 212, 1),
   backgroundColor: Color.fromRGBO(20, 20, 20, 1),
   textTheme: textTheme,
+  cursorColor: Colors.grey[100],
   appBarTheme: AppBarTheme(
     elevation: 0,
   ),

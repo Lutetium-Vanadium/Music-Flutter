@@ -147,7 +147,7 @@ class _SearchPageState extends State<SearchPage> {
                 onClick: (songData, index) {
                   BlocProvider.of<DataBloc>(context)
                       .add(DownloadSong(songData));
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  Scaffold.of(context).showSnackBar(SnackBar(
                     content: Text('Preparing to download ${songData.title}.'),
                   ));
                 },

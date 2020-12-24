@@ -6,9 +6,8 @@ import 'package:music/models/song_data.dart';
 
 class HeaderImage extends StatefulWidget {
   final SongData song;
-  final Color colour;
 
-  HeaderImage({this.song, this.colour});
+  HeaderImage({this.song});
 
   @override
   _HeaderImageState createState() => _HeaderImageState();
