@@ -5,7 +5,7 @@ import 'package:music/helpers/displace.dart' as displace;
 import 'package:music/helpers/formatLength.dart' as formatLength;
 import 'package:music/helpers/generateSubtitle.dart' as subtitle;
 import 'package:music/helpers/generateUri.dart' as uri;
-import 'package:music/helpers/version.dart' as version;
+import 'package:music/helpers/version.dart';
 
 void main() {
   group('Displace Tests', () {
@@ -117,27 +117,92 @@ void main() {
 
   group('Version', () {
     test('Parse simple version', () {
-      expect(version.Version.fromString('1.1.1+2'),
-          version.Version(major: 1, minor: 1, patch: 1, build: 2));
+      expect(Version.fromString('1.1.1+2'),
+          Version(major: 1, minor: 1, patch: 1, build: 2));
     });
 
     test('Parse no build', () {
-      expect(version.Version.fromString('1.1.1'),
-          version.Version(major: 1, minor: 1, patch: 1));
+      expect(
+          Version.fromString('1.1.1'), Version(major: 1, minor: 1, patch: 1));
     });
 
     test('Fail parse illegal', () {
-      expect(version.Version.fromString('1+1.1'), null);
+      expect(Version.fromString('1+1.1'), null);
     });
 
     test('Use provided build', () {
-      expect(version.Version.fromString('1.1.1', 2),
-          version.Version(major: 1, minor: 1, patch: 1, build: 2));
+      expect(Version.fromString('1.1.1', 2),
+          Version(major: 1, minor: 1, patch: 1, build: 2));
     });
 
     test('Override provided build', () {
-      expect(version.Version.fromString('1.1.1+3', 2),
-          version.Version(major: 1, minor: 1, patch: 1, build: 3));
+      expect(Version.fromString('1.1.1+3', 2),
+          Version(major: 1, minor: 1, patch: 1, build: 3));
+    });
+
+    test('Major version difference', () {
+      var baseVersion = Version(major: 1, minor: 0, patch: 0);
+
+      var versions = [
+        [Version(major: 0, minor: 0, patch: 0), true, false, false],
+        [Version(major: 1, minor: 0, patch: 0), false, true, false],
+        [Version(major: 2, minor: 0, patch: 0), false, false, true],
+      ];
+
+      for (var version in versions) {
+        expect((version[0] as Version) < baseVersion, version[1]);
+        expect((version[0] as Version) == baseVersion, version[2]);
+        expect((version[0] as Version) > baseVersion, version[3]);
+      }
+    });
+
+    test('Minor version difference', () {
+      var baseVersion = Version(major: 0, minor: 1, patch: 0);
+
+      var versions = [
+        [Version(major: 0, minor: 0, patch: 0), true, false, false],
+        [Version(major: 0, minor: 1, patch: 0), false, true, false],
+        [Version(major: 0, minor: 2, patch: 0), false, false, true],
+      ];
+
+      for (var version in versions) {
+        expect((version[0] as Version) < baseVersion, version[1]);
+        expect((version[0] as Version) == baseVersion, version[2]);
+        expect((version[0] as Version) > baseVersion, version[3]);
+      }
+    });
+
+    test('Patch version difference', () {
+      var baseVersion = Version(major: 0, minor: 0, patch: 1);
+
+      var versions = [
+        [Version(major: 0, minor: 0, patch: 0), true, false, false],
+        [Version(major: 0, minor: 0, patch: 1), false, true, false],
+        [Version(major: 0, minor: 0, patch: 2), false, false, true],
+      ];
+
+      for (var version in versions) {
+        expect((version[0] as Version) < baseVersion, version[1]);
+        expect((version[0] as Version) == baseVersion, version[2]);
+        expect((version[0] as Version) > baseVersion, version[3]);
+      }
+    });
+
+    test('Build version difference', () {
+      var baseVersion = Version(major: 0, minor: 0, patch: 0, build: 1);
+
+      var versions = [
+        [Version(major: 0, minor: 0, patch: 0), true, false, false],
+        [Version(major: 0, minor: 0, patch: 0, build: 0), true, false, false],
+        [Version(major: 0, minor: 0, patch: 0, build: 1), false, true, false],
+        [Version(major: 0, minor: 0, patch: 0, build: 2), false, false, true],
+      ];
+
+      for (var version in versions) {
+        expect((version[0] as Version) < baseVersion, version[1]);
+        expect((version[0] as Version) == baseVersion, version[2]);
+        expect((version[0] as Version) > baseVersion, version[3]);
+      }
     });
   });
 }

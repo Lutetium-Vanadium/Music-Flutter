@@ -21,7 +21,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   final DatabaseFunctions db;
   final NotificationHandler notificationHandler;
   final FirestoreSync syncDb;
-  Updater updater;
+  final Updater updater;
+  Timer timer;
 
   DataBloc(
       {DatabaseFunctions database,
@@ -34,13 +35,14 @@ class DataBloc extends Bloc<DataEvent, DataState> {
     this.updater.init();
     this.checkForUpdate();
 
-    Timer.periodic(Duration(hours: 2), (_) {
+    this.timer = Timer.periodic(Duration(hours: 2), (_) {
       this.checkForUpdate();
     });
   }
 
   void checkForUpdate() async {
-    var version = updater.checkForUpdate();
+    var version = await updater.checkForUpdate();
+
     if (version != null) {
       notificationHandler.showNotification(
           title: 'Update available',

@@ -132,10 +132,12 @@ class Updater {
   }
 
   Future<Version> checkForUpdate() async {
-    while (version == null) {
+    while (this.version == null) {
       await Future.delayed(Duration(seconds: 1));
     }
+
     var latestVersion = await getLatestTagVersion();
+
     if (latestVersion > this.version) {
       return latestVersion;
     }
