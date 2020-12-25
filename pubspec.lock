@@ -35,7 +35,7 @@ packages:
       name: assets_audio_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6+5"
+    version: "2.0.13"
   assets_audio_player_web:
     dependency: transitive
     description:
@@ -285,14 +285,14 @@ packages:
       name: flutter_local_notifications
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.4+1"
+    version: "3.0.2"
   flutter_local_notifications_platform_interface:
     dependency: transitive
     description:
       name: flutter_local_notifications_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.1"
+    version: "2.0.0+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -609,6 +609,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.2"
+  timezone:
+    dependency: transitive
+    description:
+      name: timezone
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.9"
   typed_data:
     dependency: transitive
     description:
