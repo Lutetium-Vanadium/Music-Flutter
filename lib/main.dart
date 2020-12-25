@@ -11,6 +11,7 @@ import './sync.dart';
 import './global_providers/database.dart';
 import './global_providers/sync_provider.dart';
 import './global_providers/audio_player.dart';
+import 'helpers/version.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,8 +30,11 @@ class App extends StatelessWidget {
   final audioPlayer = AudioPlayer();
   final notificationHandler = NotificationHandler();
   final FirestoreSync firestoreSync;
+  final Updater updater;
 
-  App(this.db) : firestoreSync = FirestoreSync(db);
+  App(this.db)
+      : firestoreSync = FirestoreSync(db),
+        updater = Updater();
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +45,7 @@ class App extends StatelessWidget {
             database: db,
             notificationHandler: notificationHandler,
             syncDatabase: firestoreSync,
+            updater: updater,
           );
           firestoreSync.onUpdate = () => bloc.add(ForceUpdate());
           return bloc;

@@ -5,6 +5,7 @@ import 'package:music/helpers/displace.dart' as displace;
 import 'package:music/helpers/formatLength.dart' as formatLength;
 import 'package:music/helpers/generateSubtitle.dart' as subtitle;
 import 'package:music/helpers/generateUri.dart' as uri;
+import 'package:music/helpers/version.dart' as version;
 
 void main() {
   group('Displace Tests', () {
@@ -111,6 +112,32 @@ void main() {
         }).toString(),
         '$base?hello=world&param3=value3&param4=value4',
       );
+    });
+  });
+
+  group('Version', () {
+    test('Parse simple version', () {
+      expect(version.Version.fromString('1.1.1+2'),
+          version.Version(major: 1, minor: 1, patch: 1, build: 2));
+    });
+
+    test('Parse no build', () {
+      expect(version.Version.fromString('1.1.1'),
+          version.Version(major: 1, minor: 1, patch: 1));
+    });
+
+    test('Fail parse illegal', () {
+      expect(version.Version.fromString('1+1.1'), null);
+    });
+
+    test('Use provided build', () {
+      expect(version.Version.fromString('1.1.1', 2),
+          version.Version(major: 1, minor: 1, patch: 1, build: 2));
+    });
+
+    test('Override provided build', () {
+      expect(version.Version.fromString('1.1.1+3', 2),
+          version.Version(major: 1, minor: 1, patch: 1, build: 3));
     });
   });
 }
