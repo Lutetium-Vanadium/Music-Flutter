@@ -1,17 +1,20 @@
-import 'package:Music/models/album_data.dart';
-import 'package:Music/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
+import 'package:music/helpers/version.dart';
 
-import 'package:Music/sync.dart';
-import 'package:Music/notifications.dart';
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/global_providers/audio_player.dart';
-import 'package:Music/models/song_data.dart';
-import 'package:Music/bloc/data_bloc.dart';
-import 'package:Music/bloc/queue_bloc.dart';
+import 'package:music/models/album_data.dart';
+import 'package:music/models/models.dart';
+import 'package:music/sync.dart';
+import 'package:music/notifications.dart';
+import 'package:music/global_providers/database.dart';
+import 'package:music/global_providers/audio_player.dart';
+import 'package:music/models/song_data.dart';
+import 'package:music/bloc/data_bloc.dart';
+import 'package:music/bloc/queue_bloc.dart';
 
 class MockDatabaseFunctions extends Mock implements DatabaseFunctions {}
+
+class MockUpdater extends Mock implements Updater {}
 
 class MockNotificationHandler extends Mock implements NotificationHandler {}
 
@@ -27,6 +30,7 @@ void main() {
     MockDatabaseFunctions db;
     MockNotificationHandler nf;
     MockFirestoreSync fs;
+    MockUpdater up;
 
     final mockAlbum = CustomAlbumData(id: 'id', name: 'n', songs: []);
 
@@ -34,8 +38,13 @@ void main() {
       db = MockDatabaseFunctions();
       nf = MockNotificationHandler();
       fs = MockFirestoreSync();
+      up = MockUpdater();
 
-      bloc = DataBloc(database: db, notificationHandler: nf, syncDatabase: fs);
+      bloc = DataBloc(
+          database: db, notificationHandler: nf, syncDatabase: fs, updater: up);
+
+      when(up.init()).thenAnswer((_) => Future.value(null));
+      when(up.checkForUpdate()).thenAnswer((_) => Future.value(null));
     });
 
     tearDown(() {

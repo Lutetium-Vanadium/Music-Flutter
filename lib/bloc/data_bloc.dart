@@ -5,13 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:Music/sync.dart';
-import 'package:Music/notifications.dart';
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/helpers/downloader.dart';
-import 'package:Music/helpers/getYoutubeDetails.dart';
-import 'package:Music/helpers/updateAlbum.dart';
+import 'package:music/sync.dart';
+import 'package:music/notifications.dart';
+import 'package:music/global_providers/database.dart';
+import 'package:music/models/models.dart';
+import 'package:music/helpers/downloader.dart';
+import 'package:music/helpers/getYoutubeDetails.dart';
+import 'package:music/helpers/updateAlbum.dart';
+import 'package:music/helpers/version.dart';
 
 part 'data_event.dart';
 part 'data_state.dart';
@@ -20,14 +21,33 @@ class DataBloc extends Bloc<DataEvent, DataState> {
   final DatabaseFunctions db;
   final NotificationHandler notificationHandler;
   final FirestoreSync syncDb;
+  Updater updater;
 
   DataBloc(
       {DatabaseFunctions database,
       this.notificationHandler,
-      FirestoreSync syncDatabase})
+      FirestoreSync syncDatabase,
+      this.updater})
       : db = database,
         syncDb = syncDatabase,
-        super(InitialData());
+        super(InitialData()) {
+    this.updater.init();
+    this.checkForUpdate();
+
+    Timer.periodic(Duration(hours: 2), (_) {
+      this.checkForUpdate();
+    });
+  }
+
+  void checkForUpdate() async {
+    var version = updater.checkForUpdate();
+    if (version != null) {
+      notificationHandler.showNotification(
+          title: 'Update available',
+          body:
+              'Visit https://github.com/Lutetium-Vanadium/Music-Flutter/releases/$version for more information');
+    }
+  }
 
   @override
   Stream<DataState> mapEventToState(

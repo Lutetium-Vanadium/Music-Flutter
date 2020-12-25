@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart' as url;
 import 'package:http/http.dart' as http;
 
-import 'package:Music/keys.dart';
+import 'package:music/keys.dart';
 
 const napsterDescription =
     'This is used to get data, such as title, artist and the album picture, about every Song and Album.';

@@ -2,10 +2,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/bloc/queue_bloc.dart';
-import 'package:Music/helpers/displace.dart';
-import 'package:Music/constants.dart';
-import 'package:Music/models/models.dart';
+import 'package:music/bloc/queue_bloc.dart';
+import 'package:music/helpers/displace.dart';
+import 'package:music/constants.dart';
+import 'package:music/models/models.dart';
 
 import './SongView.dart';
 

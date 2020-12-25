@@ -29,7 +29,9 @@ class NotificationHandler {
           // NOTE do something proper here
         });
     var initializationSettings = InitializationSettings(
-        initializationSettingsAndroid, initializationSettingsIOS);
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
+    );
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
@@ -41,8 +43,8 @@ class NotificationHandler {
       'progress channel',
       'progress channel description',
       channelShowBadge: false,
-      importance: Importance.Max,
-      priority: Priority.High,
+      importance: Importance.max,
+      priority: Priority.high,
       onlyAlertOnce: true,
       largeIcon: FilePathAndroidBitmap(path),
       showProgress: true,
@@ -51,8 +53,7 @@ class NotificationHandler {
     );
 
     var platformChannelSpecifics = NotificationDetails(
-      androidPlatformChannelSpecifics,
-      null,
+      android: androidPlatformChannelSpecifics,
     );
 
     await flutterLocalNotificationsPlugin.show(
@@ -70,14 +71,15 @@ class NotificationHandler {
       'your channel id',
       'your channel name',
       'your channel description',
-      importance: Importance.Max,
+      importance: Importance.max,
       largeIcon: FilePathAndroidBitmap(path),
-      priority: Priority.High,
+      priority: Priority.high,
       ticker: 'ticker',
     );
     var iOSPlatformChannelSpecifics = IOSNotificationDetails();
     var platformChannelSpecifics = NotificationDetails(
-        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin
         .show(0, title, body, platformChannelSpecifics, payload: 'item x');
   }

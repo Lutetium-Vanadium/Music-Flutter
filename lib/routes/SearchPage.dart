@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/bloc/data_bloc.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/constants.dart';
-import 'package:Music/helpers/napster.dart' as napster;
+import 'package:music/global_providers/database.dart';
+import 'package:music/bloc/data_bloc.dart';
+import 'package:music/models/models.dart';
+import 'package:music/constants.dart';
+import 'package:music/helpers/napster.dart' as napster;
 import './widgets/Input.dart';
 import './widgets/SongList.dart';
 import './widgets/CurrentSongBanner.dart';
@@ -23,19 +23,22 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   List<NapsterSongData> _results;
+  bool _isSearching = false;
   bool _errored = false;
   TextEditingController _textController;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
   var _titles = Set<String>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> search(String query) async {
-    if (query.length % 2 == 1) {
+    if (!_isSearching) {
+      _isSearching = true;
       var res = await widget.search(query);
       res?.removeWhere((song) => _titles.contains(song.title));
       if (!mounted) return;
       setState(() {
         _errored = res == null;
         _results = res;
+        _isSearching = false;
       });
     }
   }

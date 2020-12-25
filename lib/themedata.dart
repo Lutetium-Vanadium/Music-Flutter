@@ -59,6 +59,7 @@ var themeData = ThemeData(
   accentColor: Color.fromRGBO(23, 99, 212, 1),
   backgroundColor: Color.fromRGBO(20, 20, 20, 1),
   textTheme: textTheme,
+  cursorColor: Colors.grey[100],
   appBarTheme: AppBarTheme(
     elevation: 0,
   ),
@@ -68,7 +69,6 @@ var themeData = ThemeData(
   ),
   buttonColor: Color.fromRGBO(18, 91, 193, 1),
   bottomAppBarColor: Color.fromRGBO(27, 27, 27, 1),
-  cursorColor: Colors.grey[100],
   hintColor: Colors.grey[400],
   canvasColor: Color.fromRGBO(27, 27, 27, 1),
   accentTextTheme: createTextTheme(Color.fromRGBO(71, 135, 231, 1)),

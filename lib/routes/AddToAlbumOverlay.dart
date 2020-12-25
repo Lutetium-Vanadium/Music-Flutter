@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/bloc/data_bloc.dart';
-import 'package:Music/constants.dart';
-import 'package:Music/CustomSplashFactory.dart';
+import 'package:music/global_providers/database.dart';
+import 'package:music/models/models.dart';
+import 'package:music/bloc/data_bloc.dart';
+import 'package:music/constants.dart';
+import 'package:music/CustomSplashFactory.dart';
 
 class AddToAlbumOverlay extends StatefulWidget {
   final SongData song;
@@ -161,7 +161,11 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
     return InkWell(
       onTap: () {
         setState(() {
-          _selected = index;
+          if (_selected == index) {
+            _selected = null;
+          } else {
+            _selected = index;
+          }
         });
       },
       splashFactory: CustomSplashFactory(),

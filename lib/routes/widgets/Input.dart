@@ -20,7 +20,7 @@ class Input extends StatelessWidget {
       child: TextField(
         autofocus: autofocus,
         style: Theme.of(context).textTheme.bodyText2,
-        cursorColor: Theme.of(context).cursorColor,
+        cursorColor: TextSelectionTheme.of(context).cursorColor,
         maxLines: 1,
         controller: controller,
         decoration: InputDecoration(

@@ -6,10 +6,10 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
-import 'package:Music/sync.dart';
-import 'package:Music/global_providers/audio_player.dart';
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/models/models.dart';
+import 'package:music/sync.dart';
+import 'package:music/global_providers/audio_player.dart';
+import 'package:music/global_providers/database.dart';
+import 'package:music/models/models.dart';
 
 part 'queue_event.dart';
 part 'queue_state.dart';

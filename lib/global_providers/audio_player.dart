@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:rxdart/rxdart.dart';
 
-import 'package:Music/constants.dart';
-import 'package:Music/models/song_data.dart';
+import 'package:music/constants.dart';
+import 'package:music/models/song_data.dart';
 
 class AudioPlayerProvider extends StatelessWidget {
   final Widget child;

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/bloc/queue_bloc.dart';
+import 'package:music/bloc/queue_bloc.dart';
 
 import './PlayPause.dart';
 
@@ -27,6 +27,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
       return Container();
     } else if (state is PlayingQueue) {
       var song = state.song;
+      var width = MediaQuery.of(context).size.width;
 
       return GestureDetector(
         behavior: HitTestBehavior.opaque,
@@ -72,7 +73,7 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
                   children: <Widget>[
                     ConstrainedBox(
                       constraints: BoxConstraints(
-                        maxWidth: MediaQuery.of(context).size.width / 3,
+                        maxWidth: width / 3,
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(4),
@@ -88,25 +89,30 @@ class _CurrentSongBannerState extends State<CurrentSongBanner> {
                     SizedBox(
                       width: 10,
                     ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          song.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        Text(
-                          song.artist,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: Theme.of(context).textTheme.subtitle2,
-                        ),
-                      ],
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxWidth: 0.7 * width,
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            song.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            song.artist,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.subtitle2,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

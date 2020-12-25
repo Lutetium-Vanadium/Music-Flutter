@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:Music/global_providers/sync_provider.dart';
-import 'package:Music/sync_status.dart';
-import 'package:Music/sync.dart';
+import 'package:music/global_providers/sync_provider.dart';
+import 'package:music/sync_status.dart';
+import 'package:music/sync.dart';
 
 class SyncStatusPage extends StatefulWidget {
   @override

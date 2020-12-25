@@ -15,7 +15,7 @@ import './routes/AddToAlbumOverlay.dart';
 import './routes/RegisterApiKeys.dart';
 import './routes/SyncStatus.dart';
 
-class Router {
+class MusicRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
       case '/':

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:Music/sync.dart';
+import 'package:music/sync.dart';
 
 class SyncProvider extends StatefulWidget {
   final FirestoreSync syncDatabase;

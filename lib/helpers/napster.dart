@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
-import 'package:Music/models/models.dart';
+import 'package:music/models/models.dart';
 
 import './generateUri.dart';
 import '../keys.dart';

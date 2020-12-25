@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/routes/widgets/PlayPause.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/CustomIcons.dart';
-import 'package:Music/bloc/queue_bloc.dart';
+import 'package:music/routes/widgets/PlayPause.dart';
+import 'package:music/models/models.dart';
+import 'package:music/CustomIcons.dart';
+import 'package:music/bloc/queue_bloc.dart';
 
 class ControlBar extends StatelessWidget {
   final SongData song;

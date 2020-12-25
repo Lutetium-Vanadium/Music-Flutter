@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:Music/global_providers/database.dart';
-import 'package:Music/bloc/data_bloc.dart';
-import 'package:Music/models/models.dart';
-import 'package:Music/routes/widgets/SongList.dart';
+import 'package:music/global_providers/database.dart';
+import 'package:music/bloc/data_bloc.dart';
+import 'package:music/models/models.dart';
+import 'package:music/routes/widgets/SongList.dart';
 
 class SelectSongsOverlay extends StatefulWidget {
   final CustomAlbumData album;
@@ -117,6 +117,13 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
                       hintStyle: TextStyle(color: Theme.of(context).hintColor),
                     ),
                     textAlign: TextAlign.center,
+                    onChanged: (_) {
+                      if (cantSubmit && _numSelected > 0) {
+                        // cantSubmit was true because the name was empty. Refresh the widget to
+                        // show that you can submit
+                        setState(() {});
+                      }
+                    },
                   )
                 : Text(
                     widget.album.name,

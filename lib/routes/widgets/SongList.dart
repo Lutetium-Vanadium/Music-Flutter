@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 
-import 'package:Music/constants.dart';
-import 'package:Music/models/models.dart';
+import 'package:music/constants.dart';
+import 'package:music/models/models.dart';
 
 import './SongView.dart';
 
