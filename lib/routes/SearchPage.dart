@@ -27,6 +27,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _errored = false;
   TextEditingController _textController;
   var _titles = Set<String>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   Future<void> search(String query) async {
     if (!_isSearching) {
@@ -68,6 +69,7 @@ class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
         centerTitle: false,
@@ -147,7 +149,7 @@ class _SearchPageState extends State<SearchPage> {
                 onClick: (songData, index) {
                   BlocProvider.of<DataBloc>(context)
                       .add(DownloadSong(songData));
-                  Scaffold.of(context).showSnackBar(SnackBar(
+                  scaffoldKey.currentState.showSnackBar(SnackBar(
                     content: Text('Preparing to download ${songData.title}.'),
                   ));
                 },
