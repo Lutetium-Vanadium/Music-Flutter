@@ -275,6 +275,7 @@ class HeaderImage extends StatelessWidget {
       child: hero,
       builder: (context, child) {
         return Stack(
+          overflow: Overflow.visible,
           fit: StackFit.expand,
           children: [
             child,

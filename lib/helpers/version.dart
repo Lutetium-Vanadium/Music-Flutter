@@ -14,6 +14,9 @@ class Version extends Equatable {
   Version({this.major, this.minor, this.patch, this.build});
 
   static Version fromString(String string, [int build]) {
+    if (string[0] == 'v') {
+      string = string.substring(1);
+    }
     var majorEndIndex = string.indexOf('.');
     if (majorEndIndex < 0) return null;
 
@@ -102,7 +105,7 @@ class Version extends Equatable {
   List<Object> get props => [major, minor, patch, build];
 
   toString() {
-    return '$major.$minor.$patch${build != null ? "+$build" : ""} }';
+    return '$major.$minor.$patch${build != null ? "+$build" : ""}';
   }
 }
 
