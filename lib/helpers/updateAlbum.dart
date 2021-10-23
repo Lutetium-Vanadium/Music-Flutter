@@ -1,6 +1,5 @@
 import 'package:path_provider/path_provider.dart';
 
-import 'package:music/sync.dart';
 import 'package:music/global_providers/database.dart';
 import 'package:music/models/models.dart';
 
@@ -10,9 +9,8 @@ Future<void> updateAlbum(
   String albumId,
   String artist,
   DatabaseFunctions db,
-  FirestoreSync syncDb, {
-  int numSongs = 1,
-}) async {
+) async {
+  var isYtAlbum = albumId == 'ytb';
   var root = await getApplicationDocumentsDirectory();
   var imagePath = '${root.path}/album_images/$albumId.jpg';
 
@@ -25,27 +23,33 @@ Future<void> updateAlbum(
       where: 'id LIKE ?',
       whereArgs: [albumId],
     );
-    syncDb.update(SyncTables.Albums, albumId, {'numSongs': count + 1});
 
     return;
   }
 
-  var albumInfo = await getAlbumInfo(albumId);
+  String name;
 
-  if (albumInfo == null) {
-    print('Failed album $albumId');
+  if (isYtAlbum) {
+    name = 'Youtube';
+  } else {
+    var albumInfo = await getAlbumInfo(albumId);
+
+    if (albumInfo == null) {
+      print('Failed album $albumId');
+    }
+
+    name = albumInfo.name;
   }
 
-  print('Adding album ${albumInfo.name}.');
+  print('Adding album $name.');
 
   var album = AlbumData(
-    id: albumInfo.id,
-    name: albumInfo.name,
+    id: albumId,
+    name: name,
     imagePath: imagePath,
-    numSongs: numSongs,
+    numSongs: 1,
     artist: artist,
   );
 
   await db.insertAlbum(album);
-  syncDb.insertAlbum(album);
 }

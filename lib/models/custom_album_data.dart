@@ -28,32 +28,12 @@ class CustomAlbumData extends Equatable implements DbCollection {
   @override
   List<Object> get props => [id, name, songs];
 
-  Map<String, dynamic> toFirebase() {
-    return {
-      'id': this.id,
-      'name': this.name,
-      'songs': this.songs,
-    };
-  }
-
-  Map<String, dynamic> toMap() {
+  Map<String, String> toMap() {
     return {
       'id': this.id,
       'name': this.name,
       'songs': stringifyArr(this.songs),
     };
-  }
-
-  static CustomAlbumData fromFirebase(Map<String, dynamic> map) {
-    // Inlining it seem to throw an error for some reason...
-    var songs =
-        (map['songs'] as List<dynamic>).map((e) => e.toString()).toList();
-
-    return CustomAlbumData(
-      id: map['id'],
-      name: map['name'],
-      songs: songs,
-    );
   }
 
   static CustomAlbumData fromMap(Map<String, dynamic> map) {

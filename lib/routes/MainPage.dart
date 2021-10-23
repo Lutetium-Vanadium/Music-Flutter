@@ -38,9 +38,6 @@ class _MainPageState extends State<MainPage> {
     if (await apiKeys.needsApiKeys) {
       await Future.delayed(Duration(milliseconds: 300));
       Navigator.of(context).pushNamed('/register-apikeys');
-    } else {
-      await syncKeys.isReady;
-      Navigator.of(context).pushNamed('/sync-status');
     }
   }
 
@@ -66,7 +63,6 @@ class _MainPageState extends State<MainPage> {
         centerTitle: false,
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).backgroundColor,
-        textTheme: Theme.of(context).textTheme,
         title: Hero(
           tag: 'navbar-title',
           child: GestureDetector(
@@ -135,8 +131,7 @@ class _MainPageState extends State<MainPage> {
               });
             },
             backgroundColor: Theme.of(context).backgroundColor,
-            selectedItemColor:
-                Theme.of(context).accentTextTheme.bodyText1.color,
+            selectedItemColor: Color.fromRGBO(71, 135, 231, 1),
             unselectedItemColor: Colors.grey[200],
             items: [
               BottomNavigationBarItem(

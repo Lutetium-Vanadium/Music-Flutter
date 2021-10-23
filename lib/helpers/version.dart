@@ -111,8 +111,8 @@ class Version extends Equatable {
 
 Future<Version> getLatestTagVersion() async {
   try {
-    var response = await http.get(
-        'https://api.github.com/repos/Lutetium-Vanadium/Music-Flutter/tags');
+    var response = await http.get(Uri.parse(
+        'https://api.github.com/repos/Lutetium-Vanadium/Music-Flutter/tags'));
 
     if (response.statusCode != 200) throw response.headers['status'];
 

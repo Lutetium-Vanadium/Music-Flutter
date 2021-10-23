@@ -99,10 +99,12 @@ class _MusicState extends State<Music> {
                   children: [
                     Text('My Music',
                         style: Theme.of(context).textTheme.headline3),
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(1.25 * rem)),
-                      color: Theme.of(context).buttonColor,
+                    TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1.25 * rem),
+                        )),
+                      ),
                       onPressed: () {
                         var random = Random();
                         BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(

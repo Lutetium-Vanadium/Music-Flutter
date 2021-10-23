@@ -45,7 +45,9 @@ class ControlBar extends StatelessWidget {
       IconButton(
         visualDensity: VisualDensity.compact,
         icon: Icon(CustomIcons.shuffle),
-        color: shuffled ? Theme.of(context).accentColor : Colors.white,
+        color: shuffled
+            ? Theme.of(context).colorScheme.secondaryVariant
+            : Colors.white,
         onPressed: () {
           BlocProvider.of<QueueBloc>(context).add(ShuffleSongs());
         },
@@ -70,7 +72,9 @@ class ControlBar extends StatelessWidget {
       IconButton(
         visualDensity: VisualDensity.compact,
         icon: Icon(CustomIcons.loop),
-        color: loop ? Theme.of(context).accentColor : Colors.white,
+        color: loop
+            ? Theme.of(context).colorScheme.secondaryVariant
+            : Colors.white,
         onPressed: () {
           BlocProvider.of<QueueBloc>(context).add(LoopSongs());
         },

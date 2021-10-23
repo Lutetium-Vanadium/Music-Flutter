@@ -8,4 +8,4 @@ export 'pair.dart';
 export 'selected_song_data.dart';
 export 'song_data.dart';
 export 'song_metadata.dart';
-export 'youtube_details.dart';
+export 'youtube_song_data.dart';

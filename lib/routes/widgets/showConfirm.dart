@@ -21,15 +21,23 @@ Future<bool> showConfirm(
       pageBuilder: (context, _, __) {
         return Scaffold(
           backgroundColor: Colors.transparent,
-          body: Center(
-            child: FractionallySizedBox(
-              widthFactor: 0.8,
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                  child: ConfirmBox(
-                    title: title,
-                    text: text,
+          body: GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: Container(
+              color: Colors.transparent,
+              child: Center(
+                child: FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    clipBehavior: Clip.hardEdge,
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                      child: ConfirmBox(
+                        title: title,
+                        text: text,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -63,37 +71,44 @@ class ConfirmBox extends StatelessWidget {
         bottom: 10,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(10),
+        color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(
             title,
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline4,
           ),
           Text(
             text,
-            style: Theme.of(context).textTheme.bodyText2,
+            style: Theme.of(context).textTheme.bodyText1,
           ),
           SizedBox(height: 10),
           Row(
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              FlatButton(
-                visualDensity: VisualDensity(
-                  horizontal: VisualDensity.minimumDensity,
-                  vertical: VisualDensity.compact.vertical,
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent),
+                  visualDensity: VisualDensity(
+                    horizontal: VisualDensity.minimumDensity,
+                    vertical: VisualDensity.compact.vertical,
+                  ),
                 ),
                 child: Text('No'),
                 onPressed: () => Navigator.of(context).pop(false),
               ),
-              FlatButton(
-                visualDensity: VisualDensity(
-                  horizontal: VisualDensity.minimumDensity,
-                  vertical: VisualDensity.compact.vertical,
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all(Colors.transparent),
+                  visualDensity: VisualDensity(
+                    horizontal: VisualDensity.minimumDensity,
+                    vertical: VisualDensity.compact.vertical,
+                  ),
                 ),
                 child: Text('Yes'),
                 onPressed: () => Navigator.of(context).pop(true),

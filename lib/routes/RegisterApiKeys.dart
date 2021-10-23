@@ -6,10 +6,6 @@ import 'package:music/keys.dart';
 
 const napsterDescription =
     'This is used to get data, such as title, artist and the album picture, about every Song and Album.';
-const firestoreDescription =
-    'This can be used to sync all locally stored metadata about songs up to firebase.';
-const firestoreDisclaimer =
-    'Make sure the above keys are properly inputed as there is no way to verify. If they are, the app will automatically sync to firestore.';
 
 class RegisterApiKeys extends StatefulWidget {
   @override
@@ -19,10 +15,6 @@ class RegisterApiKeys extends StatefulWidget {
 class _RegisterApiKeysState extends State<RegisterApiKeys> {
   final _napsterController = TextEditingController();
 
-  final _appIdController = TextEditingController();
-  final _projectIdController = TextEditingController();
-  final _apiKeyController = TextEditingController();
-
   bool _napsterErrored = false;
 
   VerifyState _state = VerifyState.ToVerify;
@@ -30,9 +22,6 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
   @override
   void dispose() {
     _napsterController.dispose();
-    _appIdController.dispose();
-    _projectIdController.dispose();
-    _apiKeyController.dispose();
     super.dispose();
   }
 
@@ -95,46 +84,6 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
             ),
           ],
         ),
-        Section(
-          title: 'Firestore (optional)',
-          description: firestoreDescription,
-          link:
-              'https://github.com/Lutetium-Vanadium/Music-Flutter/blob/master/docs/apikeys.md#firebase-optional',
-          children: <Widget>[
-            TextField(
-              controller: _projectIdController,
-              style: Theme.of(context).textTheme.bodyText1,
-              maxLines: 1,
-              decoration: InputDecoration(
-                alignLabelWithHint: true,
-                labelText: 'firestore project id',
-              ),
-            ),
-            TextField(
-              controller: _appIdController,
-              style: Theme.of(context).textTheme.bodyText1,
-              maxLines: 1,
-              decoration: InputDecoration(
-                alignLabelWithHint: true,
-                labelText: 'firestore app id',
-              ),
-            ),
-            TextField(
-              controller: _apiKeyController,
-              style: Theme.of(context).textTheme.bodyText1,
-              maxLines: 1,
-              decoration: InputDecoration(
-                alignLabelWithHint: true,
-                labelText: 'firestore api key',
-              ),
-            ),
-            SizedBox(height: 15),
-            Text(
-              firestoreDisclaimer,
-              style: TextStyle(fontSize: 16, color: Colors.grey[300]),
-            ),
-          ],
-        ),
         _buildButton(context),
       ],
     );
@@ -174,33 +123,17 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
       alignment: MainAxisAlignment.center,
       buttonMinWidth: 110,
       children: [
-        FlatButton(
-          shape: RoundedRectangleBorder(
+        TextButton(
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all(RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(18),
-          ),
-          color: Theme.of(context).buttonColor,
-          materialTapTargetSize: MaterialTapTargetSize.padded,
+          ))),
           onPressed: () {
             if (_state == VerifyState.ToVerify) {
               _verifyApiKeys();
             } else if (_state == VerifyState.Verified) {
-              var apiKey = _apiKeyController.text.trim();
-              var appId = _appIdController.text.trim();
-              var projectId = _projectIdController.text.trim();
-
               apiKeys.setKeys(napster: _napsterController.text.trim());
-              if (apiKey.length > 0 &&
-                  appId.length > 0 &&
-                  projectId.length > 0) {
-                syncKeys.setKeys(
-                  apiKey: apiKey,
-                  appId: appId,
-                  projectId: projectId,
-                );
-
-                Navigator.of(context).pushReplacementNamed('/sync-status');
-              } else
-                Navigator.of(context).pop();
+              Navigator.of(context).pop();
             }
           },
           child: child,
@@ -217,9 +150,10 @@ class _RegisterApiKeysState extends State<RegisterApiKeys> {
     });
     var success = true;
 
-    var res = await http.get(
+    var verifyUri = Uri.parse(
         'https://api.napster.com/v2/?apikey=${_napsterController.text.trim()}');
-    if (res.statusCode != 200) {
+
+    if ((await http.get(verifyUri)).statusCode != 200) {
       if (!mounted) return;
       setState(() {
         _napsterErrored = true;
@@ -266,7 +200,7 @@ class Section extends StatelessWidget {
           description,
           style: TextStyle(fontSize: 16, color: Colors.grey[300]),
         ),
-        FlatButton(
+        TextButton(
           onPressed: () {
             url.launch(
               link,
@@ -275,7 +209,10 @@ class Section extends StatelessWidget {
           },
           child: Text(
             'Learn More',
-            style: Theme.of(context).accentTextTheme.bodyText2,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: Color.fromRGBO(71, 135, 231, 1)),
           ),
         ),
         ...children,

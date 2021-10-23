@@ -6,7 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 
-import 'package:music/sync.dart';
 import 'package:music/global_providers/audio_player.dart';
 import 'package:music/global_providers/database.dart';
 import 'package:music/models/models.dart';
@@ -17,14 +16,11 @@ part 'queue_state.dart';
 class QueueBloc extends Bloc<QueueEvent, QueueState> {
   final AudioPlayer audioPlayer;
   final DatabaseFunctions db;
-  final FirestoreSync syncDb;
 
-  QueueBloc(
-      {DatabaseFunctions database,
-      this.audioPlayer,
-      FirestoreSync syncDatabase})
-      : db = database,
-        syncDb = syncDatabase,
+  QueueBloc({
+    DatabaseFunctions database,
+    this.audioPlayer,
+  })  : db = database,
         super(EmptyQueue()) {
     audioPlayer.onNext(() {
       this.add(NextSong());
@@ -85,7 +81,6 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
     );
 
     await db.incrementNumListens(song);
-    syncDb.incrementNumListens(song);
   }
 
   SongData get _current => _songs.length > 0 ? _songs[_index] : null;
@@ -124,12 +119,9 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
         where: 'title LIKE ?',
         whereArgs: [event.song.title],
       );
-      syncDb.update(SyncTables.Songs, event.song.title, {'liked': liked});
 
       updateData = true;
-    }
-
-    if (_songs.length > 0) {
+    } else if (_songs.length > 0) {
       if (event is DequeueSongs) {
         _songs = [];
         _allSongs = [];
@@ -179,11 +171,12 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
 
         _allSongs.removeWhere((s) => s.title == event.song.title);
 
-        var songsIndex = _songs.indexWhere((s) => s.title == event.song.title);
-        if (songsIndex >= 0) {
-          _songs.removeAt(songsIndex);
-          var sameSong = songsIndex == _index;
-          if (songsIndex == _songs.length) {
+        var songIndex = _songs.indexWhere((s) => s.title == event.song.title);
+
+        if (songIndex >= 0) {
+          _songs.removeAt(songIndex);
+          var sameSong = songIndex == _index;
+          if (songIndex == _songs.length) {
             _index = 0;
           }
           if (sameSong) {
@@ -194,9 +187,6 @@ class QueueBloc extends Bloc<QueueEvent, QueueState> {
             }
           }
         }
-
-        syncDb.delete(SyncTables.Songs, event.song.title);
-        syncDb.update(SyncTables.Albums, event.song.albumId, data);
 
         await db.deleteEmptyAlbums();
       }

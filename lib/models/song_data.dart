@@ -49,18 +49,6 @@ class SongData extends SongMetadata implements DbCollection {
         this.thumbnail = thumbnail ?? song.thumbnail,
         this.length = length ?? song.length;
 
-  Map<String, dynamic> toFirebase([String youtubeId = '']) {
-    return {
-      'title': this.title,
-      'albumId': this.albumId,
-      'artist': this.artist,
-      'length': this.length,
-      'liked': this.liked,
-      'numListens': this.numListens,
-      'youtubeId': youtubeId,
-    };
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'filePath': this.filePath,
@@ -72,20 +60,6 @@ class SongData extends SongMetadata implements DbCollection {
       'liked': this.liked ? 1 : 0,
       'numListens': this.numListens,
     };
-  }
-
-  static SongData fromFirestore(Map<String, dynamic> map,
-      [int length = -1, String root = '']) {
-    return SongData(
-      albumId: map['albumId'],
-      artist: map['artist'],
-      filePath: '$root/songs/${map['title']}.mp3',
-      length: length,
-      numListens: map['numListens'],
-      thumbnail: '$root/album_images/${map['albumId']}.jpg',
-      title: map['title'],
-      liked: map['liked'],
-    );
   }
 
   static SongData fromMap(Map<String, dynamic> map) {

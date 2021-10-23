@@ -72,7 +72,7 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
                 ? Icon(
                     Icons.check_box,
                     size: 25,
-                    color: Theme.of(context).accentColor,
+                    color: Theme.of(context).colorScheme.secondaryVariant,
                   )
                 : Icon(Icons.check_box_outline_blank, size: 25),
           ),
@@ -138,7 +138,7 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
               right: 20,
               left: 0.8 * width10,
             ),
-            child: FlatButton(
+            child: TextButton(
               onPressed: cantSubmit
                   ? null
                   : () {
@@ -163,12 +163,12 @@ class _SelectSongsOverlayState extends State<SelectSongsOverlay> {
                       Navigator.of(context).pop();
                     },
               child: Text(create ? 'Create' : 'Edit'),
-              color: Theme.of(context).accentColor,
-              disabledColor: Colors.grey[850],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                )),
+                visualDensity: VisualDensity.comfortable,
               ),
-              visualDensity: VisualDensity.comfortable,
             ),
           ),
         ],

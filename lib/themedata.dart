@@ -54,12 +54,23 @@ TextTheme createTextTheme(Color col) {
 
 var textTheme = createTextTheme(Colors.white);
 
+Color getTextButtonColor(Set<MaterialState> states) {
+  if (states.contains(MaterialState.disabled)) {
+    return Colors.grey[850];
+  } else {
+    return Color.fromRGBO(18, 91, 193, 1);
+  }
+}
+
 var themeData = ThemeData(
   primaryColor: Color.fromRGBO(50, 50, 50, 1),
-  accentColor: Color.fromRGBO(23, 99, 212, 1),
   backgroundColor: Color.fromRGBO(20, 20, 20, 1),
   textTheme: textTheme,
-  cursorColor: Colors.grey[100],
+  textSelectionTheme: TextSelectionThemeData(
+    cursorColor: Colors.grey[100],
+    selectionColor: Colors.grey[400],
+    selectionHandleColor: Colors.white,
+  ),
   appBarTheme: AppBarTheme(
     elevation: 0,
   ),
@@ -67,11 +78,20 @@ var themeData = ThemeData(
   bottomAppBarTheme: BottomAppBarTheme(
     elevation: 0,
   ),
-  buttonColor: Color.fromRGBO(18, 91, 193, 1),
+  textButtonTheme: TextButtonThemeData(
+    style: ButtonStyle(
+      foregroundColor: MaterialStateProperty.all(Colors.white),
+      backgroundColor: MaterialStateProperty.resolveWith(getTextButtonColor),
+    ),
+  ),
+  buttonTheme: ButtonThemeData(
+    buttonColor: Color.fromRGBO(18, 91, 193, 1),
+    disabledColor: Colors.grey[850],
+  ),
   bottomAppBarColor: Color.fromRGBO(27, 27, 27, 1),
   hintColor: Colors.grey[400],
   canvasColor: Color.fromRGBO(27, 27, 27, 1),
-  accentTextTheme: createTextTheme(Color.fromRGBO(71, 135, 231, 1)),
+  // accentTextTheme: createTextTheme(Color.fromRGBO(71, 135, 231, 1)),
   colorScheme: ColorScheme(
     background: Color.fromRGBO(20, 20, 20, 1),
     brightness: Brightness.dark,
@@ -84,12 +104,8 @@ var themeData = ThemeData(
     primary: Color.fromRGBO(50, 50, 50, 1),
     primaryVariant: Color.fromRGBO(45, 45, 45, 1),
     secondary: Color.fromRGBO(29, 29, 29, 1),
-    secondaryVariant: Color.fromRGBO(25, 25, 25, 1),
+    secondaryVariant: Color.fromRGBO(23, 99, 212, 1),
     surface: Color.fromRGBO(40, 40, 40, 1),
-  ),
-  accentColorBrightness: Brightness.dark,
-  accentIconTheme: IconThemeData(
-    color: Color.fromRGBO(23, 99, 212, 1),
   ),
   brightness: Brightness.dark,
   snackBarTheme: SnackBarThemeData(

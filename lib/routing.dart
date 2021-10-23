@@ -13,7 +13,6 @@ import './routes/CurrentSongPage.dart';
 import './routes/SelectSongsOverlay.dart';
 import './routes/AddToAlbumOverlay.dart';
 import './routes/RegisterApiKeys.dart';
-import './routes/SyncStatus.dart';
 
 class MusicRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -76,11 +75,6 @@ class MusicRouter {
         return CupertinoPageRoute(
           maintainState: false,
           builder: (_) => RegisterApiKeys(),
-        );
-      case '/sync-status':
-        return CupertinoPageRoute(
-          maintainState: false,
-          builder: (_) => SyncStatusPage(),
         );
       case '/select-songs':
         assert(settings.arguments == null ||

@@ -34,7 +34,7 @@ class SongList extends StatelessWidget {
           height: 50,
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Theme.of(context).buttonColor,
+            color: Theme.of(context).colorScheme.secondaryVariant,
             borderRadius: BorderRadius.circular(25),
           ),
           child: CircularProgressIndicator(

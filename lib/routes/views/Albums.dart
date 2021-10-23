@@ -72,7 +72,7 @@ class _AlbumsState extends State<Albums> {
             child: Padding(
               padding:
                   EdgeInsets.only(left: width10 / 4 * 2, top: 30, bottom: 7),
-              child: Text('Custom Albums',
+              child: Text('Playlists',
                   style: Theme.of(context).textTheme.headline3),
             ),
           ),

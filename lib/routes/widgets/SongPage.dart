@@ -275,7 +275,7 @@ class HeaderImage extends StatelessWidget {
       child: hero,
       builder: (context, child) {
         return Stack(
-          overflow: Overflow.visible,
+          clipBehavior: Clip.none,
           fit: StackFit.expand,
           children: [
             child,
@@ -345,20 +345,24 @@ class HeaderImage extends StatelessWidget {
                   buttonMinWidth: 0.25 * screenWidth,
                   alignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(1.25 * rem)),
-                      color: Theme.of(context).buttonColor,
+                    TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1.25 * rem),
+                        )),
+                      ),
                       onPressed: () {
                         BlocProvider.of<QueueBloc>(context)
                             .add(EnqueueSongs(songs: songs));
                       },
                       child: Text('Play All'),
                     ),
-                    FlatButton(
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(1.25 * rem)),
-                      color: Theme.of(context).buttonColor,
+                    TextButton(
+                      style: ButtonStyle(
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(1.25 * rem),
+                        )),
+                      ),
                       onPressed: () {
                         var random = Random();
                         BlocProvider.of<QueueBloc>(context).add(EnqueueSongs(

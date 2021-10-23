@@ -5,12 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:music/sync.dart';
 import 'package:music/notifications.dart';
 import 'package:music/global_providers/database.dart';
 import 'package:music/models/models.dart';
 import 'package:music/helpers/downloader.dart';
-import 'package:music/helpers/getYoutubeDetails.dart';
+import 'package:music/helpers/youtube.dart' as yt;
 import 'package:music/helpers/updateAlbum.dart';
 import 'package:music/helpers/version.dart';
 
@@ -20,17 +19,11 @@ part 'data_state.dart';
 class DataBloc extends Bloc<DataEvent, DataState> {
   final DatabaseFunctions db;
   final NotificationHandler notificationHandler;
-  final FirestoreSync syncDb;
   final Updater updater;
   Timer timer;
 
-  DataBloc(
-      {DatabaseFunctions database,
-      this.notificationHandler,
-      FirestoreSync syncDatabase,
-      this.updater})
+  DataBloc({DatabaseFunctions database, this.notificationHandler, this.updater})
       : db = database,
-        syncDb = syncDatabase,
         super(InitialData()) {
     this.updater.init();
     this.checkForUpdate();
@@ -59,18 +52,30 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       try {
         var songData = event.song;
 
-        var ytDetailsArr =
-            await getYoutubeDetails(songData.title, songData.artist);
+        List<YoutubeSongData> ytDetailsArr = [];
+        YoutubeSongData ytDetails;
+        String albumId, thumbnailFile;
 
-        if (ytDetailsArr == null) throw 'Failed to get Youtube Id';
+        if (songData is NapsterSongData) {
+          ytDetailsArr = await yt.getSearchResults(
+              '${songData.title} by ${songData.artist} official music video');
 
-        var ytDetails = ytDetailsArr.removeAt(0);
-        var youtubeId = ytDetails.id;
+          if (ytDetailsArr == null) throw 'Failed to get Youtube Id';
+
+          ytDetails = ytDetailsArr.removeAt(0);
+          albumId = songData.albumId;
+          thumbnailFile = '$albumId.jpg';
+
+          await downloadNapsterImage(albumId);
+        } else if (songData is YoutubeSongData) {
+          ytDetails = songData;
+          albumId = 'ytb';
+          thumbnailFile = '${songData.id}.jpg';
+
+          await downloadYoutubeImage(songData);
+        }
 
         var filename = songData.title + '.mp3';
-        var albumId = songData.albumId;
-
-        await downloadImage(albumId);
 
         print('Downloading ${songData.title}');
         var root = await getApplicationDocumentsDirectory();
@@ -88,10 +93,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
 
             var length = idx < 0 ? ytDetails.length : ytDetailsArr[idx].length;
 
-            if (idx >= 0) {
-              youtubeId = ytDetailsArr[idx].id;
-            }
-
             song = SongData(
               albumId: albumId,
               artist: songData.artist,
@@ -99,7 +100,7 @@ class DataBloc extends Bloc<DataEvent, DataState> {
               length: length,
               liked: false,
               numListens: 0,
-              thumbnail: '${root.path}/album_images/$albumId.jpg',
+              thumbnail: '${root.path}/album_images/$thumbnailFile',
               title: songData.title,
             );
           } else {
@@ -119,10 +120,9 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         }
 
         print('Downloaded ${song.title}');
-        await updateAlbum(albumId, songData.artist, db, syncDb);
+        await updateAlbum(albumId, songData.artist, db);
 
         await db.insertSong(song);
-        syncDb.insertSong(song, youtubeId);
 
         notificationHandler.showNotification(
           title: song.title,
@@ -145,7 +145,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
       );
 
       await db.insertCustomAlbum(album);
-      syncDb.insertCustomAlbum(album);
 
       print('ADDED ${event.name}');
     } else if (event is EditCustomAlbum) {
@@ -157,7 +156,6 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         where: 'id LIKE ?',
         whereArgs: [event.id],
       );
-      syncDb.update(SyncTables.CustomAlbums, event.id, data);
 
       print('UPDATED ${event.id}');
     } else if (event is AddSongToCustomAlbum) {
@@ -176,10 +174,8 @@ class DataBloc extends Bloc<DataEvent, DataState> {
         where: 'id LIKE ?',
         whereArgs: [event.id],
       );
-      syncDb.update(SyncTables.CustomAlbums, event.id, album.toFirebase());
     } else if (event is DeleteCustomAlbum) {
       await db.deleteCustomAlbum(event.id);
-      syncDb.delete(SyncTables.CustomAlbums, event.id);
 
       print('DELETED ${event.id}');
     }

@@ -18,15 +18,6 @@ class AlbumData extends Equatable implements DbCollection {
   @override
   List<Object> get props => [id, imagePath, name, numSongs, artist];
 
-  Map<String, dynamic> toFirebase() {
-    return {
-      'id': this.id,
-      'name': this.name,
-      'numSongs': this.numSongs,
-      'artist': this.artist,
-    };
-  }
-
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
@@ -35,16 +26,6 @@ class AlbumData extends Equatable implements DbCollection {
       'numSongs': this.numSongs,
       'artist': this.artist,
     };
-  }
-
-  static AlbumData fromFirebase(Map<String, dynamic> map, String root) {
-    return AlbumData(
-      id: map['id'],
-      artist: map['artist'],
-      name: map['name'],
-      numSongs: map['numSongs'],
-      imagePath: '$root/album_images/${map['id']}.jpg',
-    );
   }
 
   static AlbumData fromMap(Map<String, dynamic> map) {

@@ -1,9 +1,13 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:flutter/services.dart' show ByteData, rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:http/http.dart' as http;
+import 'package:image/image.dart' as image;
 
 import 'package:music/models/models.dart';
+import 'package:music/constants.dart';
 
 Stream<Pair<int, int>> downloadSong(String id, String filename,
     {List<String> backup = const []}) async* {
@@ -92,15 +96,14 @@ Stream<Pair<int, int>> downloadSong(String id, String filename,
   }
 }
 
-Future<void> downloadImage(String id) async {
+Future<void> downloadNapsterImage(String id) async {
   var root = await getApplicationDocumentsDirectory();
-
   var file = File('${root.path}/album_images/$id.jpg');
 
-  if (await file.exists())
-    return;
-  else
-    file = await file.create(recursive: true);
+  if (await file.exists()) return;
+
+  file = await file.create(recursive: true);
+
   var uri = Uri.parse(
       'https://api.napster.com/imageserver/v2/albums/$id/images/500x500.jpg');
 
@@ -114,5 +117,60 @@ Future<void> downloadImage(String id) async {
   }
 
   await writer.close();
+  print('Done $id');
+}
+
+Future<void> downloadYoutubeImage(YoutubeSongData vid) async {
+  var id = vid.id;
+
+  var root = await getApplicationDocumentsDirectory();
+
+  var ytbFile = File('${root.path}/album_images/ytb.jpg');
+
+  if (!(await ytbFile.exists())) {
+    ByteData data = await rootBundle.load('$imgs/youtube.png');
+    List<int> bytes =
+        data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+    await ytbFile.writeAsBytes(bytes);
+  }
+
+  var file = File('${root.path}/album_images/$id.jpg');
+
+  if (await file.exists()) return;
+
+  file = await file.create(recursive: true);
+
+  var uri = Uri.parse(vid.thumbnail);
+
+  var res = await http.get(uri);
+  var srcImg = image.decodeImage(res.bodyBytes);
+  var blurredImage = image.Image.from(srcImg);
+  image.gaussianBlur(blurredImage, 15);
+
+  var srcW = srcImg.width;
+  var srcH = srcImg.height;
+
+  var img = image.Image(srcW, srcW);
+  image.drawImage(img, blurredImage,
+      dstX: 0,
+      dstY: 0,
+      dstW: srcW,
+      dstH: srcW,
+      srcX: (srcW - srcH) ~/ 2,
+      srcY: 0,
+      srcW: srcH,
+      srcH: srcH);
+
+  image.drawImage(img, srcImg,
+      dstX: 0,
+      dstY: (srcW - srcH) ~/ 2,
+      dstW: srcW,
+      dstH: srcH,
+      srcX: 0,
+      srcY: 0,
+      srcW: srcW,
+      srcH: srcH);
+
+  await file.writeAsBytes(image.encodeJpg(img));
   print('Done $id');
 }

@@ -129,7 +129,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
               right: 20,
               left: 0.8 * width10,
             ),
-            child: FlatButton(
+            child: TextButton(
               onPressed: _selected == null
                   ? null
                   : () {
@@ -142,12 +142,12 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
                       Navigator.of(context).pop();
                     },
               child: Text('Add'),
-              color: Theme.of(context).accentColor,
-              disabledColor: Colors.grey[850],
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              style: ButtonStyle(
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                )),
+                visualDensity: VisualDensity.comfortable,
               ),
-              visualDensity: VisualDensity.comfortable,
             ),
           ),
         ],
@@ -217,7 +217,7 @@ class _AddToAlbumOverlayState extends State<AddToAlbumOverlay> {
                   ? Icon(
                       Icons.check_box,
                       size: 25,
-                      color: Theme.of(context).accentColor,
+                      color: Theme.of(context).colorScheme.secondaryVariant,
                     )
                   : Icon(Icons.check_box_outline_blank, size: 25),
             ),

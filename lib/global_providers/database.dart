@@ -288,7 +288,7 @@ class DatabaseFunctions {
 
     int number = 0;
     if (ids.length > 0) {
-      number = int.parse(ids.first['id'].substring(4)) + 1;
+      number = int.parse((ids.first['id'] as String).substring(4)) + 1;
     }
     return 'cst.$number';
   }

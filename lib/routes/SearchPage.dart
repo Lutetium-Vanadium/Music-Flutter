@@ -7,36 +7,44 @@ import 'package:music/bloc/data_bloc.dart';
 import 'package:music/models/models.dart';
 import 'package:music/constants.dart';
 import 'package:music/helpers/napster.dart' as napster;
+import 'package:music/helpers/youtube.dart' as youtube;
 import './widgets/Input.dart';
 import './widgets/SongList.dart';
 import './widgets/CurrentSongBanner.dart';
 
 class SearchPage extends StatefulWidget {
   final String intitalQuery;
-  final Future<List<NapsterSongData>> Function(String) search;
 
-  SearchPage(this.intitalQuery, {this.search = napster.search});
+  SearchPage(this.intitalQuery);
 
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<NapsterSongData> _results;
+  List<SongMetadata> _results;
   bool _isSearching = false;
   bool _errored = false;
   TextEditingController _textController;
   var _titles = Set<String>();
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKey = GlobalKey<ScaffoldMessengerState>();
 
   Future<void> search(String query) async {
     if (!_isSearching) {
       _isSearching = true;
-      var res = await widget.search(query);
-      res?.removeWhere((song) => _titles.contains(song.title));
-      if (!mounted) return;
+
+      var napsterRes = await napster.search(query);
+      var napsterErrored = napsterRes == null;
+      List<SongMetadata> res = [...napsterRes] ?? [];
+
+      var youtubeRes = await youtube.getSearchResults(query);
+      var youtubeErrored = youtubeRes == null;
+      res.addAll(youtubeRes ?? []);
+
+      res.removeWhere((song) => _titles.contains(song.title));
+
       setState(() {
-        _errored = res == null;
+        _errored = napsterErrored && youtubeErrored;
         _results = res;
         _isSearching = false;
       });
@@ -75,7 +83,6 @@ class _SearchPageState extends State<SearchPage> {
         centerTitle: false,
         automaticallyImplyLeading: false,
         backgroundColor: Theme.of(context).backgroundColor,
-        textTheme: Theme.of(context).textTheme,
         leading: GestureDetector(
           onTap: Navigator.of(context).pop,
           child: Icon(CupertinoIcons.back),
@@ -154,19 +161,22 @@ class _SearchPageState extends State<SearchPage> {
                   ));
                 },
                 getIcon: (index) {
+                  var song = _results[index];
+
+                  String albumId =
+                      song is NapsterSongData ? song.albumId : 'ytb';
+
                   return BlocBuilder<DataBloc, DataState>(
                     builder: (context, state) {
                       if (state is ProgressNotification &&
-                          state.id ==
-                              (_results[index].title +
-                                  _results[index].albumId)) {
+                          state.id == (song.title + albumId)) {
                         return SizedBox(
                           height: 25,
                           width: 25,
                           child: CircularProgressIndicator(
                             backgroundColor: Colors.transparent,
                             valueColor: AlwaysStoppedAnimation(
-                                Theme.of(context).accentColor),
+                                Theme.of(context).colorScheme.secondaryVariant),
                             value: state.percentage,
                             strokeWidth: 2,
                           ),

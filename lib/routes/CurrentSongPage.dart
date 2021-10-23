@@ -56,7 +56,9 @@ class _CurrentSongPageState extends State<CurrentSongPage> {
                                 value: duration.toDouble(),
                                 inactiveColor:
                                     Theme.of(context).colorScheme.secondary,
-                                activeColor: Theme.of(context).accentColor,
+                                activeColor: Theme.of(context)
+                                    .colorScheme
+                                    .secondaryVariant,
                               ),
                             ),
                             Text(time.second),

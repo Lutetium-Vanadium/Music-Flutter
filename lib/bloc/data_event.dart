@@ -9,7 +9,7 @@ class ForceUpdate extends DataEvent {
 }
 
 class DownloadSong extends DataEvent {
-  final NapsterSongData song;
+  final SongMetadata song;
   DownloadSong(this.song);
 
   @override
